@@ -200,7 +200,7 @@ export default function LandingPage() {
           </nav>
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="md:hidden bg-[#c9a55c] text-[#1a2b4c]">
+              <Button variant="ghost" size="icon" className="md:hidden bg-[#c9a55c] text-[#1a2b4c]">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
