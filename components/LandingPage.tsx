@@ -386,8 +386,8 @@ export default function LandingPage() {
                 </div>
                 <div className="mt-6">
                   <Button
-                    className="w-full bg-[#800020] hover:bg-[#9a0026] text-white"
-                    onClick={() => window.open('https://wa.me/1234567890', '_blank')}
+                    className="w-full bg-white text-black hover:bg-slate-200 hover:scale-105"
+                    onClick={() => window.open('https://wa.me/2348138497268', '_blank')}
                   >
                     <Phone className="h-5 w-5 mr-2" />
                     Let's talk on WhatsApp!
