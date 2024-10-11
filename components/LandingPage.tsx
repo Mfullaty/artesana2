@@ -58,7 +58,7 @@ function StockMarquee({ stocks }: { stocks: StockInfo[] }) {
 
   return (
     <div 
-      className="overflow-hidden whitespace-nowrap bg-white" 
+      className="overflow-hidden whitespace-nowrap bg-white space-x-4" 
       ref={marqueeRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -66,7 +66,7 @@ function StockMarquee({ stocks }: { stocks: StockInfo[] }) {
       <div className="inline-block">
         {stocks.map((stock, index) => (
           <div key={index} className="inline-block px-6 py-2 text-center cursor-pointer">
-            <div className="font-semibold text-[#1a2b4c]">{stock.name}</div>
+            <div className="font-semibold text-sm text-[#1a2b4c]">{stock.name}</div>
             <div className={cn(
               "text-sm",
               stock.change >= 0 ? "text-green-600" : "text-red-600"
@@ -175,11 +175,11 @@ export default function LandingPage() {
   ];
 
   const stocks: StockInfo[] = [
-    { name: "Beans",  change: 18.00 },
-    { name: "Corn", change: -2.50 },
-    { name: "Wheat", change: 5.30 },
-    { name: "Soybeans",  change: -1.20 },
-    { name: "Rice",  change: 3.70 },
+    { name: "Beans in beirut",  change: 18.00 },
+    { name: "Corn in china", change: -2.50 },
+    { name: "Wheat in brazil", change: 5.30 },
+    { name: "Soybeans in Egypt",  change: -1.20 },
+    { name: "Rice in Nigeria",  change: 3.70 },
   ];
 
   return (
