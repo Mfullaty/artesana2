@@ -5,6 +5,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/s
 import ProductCarousel from "./ProductsCarousel";
 import { cn } from '@/lib/utils';
 import { Product } from '@/types/product';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './ui/accordion';
 
 interface StockInfo {
   name: string;
@@ -283,28 +284,20 @@ export default function LandingPage() {
 
         {/* FAQ Section */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h2 className="text-3xl font-bold text-[#333333] mb-8 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div key={index} className="border border-[#c9a55c] rounded-lg">
-                <button
-                  className="flex justify-between items-center w-full px-4 py-4 sm:px-6 text-left"
-                  onClick={() => toggleFaq(index)}
-                >
-                  <span className="text-lg font-semibold text-[#333333]">{faq.question}</span>
-                  {openFaq === index ? (
-                    <Minus className="h-5 w-5 text-[#c9a55c]" />
-                  ) : (
-                    <Plus className="h-5 w-5 text-[#c9a55c]" />
-                  )}
-                </button>
-                {openFaq === index && (
-                  <div className="px-4 pb-4 sm:px-6">
-                    <p className="text-[#333333]">{faq.answer}</p>
-                  </div>
-                )}
-              </div>
-            ))}
+          <h2 className="text-3xl font-bold text-[#1a2b4c] mb-8 text-center">Frequently Asked Questions</h2>
+          <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq, index) => (
+                <AccordionItem key={index} value={`item-${index}`}>
+                  <AccordionTrigger className="text-lg font-semibold text-[#1a2b4c] hover:text-[#c9a55c] transition-colors">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-[#333333] mt-2">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </section>
 
