@@ -65,7 +65,7 @@ function StockMarquee({ stocks }: { stocks: StockInfo[] }) {
     >
       <div className="inline-block">
         {stocks.map((stock, index) => (
-          <div key={index} className="inline-block px-6 py-2 text-center cursor-pointer">
+          <div key={index} className="inline-block px-6 py-2 text-center cursor-pointer opacity-100 hover:opacity-60">
             <div className="font-semibold text-sm text-[#1a2b4c]">{stock.name}</div>
             <div className={cn(
               "text-sm",
