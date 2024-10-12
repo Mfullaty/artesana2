@@ -120,14 +120,14 @@ export default function LuxuryProductPage() {
               </ul>
             </div>
             <div className="flex flex-col space-y-4">
-              <Link href="#requestAQuote">
+              <a href="#requestAQuote">
                 <Button className="w-full bg-[#1a2b4c] hover:bg-primary/90">
                   <div className="flex justify-center items-center gap-2">
                     <FormInputIcon />
                     <p>Request a Quote</p>
                   </div>
                 </Button>
-              </Link>
+              </a>
               <Button
               onClick={() => window.open('https://wa.me/2348138497268', '_blank')}
                 variant="outline"
