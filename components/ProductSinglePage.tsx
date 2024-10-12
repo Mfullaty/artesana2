@@ -62,7 +62,7 @@ export default function LuxuryProductPage() {
   return (
     <>
     <StockMarquee />
-    <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 text-gray-800 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 text-gray-800 p-2 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 gap-12 items-start">
           <motion.div
