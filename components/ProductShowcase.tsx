@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Product } from "@/types/product";
+import { Product } from "@/types/all";
 import Carousel from "./Carousel";
 
 const products: Product[] = [
@@ -50,7 +50,10 @@ export default function ProductShowcase() {
   return (
     <Carousel>
       {products.map((product) => (
-        <Card key={product.id} className="transform transition-all duration-300 ease-in-out hover:scale-105 my-2 sm:my-3 md:my-4 cursor-pointer">
+        <Card
+          key={product.id}
+          className="transform transition-all duration-300 ease-in-out hover:scale-105 my-2 sm:my-3 md:my-4 cursor-pointer"
+        >
           <CardContent className="p-4">
             <img
               src={product.image}

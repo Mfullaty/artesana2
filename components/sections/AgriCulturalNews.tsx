@@ -52,7 +52,7 @@ const newsItems: NewsItem[] = [
 
 export default function AgriculturalNews() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div id="agricNews" className="max-w-6xl mx-auto px-4 py-8">
       <h2 className="text-3xl font-bold text-[#333333] mb-6">Latest News</h2>
       <Carousel showIndicators={false} showControls={false}>
         {newsItems.map((item) => (

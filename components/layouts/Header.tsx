@@ -1,5 +1,5 @@
 "use client";
-import { NavItems, StockInfo } from "@/types/product";
+import { NavItems } from "@/types/all";
 import {
   Box,
   Facebook,
@@ -9,6 +9,7 @@ import {
   Info,
   Instagram,
   Menu,
+  SheetIcon,
   Truck,
   Twitter,
 } from "lucide-react";
@@ -20,18 +21,11 @@ import StockMarquee from "../StockMarquee";
 
 const navItems: NavItems[] = [
   { label: "Home", href: "#", icon: Home },
-  { label: "Products", href: "#", icon: Box },
-  { label: "Services", href: "#", icon: Truck },
-  { label: "Contact", href: "#", icon: Headphones },
-  { label: "About", href: "#", icon: Info },
-];
-
-const stocks: StockInfo[] = [
-  { name: "Beans in beirut", change: 18.0 },
-  { name: "Corn in china", change: -2.5 },
-  { name: "Wheat in brazil", change: 5.3 },
-  { name: "Soybeans in Egypt", change: -1.2 },
-  { name: "Rice in Nigeria", change: 3.7 },
+  { label: "Products", href: "#products", icon: Box },
+  { label: "Services", href: "#services", icon: Truck },
+  { label: "News", href: "#agricNews", icon: SheetIcon },
+  { label: "About us", href: "#", icon: Info },
+  { label: "Contact us", href: "#contactUs", icon: Headphones },
 ];
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -105,7 +99,7 @@ const Header = () => {
               </div>
             </div>
             <div className="absolute bottom-28 left-4 right-4">
-              <StockMarquee  stocks={stocks} />
+              <StockMarquee />
             </div>
           </SheetContent>
         </Sheet>

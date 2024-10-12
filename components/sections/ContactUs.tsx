@@ -18,7 +18,7 @@ const ContactUs = () => {
         setContactMessage('')
       }
   return (
-    <section className="bg-[#1a2b4c] text-white py-16">
+    <section id='contactUs' className="bg-[#1a2b4c] text-white py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold mb-8 text-center">Contact Us</h2>
             <div className="grid md:grid-cols-2 gap-8">
