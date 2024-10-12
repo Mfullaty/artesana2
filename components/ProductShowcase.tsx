@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/types/all";
 import Carousel from "./Carousel";
+import Link from "next/link";
 
 const products: Product[] = [
   {
@@ -50,25 +51,24 @@ export default function ProductShowcase() {
   return (
     <Carousel>
       {products.map((product) => (
-        <Card
-          key={product.id}
-          className="transform transition-all duration-300 ease-in-out hover:scale-105 my-2 sm:my-3 md:my-4 cursor-pointer"
-        >
-          <CardContent className="p-4">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-48 object-cover rounded-md select-none"
-              draggable={false}
-            />
-            <h3 className="text-base sm:text-lg font-semibold mt-2 sm:mt-3 md:mt-4">
-              {product.name}
-            </h3>
-            <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
-              {product.description}
-            </p>
-          </CardContent>
-        </Card>
+        <Link href="/product" key={product.id}>
+          <Card className="transform transition-all duration-300 ease-in-out hover:scale-105 my-2 sm:my-3 md:my-4 cursor-pointer">
+            <CardContent className="p-4">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-48 object-cover rounded-md select-none"
+                draggable={false}
+              />
+              <h3 className="text-base sm:text-lg font-semibold mt-2 sm:mt-3 md:mt-4">
+                {product.name}
+              </h3>
+              <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
+                {product.description}
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
       ))}
     </Carousel>
   );
