@@ -20,12 +20,12 @@ import { useState } from "react";
 import StockMarquee from "../StockMarquee";
 
 const navItems: NavItems[] = [
-  { label: "Home", href: "#", icon: Home },
-  { label: "Products", href: "#products", icon: Box },
-  { label: "Services", href: "#services", icon: Truck },
-  { label: "News", href: "#agricNews", icon: SheetIcon },
+  { label: "Home", href: "/", icon: Home },
+  { label: "Products", href: "/#products", icon: Box },
+  { label: "Services", href: "/#services", icon: Truck },
+  { label: "News", href: "/#agricNews", icon: SheetIcon },
   { label: "About us", href: "#", icon: Info },
-  { label: "Contact us", href: "#contactUs", icon: Headphones },
+  { label: "Contact us", href: "/#contactUs", icon: Headphones },
 ];
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

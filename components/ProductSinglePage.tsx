@@ -129,6 +129,7 @@ export default function LuxuryProductPage() {
                 </Button>
               </Link>
               <Button
+              onClick={() => window.open('https://wa.me/2348138497268', '_blank')}
                 variant="outline"
                 className="w-full text-green-600 border-green-600 hover:bg-green-600 hover:text-white transition-all duration-300"
               >
@@ -237,11 +238,10 @@ export default function LuxuryProductPage() {
                   htmlFor="company-name"
                   className="text-gray-700 text-base md:text-lg"
                 >
-                  Company Name *
+                  Company Name 
                 </Label>
                 <Input
                   id="company-name"
-                  required
                   className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg"
                 />
               </div>
