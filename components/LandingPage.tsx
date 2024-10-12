@@ -7,7 +7,6 @@ import ContactUs from "./sections/ContactUs";
 import NewsLetter from "./sections/NewsLetter";
 import AgriculturalNews from "./sections/AgriCulturalNews";
 
-
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
@@ -23,14 +22,15 @@ export default function LandingPage() {
 
         {/* Featured Products */}
         <FeaturedProducts />
-        <div className="my-6">
-          <StockMarquee />
-        </div>
 
-        <AgriculturalNews />
+        {/* Marquee */}
+        <StockMarquee />
 
         {/* Services */}
         <Services />
+
+        {/* Agricultural News */}
+        <AgriculturalNews />
 
         {/* FAQ Section */}
         <Faqs />

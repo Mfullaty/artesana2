@@ -9,7 +9,8 @@ const products: Product[] = [
     name: "Sesame Seeds",
     image:
       "https://img1.wsimg.com/isteam/ip/1919f62b-8c9f-47b6-a247-7486da73ea0c/sesame-seeds-globexia-1.jpeg/:/cr=t:30%25,l:32.26%25,w:35.47%25,h:40%25/rs=w:388,h:292,cg:true,m/qt=q:31",
-    description: "Fresh Sesame Seeds sourced from Nigeria",
+    description:
+      "Our Fresh Sesame Seeds are meticulously sourced from Nigeria, ensuring the highest quality and unparalleled freshness. These seeds are rich in flavor and packed with essential nutrients, making them a versatile addition to your culinary creations. Ideal for enhancing salads, bread, and various dishes, they bring both taste and health benefits to your table. Experience the authentic essence of Nigerian sesame seeds in every bite.",
   },
   {
     id: "cnjavskcd",
@@ -63,7 +64,7 @@ export default function ProductShowcase() {
               <h3 className="text-base sm:text-lg font-semibold mt-2 sm:mt-3 md:mt-4">
                 {product.name}
               </h3>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2">
+              <p className="text-sm sm:text-base text-muted-foreground mt-1 sm:mt-2 line-clamp-1">
                 {product.description}
               </p>
             </CardContent>
