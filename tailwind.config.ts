@@ -21,20 +21,20 @@ const config: Config = {
   				foreground: 'hsl(var(--popover-foreground))'
   			},
   			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
+  				DEFAULT: '#162b00', //'#1a2b4c'
+  				foreground: '#c6ffa7'
   			},
   			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
+  				DEFAULT: '#5d4100', //'#c9a55c'
+  				foreground: '#f6ce72'
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
   				foreground: 'hsl(var(--muted-foreground))'
   			},
   			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
+  				DEFAULT: '#ffcf02', //#1ff3d8
+  				foreground: '#fff27b'
   			},
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',

@@ -52,8 +52,8 @@ const newsItems: NewsItem[] = [
 
 export default function AgriculturalNews() {
   return (
-    <div id="agricNews" className="max-w-6xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-[#333333] mb-6">Latest News</h2>
+    <div id="agricNews" className="max-w-6xl mx-auto px-4 py-8 font-mono">
+      <h2 className="text-3xl font-bold text-primary mb-6">Latest News</h2>
       <Carousel showIndicators={false} showControls={false}>
         {newsItems.map((item) => (
           <Link
@@ -88,7 +88,7 @@ export default function AgriculturalNews() {
         <Button
           variant="default"
           size="lg"
-          className="font-semibold bg-[#1a2b4c]"
+          className="font-semibold bg-primary"
           asChild
         >
           <a href="#">Discover More</a>

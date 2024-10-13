@@ -30,22 +30,22 @@ const faqs = [
 ];
 
 const Faqs = () => {
-    const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index)
-  }
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <h2 className="text-3xl font-bold text-[#1a2b4c] mb-8 text-center">
+      <h2 className="text-3xl font-bold text-primary mb-8 text-center">
         Frequently Asked Questions
       </h2>
       <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-lg font-semibold text-[#1a2b4c] hover:text-[#c9a55c] transition-colors">
+              <AccordionTrigger className="text-lg font-semibold text-primary hover:text-secondary transition-colors">
                 {faq.question}
               </AccordionTrigger>
               <AccordionContent className="text-[#333333] mt-2">

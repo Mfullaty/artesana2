@@ -30,18 +30,18 @@ const navItems: NavItems[] = [
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
-    <header className="bg-[#1a2b4c] text-white shadow-md fixed top-0 left-0 right-0 z-50">
+    <header className="bg-primary text-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <Globe className="h-8 w-8 text-[#c9a55c]" />
-          <span className="text-xl font-bold">ARTESANA</span>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <Globe className="h-8 w-8 text-accent hover:text-accent-foreground" />
+          <span className="text-2xl font-bold text-accent hover:text-accent-foreground font-serif">ARTESANA</span>
         </div>
         <nav className="hidden md:flex space-x-6">
           {navItems.map((item) => (
             <a
               key={item.label}
               href={item.href}
-              className="text-white hover:text-[#c9a55c] transition duration-300"
+              className="text-white hover:text-accent transition duration-300"
             >
               {item.label}
             </a>
@@ -52,7 +52,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden bg-[#c9a55c] text-[#1a2b4c]"
+              className="md:hidden bg-accent text-primary hover:text-secondary hover:bg-accent-foreground"
             >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle menu</span>
@@ -60,14 +60,14 @@ const Header = () => {
           </SheetTrigger>
           <SheetContent
             side="left"
-            className="w-[300px] sm:w-[400px] bg-[#1a2b4c] text-white"
+            className="w-[300px] sm:w-[400px] bg-primary text-white"
           >
             <nav className="flex flex-col space-y-4 mt-8">
               {navItems.map((item) => (
                 <SheetClose asChild key={item.label}>
                   <a
                     href={item.href}
-                    className="flex items-center space-x-2 text-white hover:text-[#c9a55c] transition duration-300 py-2 px-4 rounded-lg hover:bg-[#2c3e50]"
+                    className="flex items-center space-x-2 text-white hover:text-accent transition duration-300 py-2 px-4 rounded-lg hover:bg-[#2c3e50]"
                   >
                     <item.icon className="h-5 w-5" />
                     <span>{item.label}</span>
@@ -80,19 +80,19 @@ const Header = () => {
               <div className="flex space-x-4">
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-[#c9a55c] transition duration-300"
+                  className="text-gray-400 hover:text-accent transition duration-300"
                 >
                   <Twitter className="h-5 w-5" />
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-[#c9a55c] transition duration-300"
+                  className="text-gray-400 hover:text-accent transition duration-300"
                 >
                   <Facebook className="h-5 w-5" />
                 </a>
                 <a
                   href="#"
-                  className="text-gray-400 hover:text-[#c9a55c] transition duration-300"
+                  className="text-gray-400 hover:text-accent transition duration-300"
                 >
                   <Instagram className="h-5 w-5" />
                 </a>

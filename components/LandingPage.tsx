@@ -10,8 +10,6 @@ import AgriculturalNews from "./sections/AgriCulturalNews";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
-      {/* Main Content */}
-      <main>
         {/* Stock Marquee Section */}
         <div className="mt-16">
           <StockMarquee />
@@ -40,7 +38,7 @@ export default function LandingPage() {
 
         {/* Newsletter Section */}
         <NewsLetter />
-      </main>
+
     </div>
   );
 }

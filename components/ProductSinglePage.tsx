@@ -101,7 +101,7 @@ export default function LuxuryProductPage() {
               className="space-y-6"
             >
               <div>
-                <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r  from-[#1a2b4c] to-[#0055ff]">
+                <h1 className="text-4xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r  from-primary to-secondary-foreground">
                   Sesame Seeds
                 </h1>
                 <p className="text-xl text-gray-600">
@@ -115,7 +115,7 @@ export default function LuxuryProductPage() {
                 <ul className="list-none space-y-2 text-gray-600">
                   {productDetails.map((detail, index) => (
                     <li key={index} className="flex items-center">
-                      <span className="w-2 h-2 bg-[#1a2b4c] rounded-full mr-2"></span>
+                      <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
                       {detail}
                     </li>
                   ))}
@@ -123,7 +123,7 @@ export default function LuxuryProductPage() {
               </div>
               <div className="flex flex-col space-y-4">
                 <a href="#requestAQuote">
-                  <Button className="w-full bg-[#1a2b4c] hover:bg-primary/90">
+                  <Button className="w-full bg-primary hover:bg-primary/90">
                     <div className="flex justify-center items-center gap-2">
                       <FormInputIcon />
                       <p>Request a Quote</p>
@@ -180,7 +180,7 @@ export default function LuxuryProductPage() {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="mt-16 bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl"
           >
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#1a2b4c] to-[#0055ff] ">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground ">
               Request A Quote
             </h2>
             <p className="text-xl md:text-2xl text-gray-600 mb-2">
@@ -290,7 +290,7 @@ export default function LuxuryProductPage() {
 
               {/* Product Requirements Section */}
               <div className="space-y-9">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r to-[#1a2b4c] from-[#0055ff] ">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground ">
                   Product Requirements
                 </h2>
                 <p className="text-xl md:text-2xl text-gray-600 mb-2">
@@ -378,7 +378,7 @@ export default function LuxuryProductPage() {
 
               {/* Quantity Section */}
               <div className="space-y-6">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#1a2b4c] to-[#0055ff] ">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground ">
                   Quantity
                 </h2>
                 <p className="text-xl md:text-2xl text-gray-600 mb-2">
@@ -448,7 +448,7 @@ export default function LuxuryProductPage() {
 
               {/* Delivery Section */}
               <div className="space-y-6">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#1a2b4c] to-[#0055ff] ">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground ">
                   Delivery
                 </h2>
                 <p className="text-xl md:text-2xl text-gray-600 mb-2">
@@ -612,7 +612,7 @@ export default function LuxuryProductPage() {
               </div>
               <Button
                 type="submit"
-                className="w-full opacity-100  bg-[#1a2b4c] text-white font-semibold text-lg md:text-xl py-4 rounded-lg transform transition-all ease-out duration-300 "
+                className="w-full opacity-100  bg-primary text-white text-lg md:text-xl py-6 rounded-lg transform transition-all ease-out duration-300 "
               >
                 Submit Quote Request
               </Button>
