@@ -22,11 +22,11 @@ const config: Config = {
   			},
   			primary: {
   				DEFAULT: '#162b00', //'#1a2b4c'
-  				foreground: '#c6ffa7'
+  				foreground: '#eeffe4'
   			},
   			secondary: {
   				DEFAULT: '#5d4100', //'#c9a55c'
-  				foreground: '#f6ce72'
+  				foreground: '#fff1d2'
   			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
@@ -34,7 +34,7 @@ const config: Config = {
   			},
   			accent: {
   				DEFAULT: '#ffcf02', //#1ff3d8
-  				foreground: '#fff27b'
+  				foreground: '#fffbd8'
   			},
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',

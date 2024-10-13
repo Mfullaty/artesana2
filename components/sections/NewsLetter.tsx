@@ -12,7 +12,7 @@ const NewsLetter = () => {
     
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="bg-accent text-primary rounded-lg shadow-md p-8 max-w-2xl mx-auto">
+          <div className="bg-secondary-foreground text-primary rounded-lg shadow-md p-8 max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">Stay Updated</h2>
             <p className="text-primary text-center mb-6">Subscribe to our newsletter for the latest  products and craft news.</p>
             <form onSubmit={handleSubmit}>
