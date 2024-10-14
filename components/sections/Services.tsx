@@ -22,7 +22,7 @@ const Services = () => {
   return (
     <section id="services" className="bg-primary text-white font-mono">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-28">
-        <h2 className="text-3xl font-bold mb-8 text-center text-primary">Our Services</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center text-primary-foreground">Our Services</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
             <div
