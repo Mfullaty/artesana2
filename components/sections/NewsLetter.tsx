@@ -12,7 +12,7 @@ const NewsLetter = () => {
     
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="bg-secondary-foreground text-primary rounded-lg shadow-md p-8 max-w-2xl mx-auto">
+          <div className="bg-primary-foreground text-primary rounded-lg shadow-md p-8 max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-center">Stay Updated</h2>
             <p className="text-primary text-center mb-6">Subscribe to our newsletter for the latest  products and craft news.</p>
             <form onSubmit={handleSubmit}>
@@ -28,7 +28,7 @@ const NewsLetter = () => {
                 />
                 <button
                   type="submit"
-                  className="bg-primary text-accent-foreground px-6 py-2 rounded-md font-semibold hover:bg-secondary transition duration-300"
+                  className="bg-primary text-accent-foreground px-6 py-2 rounded-md font-semibold opacity-100 hover:opacity-80 transition duration-300"
                 >
                   Subscribe
                 </button>

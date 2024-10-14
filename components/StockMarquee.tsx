@@ -54,7 +54,7 @@ export default function StockMarquee() {
 
   return (
     <div
-      className="overflow-hidden rounded-md whitespace-nowrap bg-white space-x-4"
+      className="overflow-hidden relative rounded-md whitespace-nowrap bg-transparent space-x-4"
       ref={marqueeRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -80,6 +80,7 @@ export default function StockMarquee() {
           </div>
         ))}
       </div>
+      
     </div>
   );
 }

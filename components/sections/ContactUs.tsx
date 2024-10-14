@@ -25,7 +25,7 @@ const ContactUs = () => {
         <h2 className="text-3xl font-bold mb-8 text-primary text-center">Contact Us</h2>
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Form */}
-          <div className="bg-secondary rounded-lg shadow-md p-6">
+          <div className="bg-primary rounded-lg shadow-md p-6">
             <h3 className="text-xl font-semibold mb-4">Send us a message</h3>
             <form onSubmit={handleContactSubmit}>
               <div className="mb-4">
@@ -77,7 +77,7 @@ const ContactUs = () => {
             </form>
           </div>
           {/* Contact Information */}
-          <div className="bg-secondary rounded-lg shadow-md p-6">
+          <div className="bg-primary rounded-lg shadow-md p-6">
             <h3 className="text-xl font-semibold mb-4">Get in touch</h3>
             <div className="space-y-4">
               <div className="flex items-start">

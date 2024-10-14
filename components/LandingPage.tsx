@@ -6,39 +6,51 @@ import Faqs from "./sections/Faqs";
 import ContactUs from "./sections/ContactUs";
 import NewsLetter from "./sections/NewsLetter";
 import AgriculturalNews from "./sections/AgriCulturalNews";
+import AboutUs from "./sections/AboutUs";
+import Image from "next/image";
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
-        {/* Stock Marquee Section */}
-        <div className="mt-16">
-          <StockMarquee />
-        </div>
-
-        {/* Hero Section */}
-        <Hero />
-
-        {/* Featured Products */}
-        <FeaturedProducts />
-
-        {/* Marquee */}
+      {/* Stock Marquee Section */}
+      <div className="mt-16 bg-white">
         <StockMarquee />
+      </div>
 
-        {/* Services */}
-        <Services />
+      {/* Hero Section */}
+      <Hero />
 
-        {/* Agricultural News */}
-        <AgriculturalNews />
+      {/* Featured Products */}
+      <FeaturedProducts />
+      {/* About Us */}
+        <div className="relative top-[50px] left-0 w-24 h-24 md:w-32 md:h-32">
+          <Image
+            src="/images/decorativeLeaf.png"
+            alt="Decorative leaf"
+            layout="fill"
+            objectFit="contain"
+          />
+        </div>
+      <AboutUs />
+      
 
-        {/* FAQ Section */}
-        <Faqs />
+      {/* Marquee */}
+      <StockMarquee />
 
-        {/* Contact Us Section */}
-        <ContactUs />
+      {/* Services */}
+      <Services />
 
-        {/* Newsletter Section */}
-        <NewsLetter />
+      {/* Agricultural News */}
+      <AgriculturalNews />
 
+      {/* FAQ Section */}
+      <Faqs />
+
+      {/* Contact Us Section */}
+      <ContactUs />
+
+      {/* Newsletter Section */}
+      <NewsLetter />
     </div>
   );
 }

@@ -4,7 +4,7 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden bg-[#F9F3EE]">
+    <section className="relative overflow-hidden bg-secondary-foreground">
       <div className="container relative z-10 mx-auto px-4 md:px-6">
         <div className="grid gap-3 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col pt-16 md:pt-20 justify-start items-center text-center md:items-start md:text-start space-y-4">
@@ -17,7 +17,7 @@ const Hero = () => {
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Link
                 href="#"
-                className="inline-flex h-10 items-center justify-center rounded-md bg-[#1B4332] px-8 text-sm font-medium text-white shadow transition-colors hover:bg-[#1B4332]/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#1B4332]"
+                className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
               >
                 Get a Quote
               </Link>
@@ -32,7 +32,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      <div className="absolute right-0 top-1/2 h-[500px] w-[500px] -translate-y-1/2 translate-x-1/4 rounded-full bg-[#F8D7BD] md:h-[700px] md:w-[700px]" />
+      <div className="absolute right-0 top-1/2 h-[500px] w-[500px] -translate-y-1/2 translate-x-1/4 rounded-full bg-secondary md:h-[700px] md:w-[700px]" />
     </section>
   );
 };
