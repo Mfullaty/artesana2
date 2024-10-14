@@ -18,6 +18,7 @@ import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import StockMarquee from "../StockMarquee";
+import Link from "next/link";
 
 const navItems: NavItems[] = [
   { label: "Home", href: "/", icon: Home },
@@ -34,9 +35,11 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2 cursor-pointer">
           <Globe className="h-8 w-8 text-accent hover:text-accent-foreground" />
-          <span className="text-2xl font-bold text-accent hover:text-accent-foreground font-serif">ARTESANA</span>
+          <span className="text-2xl font-bold text-accent hover:text-accent-foreground font-serif">
+            ARTESANA
+          </span>
         </div>
-        <nav className="hidden md:flex space-x-6">
+        <nav className="hidden md:flex items-center space-x-6">
           {navItems.map((item) => (
             <a
               key={item.label}
@@ -46,6 +49,12 @@ const Header = () => {
               {item.label}
             </a>
           ))}
+          <Link
+            href="#"
+            className="inline-flex h-10 items-center justify-center rounded-full bg-white px-8 text-sm font-medium text-primary shadow transition-colors hover:bg-primary-foreground/90 focus-visible:outline-none focus-visible:ring-1"
+          >
+            Get a Quote
+          </Link>
         </nav>
         <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
           <SheetTrigger asChild>

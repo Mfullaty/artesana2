@@ -50,7 +50,7 @@ const products: Product[] = [
 ];
 export default function ProductShowcase() {
   return (
-    <Carousel>
+    <Carousel autoPlayInterval={2000} >
       {products.map((product) => (
         <Link href="/product" key={product.id}>
           <Card className="transform transition-all duration-300 ease-in-out hover:scale-105 my-2 sm:my-3 md:my-4 cursor-pointer">
