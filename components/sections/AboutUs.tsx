@@ -8,8 +8,8 @@ export default function AboutUs() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4 mt-12 md:mt-0">
-            <h1 className="text-2xl font-bold tracking-tighter text-[#2C5E3F] sm:text-3xl md:text-4xl lg:text-5xl">
-              Welcome to ARTESANA
+            <h1 className="text-3xl font-bold tracking-tighter text-[#2C5E3F]  md:text-4xl lg:text-5xl">
+              Welcome to Artesana
             </h1>
             <p className="text-sm md:text-base text-gray-600 md:text-lg">
             Unlock endless possibilities with our export company. By focusing on top-tier agro products, we empower businesses like yours to excel in the global market.

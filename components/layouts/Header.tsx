@@ -107,7 +107,7 @@ const Header = () => {
                 </a>
               </div>
             </div>
-            <div className="absolute bottom-28 left-4 right-4">
+            <div className="absolute bottom-28 left-4 right-4 bg-white rounded-md">
               <StockMarquee />
             </div>
           </SheetContent>
