@@ -23,9 +23,9 @@ import Link from "next/link";
 const navItems: NavItems[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Products", href: "/#products", icon: Box },
+  { label: "About us", href: "#aboutUs", icon: Info },
   { label: "Services", href: "/#services", icon: Truck },
   { label: "News", href: "/#agricNews", icon: SheetIcon },
-  { label: "About us", href: "#", icon: Info },
   { label: "Contact us", href: "/#contactUs", icon: Headphones },
 ];
 const Header = () => {

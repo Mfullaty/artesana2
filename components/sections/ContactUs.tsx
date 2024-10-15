@@ -37,7 +37,7 @@ const ContactUs = () => {
                   id="name"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
-                  className="w-full px-3 py-2 bg-accent-foreground text-primary border-0 drop-shadow-md  rounded-md focus:outline-none placeholder-primary font-semibold"
+                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border border-none rounded-md focus:outline-none focus:ring-0"
                   required
                 />
               </div>
@@ -50,7 +50,7 @@ const ContactUs = () => {
                   id="email"
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
-                  className="w-full px-3 py-2 bg-accent-foreground text-primary border-0 drop-shadow-md  rounded-md focus:outline-none placeholder-primary font-semibold"
+                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border border-none rounded-md focus:outline-none focus:ring-0"
                   required
                 />
               </div>
@@ -62,7 +62,7 @@ const ContactUs = () => {
                   id="message"
                   value={contactMessage}
                   onChange={(e) => setContactMessage(e.target.value)}
-                  className="w-full px-3 py-2 bg-accent-foreground text-primary border-0 drop-shadow-md  rounded-md focus:outline-none placeholder-primary font-semibold"
+                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border-0 border-none rounded-md focus:outline-none focus:ring-0"
                   rows={4}
                   required
                 ></textarea>

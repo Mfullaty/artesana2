@@ -11,7 +11,7 @@ export default function AboutUs() {
             <h1 className="text-3xl font-bold tracking-tighter text-[#2C5E3F]  md:text-4xl lg:text-5xl">
               Welcome to Artesana
             </h1>
-            <p className="text-sm md:text-base text-gray-600 md:text-lg">
+            <p className="text-base text-gray-600 md:text-lg">
             Unlock endless possibilities with our export company. By focusing on top-tier agro products, we empower businesses like yours to excel in the global market.
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
