@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useRef, ReactNode } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  ReactNode,
+} from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,6 +15,9 @@ interface CarouselProps {
   autoPlayInterval?: number;
   showControls?: boolean;
   showIndicators?: boolean;
+  desktopSlidesToShow?: number;
+  tabletSlidesToShow?: number;
+  mobileSlidesToShow?: number;
 }
 
 function useMediaQuery(query: string): boolean {
@@ -33,6 +42,9 @@ export default function Carousel({
   autoPlayInterval = 5000,
   showControls = true,
   showIndicators = true,
+  desktopSlidesToShow = 3,
+  tabletSlidesToShow = 2,
+  mobileSlidesToShow = 1,
 }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(autoPlay);
@@ -46,7 +58,11 @@ export default function Carousel({
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const isTablet = useMediaQuery("(min-width: 640px) and (max-width: 1023px)");
 
-  const slidesToShow = isDesktop ? 3 : isTablet ? 2 : 1;
+  const slidesToShow = isDesktop
+    ? desktopSlidesToShow
+    : isTablet
+    ? tabletSlidesToShow
+    : mobileSlidesToShow;
   const slideWidth = 100 / slidesToShow;
 
   const clonedChildren = [
@@ -178,7 +194,7 @@ export default function Carousel({
 
   return (
     <div
-      className="relative w-full py-8 my-8 select-none"
+      className="relative w-full select-none"
       onMouseEnter={() => setIsAutoPlaying(false)}
       onMouseLeave={() => setIsAutoPlaying(autoPlay)}
       ref={carouselRef}
@@ -193,7 +209,9 @@ export default function Carousel({
             isTransitioning && "transition-none"
           )}
           style={{
-            transform: `translateX(calc(${getTranslateX(currentIndex)}% + ${translate}px))`,
+            transform: `translateX(calc(${getTranslateX(
+              currentIndex
+            )}% + ${translate}px))`,
             width: `${(totalSlides / slidesToShow) * 100}%`,
           }}
           onMouseDown={handleDragStart}
