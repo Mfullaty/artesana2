@@ -163,8 +163,8 @@ export default function ProductShowcase() {
       <div className="max-w-7xl mx-auto">
         <Carousel desktopSlidesToShow={4} autoPlayInterval={2000}>
           {products.map((product) => (
-            <Link href="/product" key={product.id} className="px-6 md:px-2">
-              <Card className="bg-secondary border-0 relative rounded-none border-none shadow-none overflow-hidden transition-transform duration-300 hover:scale-105 h-[350px] flex flex-col items-center justify-center">
+            <Link href="/product" key={product.id} className="px-2">
+              <Card className="bg-[#eee0cd] border-0 relative rounded-none border-none shadow-none overflow-hidden transition-transform duration-300 hover:scale-105 h-[350px] flex flex-col items-center justify-center">
                 <CardContent className="p-4 text-left w-full">
                   <div className="relative mb-2 overflow-hidden w-44 h-44 mx-auto">
                     <img
