@@ -20,7 +20,7 @@ const ContactUs = () => {
     setContactMessage("");
   };
   return (
-    <section id="contactUs" className="bg-primary-foreground text-white py-16 font-mono">
+    <section id="contactUs" className="text-white py-16 font-mono">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-8 text-primary text-center">Contact Us</h2>
         <div className="grid md:grid-cols-2 gap-8">
@@ -37,7 +37,7 @@ const ContactUs = () => {
                   id="name"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border border-none rounded-md focus:outline-none focus:ring-0"
+                  className="w-full px-3 py-2 bg-accent-foreground text-primary border-0 drop-shadow-md  rounded-md focus:outline-none placeholder-primary font-semibold"
                   required
                 />
               </div>
@@ -50,7 +50,7 @@ const ContactUs = () => {
                   id="email"
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border border-none rounded-md focus:outline-none focus:ring-0"
+                  className="w-full px-3 py-2 bg-accent-foreground text-primary border-0 drop-shadow-md  rounded-md focus:outline-none placeholder-primary font-semibold"
                   required
                 />
               </div>
@@ -62,7 +62,7 @@ const ContactUs = () => {
                   id="message"
                   value={contactMessage}
                   onChange={(e) => setContactMessage(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border-0 border-none rounded-md focus:outline-none focus:ring-0"
+                  className="w-full px-3 py-2 bg-accent-foreground text-primary border-0 drop-shadow-md  rounded-md focus:outline-none placeholder-primary font-semibold"
                   rows={4}
                   required
                 ></textarea>

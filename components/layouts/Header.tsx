@@ -34,8 +34,8 @@ const Header = () => {
     <header className="bg-primary text-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2 cursor-pointer">
-          <Globe className="h-8 w-8 text-accent hover:text-accent-foreground" />
-          <span className="text-2xl font-bold text-accent hover:text-accent-foreground font-serif">
+          <Globe className="h-8 w-8 text-accent-foreground hover:text-secondary" />
+          <span className="text-2xl font-bold text-accent-foreground hover:text-secondary font-serif">
             ARTESANA
           </span>
         </div>
@@ -44,7 +44,7 @@ const Header = () => {
             <a
               key={item.label}
               href={item.href}
-              className="text-white hover:text-accent transition duration-300"
+              className="text-accent-foreground hover:text-accent transition duration-300"
             >
               {item.label}
             </a>
@@ -61,7 +61,7 @@ const Header = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden bg-accent text-primary hover:text-secondary hover:bg-accent-foreground"
+              className="md:hidden bg-accent-foreground text-primary  hover:bg-accent hover:text-primary"
             >
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle menu</span>
