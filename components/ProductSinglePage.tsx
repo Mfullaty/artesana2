@@ -37,7 +37,6 @@ import StockMarquee from "./StockMarquee";
 import FeaturedProducts from "./sections/FeaturedProducts";
 import AgriculturalNews from "./sections/AgriCulturalNews";
 import RequestAQuoteForm from "./RequestAQuoteForm";
-import CommodityData from "./CommodityData";
 
 export default function LuxuryProductPage() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -180,7 +179,6 @@ export default function LuxuryProductPage() {
       </div>
       <FeaturedProducts />
       <AgriculturalNews />
-      {/* <CommodityData country="USA" /> */}
     </>
   );
 }
