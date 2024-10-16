@@ -191,7 +191,7 @@ export default function Carousel({
       ref={carouselRef}
       tabIndex={0}
       aria-roledescription="carousel"
-      aria-label="Carousel"
+      aria-label="Infinite Auto-playing Carousel"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -254,8 +254,7 @@ export default function Carousel({
           {showPlayPauseButton && (
             <Button
               onClick={toggleAutoPlay}
-              title="Play/Pause The Slider"
-              className="absolute right-1  rounded-full hover:bg-primary/90"
+              className="absolute right-1 rounded-full hover:bg-primary/90"
               size="icon"
               variant="outline"
               aria-label={isAutoPlaying ? "Pause Autoplay" : "Start Autoplay"}

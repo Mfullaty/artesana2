@@ -51,7 +51,7 @@ const products: Product[] = [
 
 export default function ProductShowcase() {
   return (
-    <div className="px-4">
+    <div className="px-2">
       <div className="max-w-7xl mx-auto">
         <Carousel  autoPlayInterval={2000}>
           {products.map((product) => (
@@ -61,7 +61,7 @@ export default function ProductShowcase() {
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-[300px] md:h-[250px] object-cover"
+                      className="w-full h-[250px] object-cover"
                       draggable={false}
                     />
                   <h3 className="text-lg font-semibold text-[#2C5F2D] mb-1 line-clamp-1">{product.name}</h3>
