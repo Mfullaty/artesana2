@@ -16,7 +16,7 @@ const Hero = () => {
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Link
-                href="#"
+                href="/requestAQuote"
                 className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
               >
                 Get a Quote

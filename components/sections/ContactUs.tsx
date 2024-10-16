@@ -22,7 +22,9 @@ const ContactUs = () => {
   return (
     <section id="contactUs" className="text-white py-16 font-mono">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold mb-8 text-primary text-center">Contact Us</h2>
+        <h2 className="text-3xl font-bold mb-8 text-primary text-center">
+          Contact Us
+        </h2>
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Form */}
           <div className="bg-primary rounded-lg shadow-md p-6">
@@ -84,14 +86,14 @@ const ContactUs = () => {
                 <Phone className="h-6 w-6 text-accent mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Phone</p>
-                  <p className="text-gray-300">+1 (555) 123-4567</p>
+                  <p className="text-gray-300">+234 123-456-789</p>
                 </div>
               </div>
               <div className="flex items-start">
                 <Mail className="h-6 w-6 text-accent mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Email</p>
-                  <p className="text-gray-300">info@artesana.com</p>
+                  <a className="text-secondary hover:text-gray-300" href="mailto:contact@artesana.com.ng">contact@artesana.com.ng</a>
                 </div>
               </div>
               <div className="flex items-start">

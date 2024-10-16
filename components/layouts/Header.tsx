@@ -50,7 +50,7 @@ const Header = () => {
             </a>
           ))}
           <Link
-            href="#"
+            href="/requestAQuote"
             className="inline-flex h-10 items-center justify-center rounded-full bg-white px-8 text-sm font-medium text-primary shadow transition-colors hover:bg-primary-foreground/90 focus-visible:outline-none focus-visible:ring-1"
           >
             Get a Quote

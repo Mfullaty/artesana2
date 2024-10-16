@@ -57,7 +57,7 @@ const Footer = () => {
               <br />
               Craft City, AC 12345
               <br />
-              <a className="font-bold text-primary-foreground hover:text-accent" href="mailto:contact@artesana.com.ng">contact@artesana.com</a>
+              <a className="font-bold text-primary-foreground hover:text-accent" href="mailto:contact@artesana.com.ng">contact@artesana.com.ng</a>
             </p>
           </div>
         </div>
