@@ -76,6 +76,7 @@ export default function ProductShowcase() {
   )
 }
 
+
 // import { Card, CardContent } from "@/components/ui/card";
 // import { Product } from "@/types/all";
 // import Carousel from "./Carousel";
