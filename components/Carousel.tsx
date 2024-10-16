@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  ReactNode,
-} from "react";
+import React, { useState, useEffect, useCallback, useRef, ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +7,7 @@ interface CarouselProps {
   children: ReactNode[];
   autoPlay?: boolean;
   autoPlayInterval?: number;
+  transitionDuration?: number;
   showControls?: boolean;
   showIndicators?: boolean;
   desktopSlidesToShow?: number;
@@ -25,13 +20,13 @@ function useMediaQuery(query: string): boolean {
 
   useEffect(() => {
     const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
     const listener = () => setMatches(media.matches);
-    window.addEventListener("resize", listener);
-    return () => window.removeEventListener("resize", listener);
-  }, [matches, query]);
+
+    listener(); // Set initial value
+    media.addEventListener("change", listener);
+
+    return () => media.removeEventListener("change", listener);
+  }, [query]);
 
   return matches;
 }
@@ -40,6 +35,7 @@ export default function Carousel({
   children,
   autoPlay = true,
   autoPlayInterval = 5000,
+  transitionDuration = 500,
   showControls = true,
   showIndicators = true,
   desktopSlidesToShow = 3,
@@ -141,10 +137,6 @@ export default function Carousel({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [moveToNextSlide, moveToPrevSlide]);
 
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [slidesToShow]);
-
   const handleDragStart = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
@@ -213,6 +205,7 @@ export default function Carousel({
               currentIndex
             )}% + ${translate}px))`,
             width: `${(totalSlides / slidesToShow) * 100}%`,
+            transitionDuration: `${transitionDuration}ms`,
           }}
           onMouseDown={handleDragStart}
           onMouseMove={handleDragMove}
