@@ -54,7 +54,7 @@ export default function AgriculturalNews() {
   return (
     <div id="agricNews" className="max-w-6xl mx-auto px-4 py-8 font-mono">
       <h2 className="text-3xl font-bold text-primary mb-6">Latest News</h2>
-      <Carousel showIndicators={false} showControls={false}>
+      <Carousel showPlayPauseButton={false} showIndicators={false} showControls={true}>
         {newsItems.map((item) => (
           <Link
             href={item.url}

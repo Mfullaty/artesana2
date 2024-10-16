@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, ReactNode } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ interface CarouselProps {
   transitionDuration?: number;
   showControls?: boolean;
   showIndicators?: boolean;
+  showPlayPauseButton?: boolean;
   desktopSlidesToShow?: number;
   tabletSlidesToShow?: number;
   mobileSlidesToShow?: number;
@@ -20,13 +21,13 @@ function useMediaQuery(query: string): boolean {
 
   useEffect(() => {
     const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
     const listener = () => setMatches(media.matches);
-
-    listener(); // Set initial value
-    media.addEventListener("change", listener);
-
-    return () => media.removeEventListener("change", listener);
-  }, [query]);
+    media.addListener(listener);
+    return () => media.removeListener(listener);
+  }, [matches, query]);
 
   return matches;
 }
@@ -38,6 +39,7 @@ export default function Carousel({
   transitionDuration = 500,
   showControls = true,
   showIndicators = true,
+  showPlayPauseButton = true,
   desktopSlidesToShow = 3,
   tabletSlidesToShow = 2,
   mobileSlidesToShow = 1,
@@ -48,6 +50,7 @@ export default function Carousel({
   const [startX, setStartX] = useState(0);
   const [translate, setTranslate] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const autoPlayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -69,9 +72,9 @@ export default function Carousel({
 
   const totalSlides = clonedChildren.length;
 
-  const getTranslateX = (index: number) => {
+  const getTranslateX = useCallback((index: number) => {
     return -(((index + slidesToShow) * 100) / totalSlides);
-  };
+  }, [slidesToShow, totalSlides]);
 
   const moveToNextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) => {
@@ -120,13 +123,13 @@ export default function Carousel({
   }, []);
 
   useEffect(() => {
-    if (isAutoPlaying) {
+    if (isAutoPlaying && !isHovering) {
       startAutoPlay();
     } else {
       stopAutoPlay();
     }
     return () => stopAutoPlay();
-  }, [isAutoPlaying, startAutoPlay, stopAutoPlay]);
+  }, [isAutoPlaying, isHovering, startAutoPlay, stopAutoPlay]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -137,21 +140,16 @@ export default function Carousel({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [moveToNextSlide, moveToPrevSlide]);
 
-  const handleDragStart = (
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
-  ) => {
+  const handleDragStart = useCallback((e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     setIsDragging(true);
-    setIsAutoPlaying(false);
     setStartX(
       e.type === "mousedown"
         ? (e as React.MouseEvent).pageX
         : (e as React.TouchEvent).touches[0].pageX
     );
-  };
+  }, []);
 
-  const handleDragMove = (
-    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
-  ) => {
+  const handleDragMove = useCallback((e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     if (!isDragging) return;
     const currentX =
       e.type === "mousemove"
@@ -159,11 +157,10 @@ export default function Carousel({
         : (e as React.TouchEvent).touches[0].pageX;
     const diff = currentX - startX;
     setTranslate(diff);
-  };
+  }, [isDragging, startX]);
 
-  const handleDragEnd = () => {
+  const handleDragEnd = useCallback(() => {
     setIsDragging(false);
-    setIsAutoPlaying(autoPlay);
     const threshold = slideWidth / 3;
     if (Math.abs(translate) > threshold) {
       if (translate > 0) {
@@ -173,26 +170,30 @@ export default function Carousel({
       }
     }
     setTranslate(0);
-  };
+  }, [moveToNextSlide, moveToPrevSlide, slideWidth, translate]);
 
-  const handleTransitionEnd = () => {
+  const handleTransitionEnd = useCallback(() => {
     setIsTransitioning(false);
     if (currentIndex === children.length) {
       setCurrentIndex(0);
     } else if (currentIndex === -1) {
       setCurrentIndex(children.length - 1);
     }
-  };
+  }, [currentIndex, children.length]);
+
+  const toggleAutoPlay = useCallback(() => {
+    setIsAutoPlaying((prev) => !prev);
+  }, []);
 
   return (
     <div
       className="relative w-full select-none"
-      onMouseEnter={() => setIsAutoPlaying(false)}
-      onMouseLeave={() => setIsAutoPlaying(autoPlay)}
       ref={carouselRef}
       tabIndex={0}
       aria-roledescription="carousel"
-      aria-label="Infinite Auto-playing Carousel"
+      aria-label="Carousel"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
     >
       <div className="overflow-hidden">
         <div
@@ -231,13 +232,8 @@ export default function Carousel({
       {showControls && (
         <>
           <Button
-            onClick={() => {
-              moveToPrevSlide();
-              setIsAutoPlaying(false);
-            }}
-            onMouseEnter={() => setIsAutoPlaying(false)}
-            onMouseLeave={() => setIsAutoPlaying(autoPlay)}
-            className="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 rounded-full"
+            onClick={moveToPrevSlide}
+            className="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 rounded-full hover:bg-primary/90"
             size="icon"
             variant="outline"
             aria-label="Previous Slide"
@@ -246,19 +242,27 @@ export default function Carousel({
           </Button>
 
           <Button
-            onClick={() => {
-              moveToNextSlide();
-              setIsAutoPlaying(false);
-            }}
-            onMouseEnter={() => setIsAutoPlaying(false)}
-            onMouseLeave={() => setIsAutoPlaying(autoPlay)}
-            className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 rounded-full"
+            onClick={moveToNextSlide}
+            className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 rounded-full hover:bg-primary/90"
             size="icon"
             variant="outline"
             aria-label="Next Slide"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
+
+          {showPlayPauseButton && (
+            <Button
+              onClick={toggleAutoPlay}
+              title="Play/Pause The Slider"
+              className="absolute right-1  rounded-full hover:bg-primary/90"
+              size="icon"
+              variant="outline"
+              aria-label={isAutoPlaying ? "Pause Autoplay" : "Start Autoplay"}
+            >
+              {isAutoPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            </Button>
+          )}
         </>
       )}
 
@@ -268,7 +272,7 @@ export default function Carousel({
             <Button
               key={idx}
               className={cn(
-                "h-1 w-1 sm:h-2 sm:w-2 rounded-full p-0",
+                "h-1 w-1 sm:h-2 sm:w-2 rounded-full p-0 hover:bg-primary/90",
                 currentIndex === idx ||
                   (currentIndex === children.length && idx === 0) ||
                   (currentIndex === -1 && idx === children.length - 1)
@@ -278,7 +282,6 @@ export default function Carousel({
               onClick={() => {
                 setIsTransitioning(true);
                 setCurrentIndex(idx);
-                setIsAutoPlaying(false);
               }}
               aria-label={`Go to slide ${idx + 1}`}
             />

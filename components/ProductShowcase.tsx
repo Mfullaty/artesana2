@@ -53,7 +53,7 @@ export default function ProductShowcase() {
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <Carousel autoPlay={true} autoPlayInterval={2000}>
+        <Carousel  autoPlayInterval={2000}>
           {products.map((product) => (
             <Link draggable={false} href="/product" key={product.id} className="px-2">
               <Card className="bg-[#eee0cd] relative border-none shadow-none overflow-hidden transition-transform duration-300 hover:scale-105">
