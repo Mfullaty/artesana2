@@ -1,21 +1,21 @@
-import { Globe, Package, Truck } from "lucide-react";
+import { Globe, Package, Shield, Truck } from "lucide-react";
 import React from "react";
 
 const services = [
   {
     icon: Globe,
     title: "Global Reach",
-    description: "Our network is global. We deliver worldwide",
+    description: "Our global reach allows us to cater to diverse markets and meet the demands of our customers, no matter where they are. You can trust us to handle your delivery needs with professionalism and care.",
   },
   {
-    icon: Truck,
-    title: "Careful Shipping",
-    description: "Safe and secure delivery of delicate  items.",
+    icon: Shield,
+    title: "Quality Control & Inspection",
+    description: "We ensure that all products meet your specifications through rigorous quality control checks and inspections, providing you with detailed reports before products are shipped.",
   },
   {
     icon: Package,
     title: "Custom Orders",
-    description: "Tailored  products for your specific needs.",
+    description: "Our products are expertly tailored to meet your specific needs, ensuring you receive exactly what you require for your business by understanding the unique demands of each customer.",
   },
 ];
 const Services = () => {
