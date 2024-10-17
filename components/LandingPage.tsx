@@ -12,10 +12,7 @@ import Image from "next/image";
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
-      {/* Stock Marquee Section */}
-      <div className="mt-16 bg-white">
-        <StockMarquee />
-      </div>
+      
 
       {/* Hero Section */}
       <Hero />

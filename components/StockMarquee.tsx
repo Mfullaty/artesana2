@@ -1,19 +1,76 @@
+'use client'
 import { cn } from "@/lib/utils";
-import { StockInfo } from "@/types/all";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
-const stocks: StockInfo[] = [
-  { name: "Beans in beirut", change: 18.0 },
-  { name: "Corn in china", change: -2.5 },
-  { name: "Wheat in brazil", change: 5.3 },
-  { name: "Soybeans in Egypt", change: -1.2 },
-  { name: "Rice in Nigeria", change: 3.7 },
-];
+interface CommodityData {
+  id: string;
+  name: string;
+  interval: string;
+  unit: string;
+  data: { date: string; value: string }[];
+}
+
+function calculatePriceChange(data: { date: string; value: string }[]): number {
+  if (!data || data.length < 2) return 0;
+  
+  const lastMonth = parseFloat(data[0].value);
+  const secondLastMonth = parseFloat(data[1].value);
+  
+  if (isNaN(lastMonth) || isNaN(secondLastMonth) || secondLastMonth === 0) {
+    return 0;
+  }
+  
+  return ((lastMonth - secondLastMonth) / secondLastMonth) * 100;
+}
+
 export default function StockMarquee() {
   const marqueeRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [commoditiesData, setCommoditiesData] = useState<CommodityData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const commodityEndpoints = [
+          { id: "sugar", endpoint: "/api/alphavantage/sugar" },
+          { id: "coffee", endpoint: "/api/alphavantage/coffee" },
+          { id: "copper", endpoint: "/api/alphavantage/copper" },
+          { id: "wheat", endpoint: "/api/alphavantage/wheat" },
+          { id: "aluminium", endpoint: "/api/alphavantage/aluminium" },
+          { id: "corn", endpoint: "/api/alphavantage/corn" },
+        ];
+
+        const responses = await Promise.all(
+          commodityEndpoints.map(({ endpoint }) => fetch(endpoint))
+        );
+
+        const dataPromises = responses.map(async (response, index) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          return { ...data, id: commodityEndpoints[index].id };
+        });
+
+        const data = await Promise.all(dataPromises);
+        setCommoditiesData(data);
+      } catch (err) {
+        setError("Failed to fetch commodity data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (loading || error || commoditiesData.length === 0) return;
+
     const marqueeElement = marqueeRef.current;
     if (!marqueeElement) return;
 
@@ -26,14 +83,13 @@ export default function StockMarquee() {
       marqueeElement.appendChild(clone);
     };
 
-    // Clone the content multiple times to ensure smooth looping
     for (let i = 0; i < 3; i++) {
       cloneContent();
     }
 
     let animationId: number;
     let startTime: number;
-    const animationDuration = 30000; // 30 seconds for one full loop
+    const animationDuration = 30000;
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
@@ -50,7 +106,10 @@ export default function StockMarquee() {
     animationId = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(animationId);
-  }, [isHovered]);
+  }, [isHovered, loading, error, commoditiesData]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <div
@@ -60,27 +119,33 @@ export default function StockMarquee() {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="inline-block">
-        {stocks.map((stock, index) => (
-          <div
-            key={index}
-            className="inline-block px-6 py-2 text-center cursor-pointer opacity-100 hover:opacity-60"
-          >
-            <div className="font-semibold text-sm text-[#1a2b4c]">
-              {stock.name}
-            </div>
-            <div
-              className={cn(
-                "text-sm",
-                stock.change >= 0 ? "text-green-600" : "text-red-600"
-              )}
+        {commoditiesData.map((commodity) => {
+          if (!commodity || !commodity.data || commodity.data.length < 2) {
+            return null;
+          }
+          const priceChange = calculatePriceChange(commodity.data);
+          return (
+            <Link
+              key={commodity.id}
+              href={`/commodity/${commodity.id}`}
+              className="inline-block px-6 py-2 text-center cursor-pointer opacity-100 hover:opacity-60"
             >
-              {stock.change >= 0 ? "+" : ""}
-              {stock.change.toFixed(2)}%
-            </div>
-          </div>
-        ))}
+              <div className="font-semibold text-sm text-[#1a2b4c]">
+                {commodity.name.replace("Global Price of ", "")}
+              </div>
+              <div
+                className={cn(
+                  "text-sm",
+                  priceChange > 0 ? "text-green-600" : priceChange < 0 ? "text-red-600" : "text-gray-600"
+                )}
+              >
+                {priceChange > 0 ? "+" : ""}
+                {priceChange.toFixed(2)}%
+              </div>
+            </Link>
+          );
+        })}
       </div>
-      
     </div>
   );
 }

@@ -37,6 +37,7 @@ import StockMarquee from "./StockMarquee";
 import FeaturedProducts from "./sections/FeaturedProducts";
 import AgriculturalNews from "./sections/AgriCulturalNews";
 import RequestAQuoteForm from "./RequestAQuoteForm";
+import CommodityPriceChart from "./CommodityPriceChart";
 
 export default function LuxuryProductPage() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -62,7 +63,6 @@ export default function LuxuryProductPage() {
 
   return (
     <>
-      <StockMarquee />
       <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 text-gray-800 p-2 md:p-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-start">
@@ -179,6 +179,10 @@ export default function LuxuryProductPage() {
       </div>
       <FeaturedProducts />
       <AgriculturalNews />
+      {/* <CommodityIndex /> */}
+      <div className="w-full max-w-7xl mx-auto">
+        <CommodityPriceChart resource="all" resourceName="All commodities" />
+      </div>
     </>
   );
 }
