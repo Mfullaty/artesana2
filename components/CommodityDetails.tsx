@@ -31,6 +31,7 @@ import {
   isValid,
 } from "date-fns";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import RequestAQuoteForm from "./RequestAQuoteForm";
 
 ChartJS.register(
   CategoryScale,
@@ -59,7 +60,7 @@ const unitMap: { [key: string]: string } = {
   "cents per pound": "¢/lb",
 };
 
-const CommodityDetailPage = ({
+const CommodityDetails = ({
   resource,
   resourceName,
 }: {
@@ -216,7 +217,7 @@ const CommodityDetailPage = ({
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">{commodityData.name}</h1>
+      <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-6">{commodityData.name}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card>
@@ -388,4 +389,4 @@ const CommodityDetailPage = ({
   );
 };
 
-export default CommodityDetailPage;
+export default CommodityDetails;

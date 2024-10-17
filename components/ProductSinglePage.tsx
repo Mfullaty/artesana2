@@ -6,38 +6,12 @@ import { motion } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
-  Upload,
   Calendar as CalendarIcon,
   FormInputIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import StockMarquee from "./StockMarquee";
-import FeaturedProducts from "./sections/FeaturedProducts";
-import AgriculturalNews from "./sections/AgriCulturalNews";
 import RequestAQuoteForm from "./RequestAQuoteForm";
-import CommodityPriceChart from "./CommodityPriceChart";
 
 export default function LuxuryProductPage() {
   const [currentImage, setCurrentImage] = useState(0);
@@ -176,12 +150,6 @@ export default function LuxuryProductPage() {
           {/* Request A Quote Section */}
           <RequestAQuoteForm />
         </div>
-      </div>
-      <FeaturedProducts />
-      <AgriculturalNews />
-      {/* <CommodityIndex /> */}
-      <div className="w-full max-w-7xl mx-auto">
-        <CommodityPriceChart resource="all" resourceName="All commodities" />
       </div>
     </>
   );
