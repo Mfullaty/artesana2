@@ -1,12 +1,7 @@
-import CommodityPriceChart from '@/components/CommodityPriceChart'
-import React from 'react'
+import CommodityDetails from "@/components/CommodityDetails";
 
-const Wheat = () => {
+export default function Wheat() {
   return (
-    <div className="w-full max-w-7xl mx-auto my-16">
-        <CommodityPriceChart resource="wheat" resourceName="Wheat" />
-      </div>
+    <CommodityDetails resource="wheat" resourceName="Wheat" />
   )
 }
-
-export default Wheat

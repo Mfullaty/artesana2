@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface CommodityData {
   id: string;
@@ -14,14 +15,14 @@ interface CommodityData {
 function calculatePriceChange(data: { date: string; value: string }[]): number {
   if (!data || data.length < 2) return 0;
   
-  const lastMonth = parseFloat(data[0].value);
-  const secondLastMonth = parseFloat(data[1].value);
+  const currentPrice = parseFloat(data[0].value);
+  const lastMonthPrice = parseFloat(data[1].value);
   
-  if (isNaN(lastMonth) || isNaN(secondLastMonth) || secondLastMonth === 0) {
+  if (isNaN(currentPrice) || isNaN(lastMonthPrice) || lastMonthPrice === 0) {
     return 0;
   }
   
-  return ((lastMonth - secondLastMonth) / secondLastMonth) * 100;
+  return ((currentPrice - lastMonthPrice) / lastMonthPrice) * 100;
 }
 
 export default function StockMarquee() {
@@ -108,8 +109,20 @@ export default function StockMarquee() {
     return () => cancelAnimationFrame(animationId);
   }, [isHovered, loading, error, commoditiesData]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) {
+    return (
+      <div className="flex space-x-4 overflow-hidden">
+        {[...Array(6)].map((_, index) => (
+          <div key={index} className="inline-block px-6 py-2">
+            <Skeleton className="h-4 w-20 mb-2" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div
