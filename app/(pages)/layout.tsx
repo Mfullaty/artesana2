@@ -1,19 +1,25 @@
-"use client";
-import LandingPage from "@/components/LandingPage";
 import Footer from "@/components/layouts/Footer";
 import Header from "@/components/layouts/Header";
 import StockMarquee from "@/components/StockMarquee";
 
-export default function Home() {
+export default function PagesLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <>
-      <Header />
+    <html lang="en">
+      <body
+        className={`antialiased relative scroll-smooth`}
+      >
+        <Header />
       {/* Stock Marquee Section */}
       <div className="mt-16 bg-white">
         <StockMarquee />
       </div>
-      <LandingPage />
+        <div>{children}</div>
       <Footer />
-    </>
+      </body>
+    </html>
   );
 }
