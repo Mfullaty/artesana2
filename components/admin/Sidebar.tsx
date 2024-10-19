@@ -72,7 +72,7 @@ export function Sidebar() {
                 title={item.label}
               >
                 <item.icon className={`h-5 w-5 ${isSidebarOpen && 'mr-2'}`} />
-                {isSidebarOpen && <span>{item.label}</span>}
+                {isSidebarOpen && <span>{item.label}</span>} 
               </Button>
             </Link>
           ))}
