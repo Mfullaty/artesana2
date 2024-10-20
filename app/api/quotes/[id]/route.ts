@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/db";
+import {db} from "@/lib/db";
+
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
-    const quote = await prisma.quote.findUnique({
+    const quote = await db.quote.findUnique({
       where: { id: params.id },
     });
 
@@ -30,7 +31,7 @@ export async function PUT(
 ) {
   try {
     const body = await request.json();
-    const updatedQuote = await prisma.quote.update({
+    const updatedQuote = await db.quote.update({
       where: { id: params.id },
       data: {
         fullName: body.fullName,
@@ -69,7 +70,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    await prisma.quote.delete({
+    await db.quote.delete({
       where: { id: params.id },
     });
 
