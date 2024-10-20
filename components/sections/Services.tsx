@@ -7,19 +7,19 @@ const services = [
     icon: Globe,
     title: "Global Reach",
     description: "Our global reach allows us to cater to diverse markets and meet the demands of our customers, no matter where they are. You can trust us to handle your delivery needs with professionalism and care.",
-    image: "/images/samplenews1.jpg",
+    image: "/images/global-reach.png",
   },
   {
     icon: Shield,
     title: "Quality Control & Inspection",
     description: "We ensure that all products meet your specifications through rigorous quality control checks and inspections, providing you with detailed reports before products are shipped.",
-    image: "/images/samplenews2.png",
+    image: "/images/custom-orders.png",
   },
   {
     icon: Package,
     title: "Custom Orders",
     description: "Our products are expertly tailored to meet your specific needs, ensuring you receive exactly what you require for your business by understanding the unique demands of each customer.",
-    image: "/images/samplenews3.jpg",
+    image: "/images/quality.png",
   },
 ];
 
