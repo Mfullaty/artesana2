@@ -1,38 +1,42 @@
-import { Globe, Package, Shield, Truck } from "lucide-react";
 import React from "react";
+import { Globe, Package, Shield } from "lucide-react";
+import { MyCard } from "../MyCard";
 
 const services = [
   {
     icon: Globe,
     title: "Global Reach",
     description: "Our global reach allows us to cater to diverse markets and meet the demands of our customers, no matter where they are. You can trust us to handle your delivery needs with professionalism and care.",
+    image: "/images/samplenews1.jpg",
   },
   {
     icon: Shield,
     title: "Quality Control & Inspection",
     description: "We ensure that all products meet your specifications through rigorous quality control checks and inspections, providing you with detailed reports before products are shipped.",
+    image: "/images/samplenews2.png",
   },
   {
     icon: Package,
     title: "Custom Orders",
     description: "Our products are expertly tailored to meet your specific needs, ensuring you receive exactly what you require for your business by understanding the unique demands of each customer.",
+    image: "/images/samplenews3.jpg",
   },
 ];
+
 const Services = () => {
   return (
-    <section id="services" className=" text-white font-mono">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-28">
-        <h2 className="text-3xl font-bold mb-8 text-center text-primary">Our Services</h2>
+    <section id="services" className="bg-white text-gray-800 font-mono">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-28">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service) => (
-            <div
+            <MyCard
               key={service.title}
-              className="bg-primary rounded-lg shadow-md p-6 flex flex-col items-center text-center"
-            >
-              <service.icon className="h-12 w-12 text-primary-foreground mb-4" />
-              <h3 className="text-xl font-semibold mb-2 text-primary-foreground">{service.title}</h3>
-              <p className="text-primary-foreground">{service.description}</p>
-            </div>
+              image={service.image}
+              imageAlt={service.title}
+              title={service.title}
+              description={service.description}
+              icon={service.icon}
+            />
           ))}
         </div>
       </div>

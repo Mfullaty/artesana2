@@ -8,18 +8,14 @@ export default function PagesLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`antialiased relative scroll-smooth`}
-      >
-        <Header />
+    <div>
+      <Header />
       {/* Stock Marquee Section */}
       <div className="mt-16 bg-white">
         <StockMarquee />
       </div>
-        <div>{children}</div>
+      <div>{children}</div>
       <Footer />
-      </body>
-    </html>
+    </div>
   );
 }
