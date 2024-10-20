@@ -1,23 +1,23 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextResponse } from "next/server";
+import {db} from "@/lib/db";
 
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const page = parseInt(searchParams.get('page') || '1')
-  const limit = parseInt(searchParams.get('limit') || '10')
-  const skip = (page - 1) * limit
+  const { searchParams } = new URL(request.url);
+  const page = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "10");
+  const skip = (page - 1) * limit;
 
   try {
     const [quotes, totalQuotes] = await Promise.all([
-      prisma.quote.findMany({
+      db.quote.findMany({
         skip,
         take: limit,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       }),
-      prisma.quote.count(),
-    ])
+      db.quote.count(),
+    ]);
 
-    const totalPages = Math.ceil(totalQuotes / limit)
+    const totalPages = Math.ceil(totalQuotes / limit);
 
     return NextResponse.json({
       quotes,
@@ -26,17 +26,20 @@ export async function GET(request: Request) {
         totalPages,
         totalQuotes,
       },
-    })
+    });
   } catch (error) {
-    console.error('Error fetching quotes:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error("Error fetching quotes:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
-    const quote = await prisma.quote.create({
+    const body = await request.json();
+    const quote = await db.quote.create({
       data: {
         fullName: body.fullName,
         email: body.email,
@@ -57,10 +60,13 @@ export async function POST(request: Request) {
         deliveryFrequency: body.deliveryFrequency,
         additionalInfo: body.additionalInfo,
       },
-    })
-    return NextResponse.json(quote)
+    });
+    return NextResponse.json(quote);
   } catch (error) {
-    console.error('Error creating quote:', error)
-    return NextResponse.json({ error: 'Error creating quote' }, { status: 500 })
+    console.error("Error creating quote:", error);
+    return NextResponse.json(
+      { error: "Error creating quote" },
+      { status: 500 }
+    );
   }
 }

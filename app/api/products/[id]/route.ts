@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PrismaClient } from '@prisma/client'
 import { writeFile, unlink } from 'fs/promises'
 import path from 'path'
+import { db } from '@/lib/db'
 
-const prisma = new PrismaClient()
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const product = await prisma.product.findUnique({
+    const product = await db.product.findUnique({
       where: { id: params.id },
     })
 
@@ -57,7 +56,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       }
     }
 
-    const existingProduct = await prisma.product.findUnique({
+    const existingProduct = await db.product.findUnique({
       where: { id: params.id },
     })
 
@@ -73,7 +72,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       }
     }
 
-    const updatedProduct = await prisma.product.update({
+    const updatedProduct = await db.product.update({
       where: { id: params.id },
       data: {
         ...product,
@@ -90,7 +89,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const product = await prisma.product.findUnique({
+    const product = await db.product.findUnique({
       where: { id: params.id },
     })
 
@@ -104,7 +103,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       await unlink(imagePath)
     }
 
-    await prisma.product.delete({
+    await db.product.delete({
       where: { id: params.id },
     })
 

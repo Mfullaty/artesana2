@@ -1,26 +1,35 @@
-import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { NextResponse } from "next/server";
+import prisma from "@/lib/db";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const quote = await prisma.quote.findUnique({
       where: { id: params.id },
-    })
+    });
 
     if (!quote) {
-      return NextResponse.json({ error: 'Quote not found' }, { status: 404 })
+      return NextResponse.json({ error: "Quote not found" }, { status: 404 });
     }
 
-    return NextResponse.json(quote)
+    return NextResponse.json(quote);
   } catch (error) {
-    console.error('Error fetching quote:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error("Error fetching quote:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
-    const body = await request.json()
+    const body = await request.json();
     const updatedQuote = await prisma.quote.update({
       where: { id: params.id },
       data: {
@@ -43,24 +52,33 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         deliveryFrequency: body.deliveryFrequency,
         additionalInfo: body.additionalInfo,
       },
-    })
+    });
 
-    return NextResponse.json(updatedQuote)
+    return NextResponse.json(updatedQuote);
   } catch (error) {
-    console.error('Error updating quote:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error("Error updating quote:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     await prisma.quote.delete({
       where: { id: params.id },
-    })
+    });
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting quote:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    console.error("Error deleting quote:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

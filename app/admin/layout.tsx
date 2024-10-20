@@ -1,16 +1,9 @@
 import { ReactNode } from 'react'
-import { getServerSession } from "next-auth/next"
-import { redirect } from 'next/navigation'
 import { Sidebar } from '@/components/admin/Sidebar'
-import { authOptions } from '../api/auth/[...nextauth]/auth'
+import { Toaster } from 'sonner'
 
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const session = await getServerSession(authOptions)
-
-  if (!session) {
-    redirect('/login')
-  }
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -18,6 +11,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       <main className="flex-1 p-4 md:p-8 overflow-auto">
         {children}
       </main>
+      <Toaster richColors duration={3000} />
     </div>
   )
 }
