@@ -66,27 +66,40 @@ model Product {
 }
 
 model Quote {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  fullName           String
-  email              String
-  phone              String?
-  companyName        String?
-  website            String?
-  needFor            String
-  product            String
-  productType        String
-  cultivationType    String[]
-  processing         String?
-  unit               String
-  volume             String
-  purchaseType       String
-  deliveryAddress    String
-  incoterm           String
-  deliveryDate       DateTime
-  deliveryFrequency  String
-  additionalInfo     String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  
+  // Contact Information
+  fullName         String
+  email            String
+  phone            String?
+  companyName      String?
+  website          String?
+  needFor          String
+  
+  // Product Details
+  product          String
+  productType      String
+  cultivationType  String[]
+  processing       String?
+  
+  // Quantity
+  unit            String
+  volume          String
+  purchaseType    String
+  
+  // Delivery
+  deliveryAddress  String
+  incoterm        String?
+  deliveryDate    DateTime
+  deliveryFrequency String
+  
+  // Additional Info
+  additionalInfo   String?
+  status          String     @default("PENDING") // PENDING, APPROVED, REJECTED
+
+  @@map("quote_requests")
 }
 
 model Message {
