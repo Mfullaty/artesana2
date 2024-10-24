@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useMemo } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Globe, Shield, Package, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { AppTimeline } from "@/components/ui/app-timeline";
 import Services from "@/components/sections/Services";
 import { ServicesHero } from "./_components/ServicesHero";
+import FooterCallToAction from "@/components/FooterCallToAction";
 
 const services = [
   {
@@ -199,23 +199,7 @@ export default function OurServices() {
         ))}
 
         {/* Call to Action Section */}
-        <section className="bg-primary text-primary-foreground py-16">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Ready to Experience Our Services?
-            </h2>
-            <p className="text-xl mb-8">
-              Let's discuss how Artesana can help your business grow.
-            </p>
-            <Button
-              asChild
-              size="lg"
-              className="bg-white text-primary hover:bg-black hover:text-white"
-            >
-              <Link href="/contact">Contact Us Today</Link>
-            </Button>
-          </div>
-        </section>
+        <FooterCallToAction />
       </main>
     </div>
   );

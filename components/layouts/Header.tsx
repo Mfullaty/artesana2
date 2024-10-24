@@ -23,10 +23,10 @@ import Link from "next/link";
 const navItems: NavItems[] = [
   { label: "Home", href: "/", icon: Home },
   { label: "Products", href: "/#products", icon: Box },
-  { label: "About us", href: "#aboutUs", icon: Info },
+  { label: "About us", href: "/about-us", icon: Info },
   { label: "Services", href: "/our-services", icon: Truck },
   { label: "News", href: "/#agricNews", icon: SheetIcon },
-  { label: "Contact us", href: "/#contactUs", icon: Headphones },
+  { label: "Contact us", href: "/contact-us", icon: Headphones },
 ];
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
