@@ -212,7 +212,7 @@ export default function ProductsTab() {
                         <TableCell><Skeleton className="h-8 w-[100px]" /></TableCell>
                       </TableRow>
                     ))
-                  ) : (
+                  ) : products && products.length > 0 && (
                     products.map((product: any) => (
                       <TableRow key={product.id}>
                         <TableCell>{product.name}</TableCell>
