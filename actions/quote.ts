@@ -1,32 +1,15 @@
 "use server";
+
 import { db } from "@/lib/db";
 import { requestAQuoteSchema } from "@/schemas";
-import { quoteDetailSchema } from "@/schemas/quotes";
+import { quoteDetailSchema, QuoteDetailFormData } from "@/schemas/quotes";
 import { unlink, writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
 import path from "path";
 
-export interface QuoteDetailResponse {
+export interface QuoteDetailResponse extends QuoteDetailFormData {
   id: string;
-  fullName: string;
-  email: string;
-  phone: string | null;
-  companyName: string | null;
-  website: string | null;
-  needFor: string;
-  product: string;
-  productType: string;
-  cultivationType: string[];
-  processing: string | null;
-  unit: string;
-  volume: string;
-  purchaseType: string;
-  deliveryAddress: string;
-  incoterm: string | null;
-  deliveryDate: Date;
-  deliveryFrequency: string;
-  additionalInfo: string | null;
-  files: [] | null;
+  createdAt: Date;
 }
 
 export interface QuoteResponse {
@@ -45,17 +28,11 @@ export interface QuoteResponse {
 
 export const submitQuoteRequest = async (formData: FormData) => {
   try {
-    // Convert FormData to a proper object with correct types
     const rawData = Object.fromEntries(formData);
-
-    // Parse and transform the data
     const data = {
       ...rawData,
-      // Convert cultivationType from string to array
       cultivationType: formData.getAll("cultivationType"),
-      // Convert deliveryDate string to Date object
       deliveryDate: new Date(rawData.deliveryDate as string),
-      // Handle files separately
       files: formData
         .getAll("files")
         .filter((file): file is File => file instanceof File)
@@ -78,11 +55,7 @@ export const submitQuoteRequest = async (formData: FormData) => {
       const buffer = Buffer.from(bytes);
 
       const fileName = file.name;
-      const filePath = path.join(
-        process.cwd(),
-        "/public/uploads/files",
-        fileName
-      );
+      const filePath = path.join(process.cwd(), "/public/uploads/files", fileName);
 
       await writeFile(filePath, buffer);
       uploadedFiles.push(fileName);
@@ -154,7 +127,6 @@ export async function getQuotes(page: number, limit: number) {
 
 export async function deleteQuote(id: string) {
   try {
-    // First, get the quote to access its files
     const quote = await db.quote.findUnique({
       where: { id },
       select: { files: true },
@@ -167,26 +139,19 @@ export async function deleteQuote(id: string) {
       };
     }
 
-    // Delete associated files
     if (quote.files && quote.files.length > 0) {
       await Promise.all(
         quote.files.map(async (file) => {
           try {
-            const filePath = path.join(
-              process.cwd(),
-              "public/uploads/files",
-              file
-            );
+            const filePath = path.join(process.cwd(), "public/uploads/files", file);
             await unlink(filePath);
           } catch (error) {
             console.error(`Error deleting file ${file}:`, error);
-            // Continue with other files even if one fails
           }
         })
       );
     }
 
-    // Delete the quote from the database
     await db.quote.delete({
       where: { id },
     });
@@ -217,7 +182,7 @@ export async function getQuoteDetail(id: string) {
 
     return {
       success: true,
-      data: quote as QuoteResponse,
+      data: quote as QuoteDetailResponse,
     };
   } catch (error) {
     console.error("Error fetching quote:", error);
@@ -228,10 +193,7 @@ export async function getQuoteDetail(id: string) {
   }
 }
 
-export async function updateQuote(
-  id: string,
-  data: Partial<QuoteDetailResponse>
-) {
+export async function updateQuote(id: string, data: Partial<QuoteDetailFormData>) {
   try {
     const validatedFields = quoteDetailSchema.safeParse(data);
 

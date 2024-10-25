@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { ArrowLeft, Pencil, Loader2 } from "lucide-react";
-
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from "date-fns";
@@ -22,7 +21,7 @@ import { cn } from "@/lib/utils";
 import { QuoteDetailFormData, quoteDetailSchema } from "@/schemas/quotes";
 import { getQuoteDetail, updateQuote } from "@/actions/quote";
 import { FilePreview } from "../_components/FilePreview";
-
+import { Skeleton } from "@/components/ui/skeleton";
 
 const defaultValues: QuoteDetailFormData = {
   fullName: "",
@@ -114,11 +113,31 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="space-y-6 h-screen">
+        <Skeleton className="h-10 w-32" />
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-8 w-3/4 mb-2" />
+            <Skeleton className="h-4 w-1/2" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              {[...Array(5)].map((_, index) => (
+                <div key={index} className="space-y-2">
+                  <Skeleton className="h-4 w-1/4" />
+                  <Skeleton className="h-10 w-full" />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-4xl mx-auto">
       <Button variant="ghost" onClick={() => router.back()} className="mb-4">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Quotes
       </Button>
@@ -170,7 +189,7 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                         <FormItem>
                           <FormLabel>Phone</FormLabel>
                           <FormControl>
-                            <Input {...field} disabled={!isEditing} />
+                            <Input {...field} value={field.value || ''} disabled={!isEditing} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -184,7 +203,7 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                         <FormItem>
                           <FormLabel>Company Name</FormLabel>
                           <FormControl>
-                            <Input {...field} disabled={!isEditing} />
+                            <Input {...field} value={field.value || ''} disabled={!isEditing} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -198,7 +217,7 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                         <FormItem>
                           <FormLabel>Website</FormLabel>
                           <FormControl>
-                            <Input {...field} disabled={!isEditing} />
+                            <Input {...field} value={field.value || ''} disabled={!isEditing} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -331,7 +350,7 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                           <Select
                             disabled={!isEditing}
                             onValueChange={field.onChange}
-                            value={field.value}
+                            value={field.value || undefined}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -454,7 +473,7 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                           <Select
                             disabled={!isEditing}
                             onValueChange={field.onChange}
-                            value={field.value}
+                            value={field.value || undefined}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -554,7 +573,7 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                       <FormItem>
                         <FormLabel>Additional Notes</FormLabel>
                         <FormControl>
-                          <Textarea {...field} disabled={!isEditing} className="min-h-[100px]" />
+                          <Textarea {...field} value={field.value || ''} disabled={!isEditing} className="min-h-[100px]" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
