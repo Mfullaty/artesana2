@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Artesana 3",
+  title: "Artesana",
   description: "The #1 Global Export Company in Africa",
 };
 

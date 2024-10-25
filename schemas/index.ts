@@ -22,7 +22,6 @@ export const RegisterSchema = z.object({
   }),
 });
 
-// Define the QuoteFormSchema
 export const requestAQuoteSchema = z.object({
   // Product Selection
   product: z.string().min(1, "Product selection is required"),
@@ -32,7 +31,7 @@ export const requestAQuoteSchema = z.object({
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
   companyName: z.string().optional(),
-  website: z.string().url("Invalid website URL").optional(),
+  website: z.string().url("Invalid website URL").optional().or(z.literal("")),
   needFor: z.enum([
     "import",
     "export",
@@ -86,7 +85,6 @@ export const requestAQuoteSchema = z.object({
 
   // Additional Information
   additionalInfo: z.string().optional(),
-  files: z.array(z.instanceof(File)).optional(),
+  files: z.array(z.string()).optional(),
 });
-
 export type RequestAQuoteFormData = z.infer<typeof requestAQuoteSchema>;

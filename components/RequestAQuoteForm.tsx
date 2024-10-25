@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useCallback, useState, useTransition } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { Upload, Calendar as CalendarIcon } from "lucide-react";
+import { Upload, Calendar as CalendarIcon, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -40,7 +40,7 @@ import {
 } from "./ui/form";
 import FormError from "./FormError";
 import FormSuccess from "./FormSuccess";
-import { submitQuoteRequest } from "@/actions/request-quote";
+import { submitQuoteRequest } from "@/actions/quote";
 
 type FormData = z.infer<typeof requestAQuoteSchema>;
 
@@ -49,6 +49,8 @@ export default function RequestAQuoteForm() {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const [selectedProduct, setSelectedProduct] = useState("Product");
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
   const path = usePathname();
 
   const form = useForm<z.infer<typeof requestAQuoteSchema>>({
@@ -80,12 +82,57 @@ export default function RequestAQuoteForm() {
     setError("");
     setSuccess("");
     startTransition(() => {
-      submitQuoteRequest(values).then((data) => {
+      const formData = new FormData();
+      Object.entries(values).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((item) => formData.append(key, item));
+        } else if (value instanceof Date) {
+          formData.append(key, value.toISOString());
+        } else if (value !== undefined && value !== null) {
+          formData.append(key, value.toString());
+        }
+      });
+      uploadedFiles.forEach((file) => {
+        formData.append("files", file);
+      });
+      submitQuoteRequest(formData).then((data) => {
         setError(data.error);
         setSuccess(data.success);
       });
     });
   };
+
+  // Handle File Change
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selectedFiles = Array.from(e.target.files || []);
+      if (selectedFiles.length + uploadedFiles.length > 5) {
+        setError("You can only upload up to 5 files.");
+        return;
+      }
+      setUploadedFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    },
+    [uploadedFiles]
+  );
+
+  // Handle File Drop
+  const handleFileDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const droppedFiles = Array.from(e.dataTransfer.files);
+      if (droppedFiles.length + uploadedFiles.length > 5) {
+        setError("You can only upload up to 5 files.");
+        return;
+      }
+      setUploadedFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
+    },
+    [uploadedFiles]
+  );
+
+  // Remove File
+  const removeFile = useCallback((index: number) => {
+    setUploadedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  }, []);
 
   const updateProductName = (name: string) => {
     if (path === "/requestAQuote") {
@@ -728,12 +775,16 @@ export default function RequestAQuoteForm() {
               <Label htmlFor="file-upload">Upload Files</Label>
               <p className="text-sm md:text-base text-gray-500">
                 You can upload references or specification sheet in image and
-                pdf formats.
+                pdf formats. (Max 5 files)
               </p>
-              <div className="flex items-center justify-center w-full">
+              <div
+                className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={handleFileDrop}
+              >
                 <label
                   htmlFor="file-upload"
-                  className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
+                  className="flex flex-col items-center justify-center w-full h-full"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <Upload className="w-8 h-8 mb-4 text-gray-500" />
@@ -750,9 +801,33 @@ export default function RequestAQuoteForm() {
                     type="file"
                     className="hidden"
                     accept=".png,.jpg,.jpeg,.pdf"
+                    onChange={handleFileChange}
+                    multiple
                   />
                 </label>
               </div>
+              {uploadedFiles.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium mb-2">Uploaded Files:</h4>
+                  <ul className="space-y-2">
+                    {uploadedFiles.map((file, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center justify-between bg-gray-100 p-2 rounded"
+                      >
+                        <span className="text-sm truncate">{file.name}</span>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X size={16} />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 

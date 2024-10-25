@@ -1,101 +1,99 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Pencil, Trash, Loader2, Eye } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useToast } from "@/components/ui/use-toast"
-import { Toaster } from "@/components/ui/toaster"
-import Pagination from "./Pagination"
-import ConfirmationModal from "../ConfirmationModal"
-
-interface Quote {
-  id: string
-  fullName: string
-  email: string
-  phone?: string
-  companyName?: string
-  product: string
-  productType: string
-  volume: string
-  unit: string
-  deliveryDate: string
-  createdAt: string
-}
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Trash, Loader2, Eye } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import Pagination from "./Pagination";
+import ConfirmationModal from "../ConfirmationModal";
+import { deleteQuote, getQuotes, QuoteResponse } from "@/actions/quote";
+import { Quote } from "@prisma/client";
+import { QuotesQuery, quotesQuerySchema } from "@/schemas/quotes";
 
 export default function QuotesTab() {
-  const router = useRouter()
-  const { toast } = useToast()
-  const [quotes, setQuotes] = useState<Quote[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [isLoading, setIsLoading] = useState(true)
-  const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; quoteId: string | null }>({ isOpen: false, quoteId: null })
-  const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({})
-  const itemsPerPage = 10
+  const router = useRouter();
+  const { toast } = useToast();
+  const [quotes, setQuotes] = useState<QuoteResponse[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; quoteId: string | null }>({ isOpen: false, quoteId: null });
+  const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
+
+  const form = useForm<QuotesQuery>({
+    resolver: zodResolver(quotesQuerySchema),
+    defaultValues: {
+      page: 1,
+      limit: 10
+    }
+  });
 
   useEffect(() => {
-    fetchQuotes()
-  }, [currentPage])
+    fetchQuotes();
+  }, [currentPage]);
 
   const fetchQuotes = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await fetch(`/api/quotes?page=${currentPage}&limit=${itemsPerPage}`)
-      const data = await response.json()
-      setQuotes(data.quotes)
-      setTotalPages(data.pagination.totalPages)
+      const result = await getQuotes(currentPage, 10);
+      if (result.success && result.data) {
+        setQuotes(result.data.quotes);
+        setTotalPages(result.data.pagination.totalPages);
+      } else {
+        throw new Error(result.error || 'Failed to fetch quotes');
+      }
     } catch (error) {
-      console.error('Error fetching quotes:', error)
+      console.error('Error fetching quotes:', error);
       toast({
         title: "Error",
         description: "Failed to fetch quotes. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleDeleteQuote = async (id: string) => {
-    setLoadingStates(prev => ({ ...prev, [id]: true }))
+    setLoadingStates(prev => ({ ...prev, [id]: true }));
     try {
-      const response = await fetch(`/api/quotes/${id}`, {
-        method: 'DELETE',
-      })
-
-      if (response.ok) {
-        fetchQuotes()
+      const result = await deleteQuote(id);
+      if (result.success) {
+        await fetchQuotes();
         toast({
           title: "Success",
           description: "Quote deleted successfully.",
-        })
+        });
       } else {
-        throw new Error('Failed to delete quote')
+        throw new Error(result.error || 'Failed to delete quote');
       }
     } catch (error) {
-      console.error('Error deleting quote:', error)
+      console.error('Error deleting quote:', error);
       toast({
         title: "Error",
         description: "Failed to delete quote. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setLoadingStates(prev => ({ ...prev, [id]: false }))
-      setDeleteConfirmation({ isOpen: false, quoteId: null })
+      setLoadingStates(prev => ({ ...prev, [id]: false }));
+      setDeleteConfirmation({ isOpen: false, quoteId: null });
     }
-  }
+  };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (date: Date) => {
+    return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
-    })
-  }
+    });
+  };
 
   return (
     <Card className="w-full">
@@ -118,7 +116,7 @@ export default function QuotesTab() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                Array.from({ length: itemsPerPage }).map((_, index) => (
+                Array.from({ length: 10 }).map((_, index) => (
                   <TableRow key={index}>
                     <TableCell><Skeleton className="h-4 w-[150px]" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-[100px]" /></TableCell>
@@ -144,14 +142,6 @@ export default function QuotesTab() {
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
-                      {/* <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        onClick={() => router.push(`/admin/quotes/${quote.id}/edit`)}
-                        disabled={loadingStates[quote.id]}
-                      >
-                        {loadingStates[quote.id] ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pencil className="h-4 w-4" />}
-                      </Button> */}
                       <Button 
                         variant="ghost" 
                         size="icon" 
@@ -184,5 +174,5 @@ export default function QuotesTab() {
       </CardContent>
       <Toaster />
     </Card>
-  )
+  );
 }

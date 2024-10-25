@@ -98,6 +98,7 @@ model Quote {
   // Additional Info
   additionalInfo   String?
   status          String     @default("PENDING") // PENDING, APPROVED, REJECTED
+  files            String[]
 
   @@map("quote_requests")
 }
