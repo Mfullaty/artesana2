@@ -27,8 +27,8 @@ function ProductCardSkeleton() {
 function NoProductsSection() {
   return (
     <div className="bg-[#eee0cd] p-8 rounded-lg text-center">
-      <RefreshCw className="w-16 h-16 mx-auto mb-4 text-[#2C5F2D] animate-spin" />
-      <h2 className="text-2xl font-bold text-[#2C5F2D] mb-2">Come back and refresh soon</h2>
+      <RefreshCw className="w-10 h-10 mx-auto mb-4 text-primary animate-spin" />
+      <h2 className="text-2xl font-bold text-primary mb-2">Come back and refresh soon</h2>
       <p className="text-gray-600">We are working on uploading the products</p>
     </div>
   )
@@ -96,7 +96,7 @@ export default function ProductShowcase() {
                         className="w-full h-[250px] object-cover"
                         draggable={false}
                       />
-                      <h3 className="text-lg font-semibold text-[#2C5F2D] mb-1 line-clamp-1">{product.name}</h3>
+                      <h3 className="text-lg font-semibold text-primary mb-1 line-clamp-1">{product.name}</h3>
                       <p className="text-sm text-gray-600 line-clamp-3">{product.description}</p>
                     </CardContent>
                   </Card>

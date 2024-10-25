@@ -191,12 +191,12 @@ export default function ProductsTab() {
         <CardContent>
           <div className="mb-8">
             <div className="overflow-x-auto">
-              <Table>
+            <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Image</TableHead>
-                    <TableHead>Description</TableHead>
+                    <TableHead className="w-1/3">Description</TableHead>
                     <TableHead>In Stock</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -221,7 +221,11 @@ export default function ProductsTab() {
                             <Image src={product.images[0]} alt={product.name} width={64} height={64} className="object-cover rounded" />
                           )}
                         </TableCell>
-                        <TableCell>{product.description}</TableCell>
+                        <TableCell>
+                          <div className="line-clamp-2" title={product.description}>
+                            {product.description}
+                          </div>
+                        </TableCell>
                         <TableCell>{product.inStock}</TableCell>
                         <TableCell>
                           <Button 

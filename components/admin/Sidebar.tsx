@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
-import { Package, MessageSquare, FileText, X, Menu, ChevronLeft, ChevronRight, LogOut } from "lucide-react"
+import { Package, MessageSquare, FileText, X, Menu, ChevronLeft, ChevronRight, LogOut, Boxes } from "lucide-react"
 
 export function Sidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -25,7 +25,8 @@ export function Sidebar() {
   }, [])
 
   const sidebarItems = [
-    { icon: Package, label: "Products", href: "/admin" },
+    { icon: Boxes, label: "Dashboard", href: "/admin" },
+    { icon: Package, label: "Products", href: "/admin/products" },
     { icon: FileText, label: "Quotes", href: "/admin/quotes" },
     { icon: MessageSquare, label: "Messages", href: "/admin/messages" },
   ]
