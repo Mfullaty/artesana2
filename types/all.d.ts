@@ -17,3 +17,19 @@ export interface NavItems {
     Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
   >;
 }
+
+interface Message {
+  id: string
+  name: string
+  email: string
+  message: string
+  sentOn: string
+  status: string
+}
+
+interface Reply {
+  id: string
+  content: string
+  sentOn: string
+  isAdmin: boolean
+}

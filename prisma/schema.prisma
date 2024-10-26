@@ -26,7 +26,6 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
@@ -47,67 +46,77 @@ model VerificationToken {
 }
 
 model Product {
-  id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  description      String
-  origin           String
-  moisture         String?
-  color            String?
-  form             String
-  cultivation      String
-  cultivationType  String?
-  purity           String?
-  grades           String?
-  measurement      String
-  inStock          Int
-  images           String[] // Array to store multiple image URLs
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String
+  origin          String
+  moisture        String?
+  color           String?
+  form            String
+  cultivation     String
+  cultivationType String?
+  purity          String?
+  grades          String?
+  measurement     String
+  inStock         Int
+  images          String[] // Array to store multiple image URLs
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Quote {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
-  
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   // Contact Information
-  fullName         String
-  email            String
-  phone            String?
-  companyName      String?
-  website          String?
-  needFor          String
-  
+  fullName    String
+  email       String
+  phone       String?
+  companyName String?
+  website     String?
+  needFor     String
+
   // Product Details
-  product          String
-  productType      String
-  cultivationType  String[]
-  processing       String?
-  
+  product         String
+  productType     String
+  cultivationType String[]
+  processing      String?
+
   // Quantity
-  unit            String
-  volume          String
-  purchaseType    String
-  
+  unit         String
+  volume       String
+  purchaseType String
+
   // Delivery
-  deliveryAddress  String
-  incoterm        String?
-  deliveryDate    DateTime
+  deliveryAddress   String
+  incoterm          String?
+  deliveryDate      DateTime
   deliveryFrequency String
-  
+
   // Additional Info
-  additionalInfo   String?
-  status          String     @default("PENDING") // PENDING, APPROVED, REJECTED
-  files            String[]
+  additionalInfo String?
+  status         String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  files          String[]
 
   @@map("quote_requests")
 }
 
 model Message {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
   name    String
   email   String
   message String
-  sentOn DateTime @default(now())
+  sentOn  DateTime @default(now())
   status  String
+  replies Reply[]
+}
+
+model Reply {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  sentOn    DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id])
+  isAdmin   Boolean  @default(false)
+  messageId String   @db.ObjectId
 }

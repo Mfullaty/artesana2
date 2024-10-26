@@ -34,13 +34,14 @@ export async function GET(req: NextRequest) {
   const skip = (page - 1) * limit
 
   try {
-    const [messages, totalCount] = await Promise.all([
+    const [messages, totalCount, unreadCount] = await Promise.all([
       db.message.findMany({
         skip,
         take: limit,
         orderBy: { sentOn: 'desc' },
       }),
       db.message.count(),
+      db.message.count({ where: { status: 'new' } }),
     ])
 
     const totalPages = Math.ceil(totalCount / limit)
@@ -52,6 +53,7 @@ export async function GET(req: NextRequest) {
         totalPages,
         totalCount,
       },
+      unreadCount,
     })
   } catch (error) {
     console.error('Error fetching messages:', error)
