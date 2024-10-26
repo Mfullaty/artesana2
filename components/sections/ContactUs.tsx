@@ -8,8 +8,8 @@ import { Mail, MapPin, Phone, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
 import { messageSchema } from "@/schemas/messages"
+import { toast, Toaster } from 'sonner'
 
 type MessageFormData = z.infer<typeof messageSchema>
 
@@ -17,7 +17,6 @@ export default function ContactUs() {
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<MessageFormData>({
     resolver: zodResolver(messageSchema),
   })
-  const { toast } = useToast()
 
   const onSubmit = async (data: MessageFormData) => {
     try {
@@ -30,8 +29,7 @@ export default function ContactUs() {
       })
 
       if (response.ok) {
-        toast({
-          title: "Message sent",
+        toast.success("Message sent", {
           description: "We'll get back to you soon!",
         })
         reset()
@@ -39,61 +37,62 @@ export default function ContactUs() {
         throw new Error("Failed to send message")
       }
     } catch (error) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to send message. Please try again.",
-        variant: "destructive",
       })
     }
   }
 
   return (
-    <section id="contactUs" className="text-white py-16 font-mono">
+    <section id="contactUs" className="py-16 font-mono bg-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold mb-8 text-primary text-center">
+        <h2 className="text-3xl font-bold mb-8 text-gray-900 text-center">
           Contact Us
         </h2>
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Form */}
-          <div className="bg-primary rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold mb-4">Send us a message</h3>
+          <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg shadow-2xl p-6 border border-gray-200">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">Send us a message</h3>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
-                <label htmlFor="name" className="block font-medium mb-2">
+                <label htmlFor="name" className="block font-medium mb-2 text-gray-700">
                   Name
                 </label>
                 <Input
                   id="name"
                   {...register("name")}
-                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border border-none rounded-md focus:outline-none focus:ring-0"
+                  className="w-full px-3 py-2 bg-white bg-opacity-50 text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 placeholder-opacity-50"
+                  placeholder="Your name"
                 />
                 {errors.name && (
                   <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
                 )}
               </div>
               <div className="mb-4">
-                <label htmlFor="email" className="block font-medium mb-2">
+                <label htmlFor="email" className="block font-medium mb-2 text-gray-700">
                   Email
                 </label>
                 <Input
                   id="email"
                   type="email"
                   {...register("email")}
-                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border border-none rounded-md focus:outline-none focus:ring-0"
+                  className="w-full px-3 py-2 bg-white bg-opacity-50 text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 placeholder-opacity-50"
+                  placeholder="your@email.com"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
                 )}
               </div>
               <div className="mb-4">
-                <label htmlFor="message" className="block font-medium mb-2">
+                <label htmlFor="message" className="block font-medium mb-2 text-gray-700">
                   Message
                 </label>
                 <Textarea
                   id="message"
                   {...register("message")}
-                  className="w-full px-3 py-2 bg-[#f8f8f8] text-primary border-0 border-none rounded-md focus:outline-none focus:ring-0"
+                  className="w-full px-3 py-2 bg-white bg-opacity-50 text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 placeholder-opacity-50"
                   rows={4}
+                  placeholder="Your message"
                 />
                 {errors.message && (
                   <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>
@@ -102,7 +101,7 @@ export default function ContactUs() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-accent-foreground text-primary px-4 py-2 rounded-md font-semibold hover:bg-accent transition duration-300 flex items-center justify-center"
+                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-blue-700 transition duration-300 flex items-center justify-center"
               >
                 {isSubmitting ? (
                   "Sending..."
@@ -116,48 +115,48 @@ export default function ContactUs() {
             </form>
           </div>
           {/* Contact Information */}
-          <div className="bg-primary rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold mb-4">Get in touch</h3>
+          <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-lg shadow-2xl p-6 border border-gray-200">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">Get in touch</h3>
             <div className="space-y-4">
               <div className="flex items-start">
-                <Phone className="h-6 w-6 text-accent mr-3 mt-1" />
+                <Phone className="h-6 w-6 text-blue-600 mr-3 mt-1" />
                 <div>
-                  <p className="font-medium">Phone</p>
-                  <p className="text-gray-300">+234 123-456-789</p>
+                  <p className="font-medium text-gray-900">Phone</p>
+                  <p className="text-gray-600">+234 123-456-789</p>
                 </div>
               </div>
               <div className="flex items-start">
-                <Mail className="h-6 w-6 text-accent mr-3 mt-1" />
+                <Mail className="h-6 w-6 text-blue-600 mr-3 mt-1" />
                 <div>
-                  <p className="font-medium">Email</p>
-                  <a className="text-secondary hover:text-gray-300" href="mailto:contact@artesana.com.ng">
+                  <p className="font-medium text-gray-900">Email</p>
+                  <a className="text-blue-600 hover:text-blue-800 transition-colors" href="mailto:contact@artesana.com.ng">
                     contact@artesana.com.ng
                   </a>
                 </div>
               </div>
               <div className="flex items-start">
-                <MapPin className="h-6 w-6 text-accent mr-3 mt-1" />
+                <MapPin className="h-6 w-6 text-blue-600 mr-3 mt-1" />
                 <div>
-                  <p className="font-medium">Address</p>
-                  <p className="text-gray-300">
+                  <p className="font-medium text-gray-900">Address</p>
+                  <p className="text-gray-600">
                     123 Artisan Street, Craft City, AC 12345
                   </p>
                 </div>
               </div>
             </div>
             <div className="mt-6">
-              <h4 className="font-semibold mb-2">Business Hours</h4>
-              <p className="text-gray-300">
+              <h4 className="font-semibold mb-2 text-gray-900">Business Hours</h4>
+              <p className="text-gray-600">
                 Monday - Friday: 9:00 AM - 5:00 PM
               </p>
-              <p className="text-gray-300">Saturday: 10:00 AM - 2:00 PM</p>
-              <p className="text-gray-300">Sunday: Closed</p>
+              <p className="text-gray-600">Saturday: 10:00 AM - 2:00 PM</p>
+              <p className="text-gray-600">Sunday: Closed</p>
             </div>
             <div className="mt-6">
               <Button
                 onClick={() => window.open("https://wa.me/2348138497268", "_blank")}
                 variant="outline"
-                className="w-full text-green-600 border-green-600 hover:bg-green-600 hover:text-white transition-all duration-300 font-semibold"
+                className="w-full bg-green-500 bg-opacity-20 text-green-700 border-green-500 border-opacity-50 hover:bg-green-500 hover:text-white hover:bg-opacity-80 transition-all duration-300 font-semibold backdrop-filter backdrop-blur-sm"
               >
                 <svg
                   className="mr-2 h-4 w-4"
@@ -173,6 +172,7 @@ export default function ContactUs() {
           </div>
         </div>
       </div>
+      <Toaster />
     </section>
   )
 }

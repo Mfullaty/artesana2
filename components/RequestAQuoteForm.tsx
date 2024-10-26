@@ -1,35 +1,35 @@
-"use client";
+"use client"
 
-import { useCallback, useState, useTransition } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
-import { Upload, Calendar as CalendarIcon, X } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import * as z from "zod";
+import { useCallback, useState, useTransition, useEffect } from "react"
+import { useForm, Controller } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { motion } from "framer-motion"
+import { Upload, Calendar as CalendarIcon, X } from "lucide-react"
+import { usePathname } from "next/navigation"
+import { format } from "date-fns"
+import { cn } from "@/lib/utils"
+import * as z from "zod"
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "@/components/ui/calendar";
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { requestAQuoteSchema } from "@/schemas";
+} from "@/components/ui/popover"
+import { requestAQuoteSchema } from "@/schemas"
 import {
   Form,
   FormControl,
@@ -37,21 +37,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import FormError from "./FormError";
-import FormSuccess from "./FormSuccess";
-import { submitQuoteRequest } from "@/actions/quote";
+} from "./ui/form"
+import FormError from "./FormError"
+import FormSuccess from "./FormSuccess"
+import { submitQuoteRequest } from "@/actions/quote"
 
-type FormData = z.infer<typeof requestAQuoteSchema>;
+type FormData = z.infer<typeof requestAQuoteSchema>
 
-export default function RequestAQuoteForm() {
-  const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
-  const [isPending, startTransition] = useTransition();
-  const [selectedProduct, setSelectedProduct] = useState("Product");
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+interface Product {
+  id: string
+  name: string
+}
 
-  const path = usePathname();
+export default function RequestAQuoteForm({ productName = "" }: { productName?: string }) {
+  const [error, setError] = useState<string | undefined>("")
+  const [success, setSuccess] = useState<string | undefined>("")
+  const [isPending, startTransition] = useTransition()
+  const [selectedProduct, setSelectedProduct] = useState(productName || "Product")
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [products, setProducts] = useState<Product[]>([])
+
+  const path = usePathname()
 
   const form = useForm<z.infer<typeof requestAQuoteSchema>>({
     resolver: zodResolver(requestAQuoteSchema),
@@ -69,83 +75,89 @@ export default function RequestAQuoteForm() {
       needFor: "export",
       phone: "",
       processing: "double-sortex-cleaned",
-      product: "",
+      product: productName,
       productType: "natural",
       purchaseType: "not-sure",
       unit: "metric-ton",
       volume: "",
       website: "",
     },
-  });
+  })
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/app/api/products')
+        const data = await response.json()
+        setProducts(data.products)
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   const onSubmit = async (values: FormData) => {
-    setError("");
-    setSuccess("");
+    setError("")
+    setSuccess("")
     startTransition(() => {
-      const formData = new FormData();
+      const formData = new FormData()
       Object.entries(values).forEach(([key, value]) => {
         if (Array.isArray(value)) {
-          value.forEach((item) => formData.append(key, item));
+          value.forEach((item) => formData.append(key, item))
         } else if (value instanceof Date) {
-          formData.append(key, value.toISOString());
+          formData.append(key, value.toISOString())
         } else if (value !== undefined && value !== null) {
-          formData.append(key, value.toString());
+          formData.append(key, value.toString())
         }
-      });
+      })
       uploadedFiles.forEach((file) => {
-        formData.append("files", file);
-      });
+        formData.append("files", file)
+      })
       submitQuoteRequest(formData).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
-      });
-    });
-  };
+        setError(data.error)
+        setSuccess(data.success)
+      })
+    })
+  }
 
-  // Handle File Change
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const selectedFiles = Array.from(e.target.files || []);
+      const selectedFiles = Array.from(e.target.files || [])
       if (selectedFiles.length + uploadedFiles.length > 5) {
-        setError("You can only upload up to 5 files.");
-        return;
+        setError("You can only upload up to 5 files.")
+        return
       }
-      setUploadedFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      setUploadedFiles((prevFiles) => [...prevFiles, ...selectedFiles])
     },
     [uploadedFiles]
-  );
+  )
 
-  // Handle File Drop
   const handleFileDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      const droppedFiles = Array.from(e.dataTransfer.files);
+      e.preventDefault()
+      const droppedFiles = Array.from(e.dataTransfer.files)
       if (droppedFiles.length + uploadedFiles.length > 5) {
-        setError("You can only upload up to 5 files.");
-        return;
+        setError("You can only upload up to 5 files.")
+        return
       }
-      setUploadedFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
+      setUploadedFiles((prevFiles) => [...prevFiles, ...droppedFiles])
     },
     [uploadedFiles]
-  );
+  )
 
-  // Remove File
   const removeFile = useCallback((index: number) => {
-    setUploadedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-  }, []);
+    setUploadedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index))
+  }, [])
 
   const updateProductName = (name: string) => {
-    if (path === "/requestAQuote") {
-      setSelectedProduct(name);
-    }
-  };
+    setSelectedProduct(name)
+  }
 
   const replaceProductName = (text: string) => {
-    if (path === "/requestAQuote") {
-      return text.replace(/Product?/gi, selectedProduct);
-    }
-    return text;
-  };
+    return text.replace(/Product/gi, selectedProduct)
+  }
 
   return (
     <motion.div
@@ -188,31 +200,19 @@ export default function RequestAQuoteForm() {
                       <Select
                         {...field}
                         onValueChange={(value) => {
-                          field.onChange(value);
-                          updateProductName(value);
+                          field.onChange(value)
+                          updateProductName(value)
                         }}
                       >
                         <SelectTrigger className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg">
                           <SelectValue placeholder="Select an option" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="Sesame Seeds">
-                            Sesame Seeds
-                          </SelectItem>
-                          <SelectItem value="Cashew Nuts">
-                            Cashew Nuts
-                          </SelectItem>
-                          <SelectItem value="Hibiscus Flower">
-                            Hibiscus Flower
-                          </SelectItem>
-                          <SelectItem value="Soya Beans">Soya Beans</SelectItem>
-                          <SelectItem value="Nigerian Charcoal">
-                            Nigerian Charcoal
-                          </SelectItem>
-                          <SelectItem value="Dried Ginger">
-                            Dried Ginger
-                          </SelectItem>
-                          <SelectItem value="Red Beans">Red Beans</SelectItem>
+                          {products.map((product) => (
+                            <SelectItem key={product.id} value={product.name}>
+                              {product.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
