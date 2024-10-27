@@ -16,6 +16,14 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Artesana",
   description: "The #1 Global Export Company in Africa",
+  icons:{
+    icon: [
+      {url: "/web-icon-2.svg"}
+    ],
+    shortcut: [
+      {url: "/web-icon-2.svg"}
+    ],
+  }
 };
 
 export default function RootLayout({

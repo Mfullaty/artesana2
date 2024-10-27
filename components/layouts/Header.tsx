@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import StockMarquee from "../StockMarquee";
 import Link from "next/link";
+import Image from "next/image";
 
 const navItems: NavItems[] = [
   { label: "Home", href: "/", icon: Home },
@@ -34,7 +35,8 @@ const Header = () => {
     <header className="bg-primary text-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center space-x-2 cursor-pointer">
-          <Globe className="h-8 w-8 text-accent-foreground hover:text-secondary" />
+        <Image src="/logo-1.png" alt="logo" width={50} height={50} />
+          {/* <Globe className="h-8 w-8 text-accent-foreground hover:text-secondary" /> */}
           <span className="text-2xl font-bold text-accent-foreground hover:text-secondary font-serif">
             ARTESANA
           </span>

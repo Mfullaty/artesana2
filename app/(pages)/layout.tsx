@@ -11,7 +11,7 @@ export default function PagesLayout({
     <div>
       <Header />
       {/* Stock Marquee Section */}
-      <div className="mt-16 bg-white">
+      <div className="mt-20 py-2 bg-white">
         <StockMarquee />
       </div>
       <div>{children}</div>
