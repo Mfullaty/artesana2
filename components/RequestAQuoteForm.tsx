@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useState, useTransition, useEffect } from "react"
-import { useForm, Controller } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { motion } from "framer-motion"
 import { Upload, Calendar as CalendarIcon, X } from "lucide-react"
@@ -49,6 +49,30 @@ interface Product {
   name: string
 }
 
+const SkeletonInput = () => (
+  <div className="h-10 bg-gray-200 rounded animate-pulse" />
+)
+
+const SkeletonTextarea = () => (
+  <div className="h-24 bg-gray-200 rounded animate-pulse" />
+)
+
+const SkeletonRadioGroup = () => (
+  <div className="flex space-x-4">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="w-20 h-6 bg-gray-200 rounded animate-pulse" />
+    ))}
+  </div>
+)
+
+const SkeletonCheckbox = () => (
+  <div className="flex space-x-4">
+    {[1, 2].map((i) => (
+      <div key={i} className="w-24 h-6 bg-gray-200 rounded animate-pulse" />
+    ))}
+  </div>
+)
+
 export default function RequestAQuoteForm({ productName = "" }: { productName?: string }) {
   const [error, setError] = useState<string | undefined>("")
   const [success, setSuccess] = useState<string | undefined>("")
@@ -56,6 +80,7 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
   const [selectedProduct, setSelectedProduct] = useState(productName || "Product")
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
   const [products, setProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const path = usePathname()
 
@@ -87,11 +112,13 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/app/api/products')
+        const response = await fetch('/api/products')
         const data = await response.json()
         setProducts(data.products)
       } catch (error) {
         console.error('Error fetching products:', error)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -120,6 +147,8 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
         setSuccess(data.success)
       })
     })
+
+    setUploadedFiles([]);
   }
 
   const handleFileChange = useCallback(
@@ -161,193 +190,149 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
 
   return (
     <motion.div
-      id="requestAQuote"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
-      className="mt-16 bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl"
+      className="mt-6 bg-white/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl"
     >
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
         Request A Quote
       </h2>
-      <p className="text-xl md:text-2xl text-gray-600 mb-2">
+      <p className="text-xl md:text-2xl text-gray-600 mb-6">
         {replaceProductName(
           "From bulk quantities to pallet loads, we've got all your needs covered."
         )}
-      </p>
-      <p className="text-gray-500 mb-6">
-        {replaceProductName(
-          "Complete the form to receive a personalized quote for our high-quality Product, customized to meet your business requirements. Indicate whether you need organic or conventional, and provide your preferred delivery timeline."
-        )}
+        Complete the form to receive a personalized quote for our high-quality Product, customized to meet your business requirements. Indicate whether you need organic or conventional, and provide your preferred delivery timeline.
       </p>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-12 md:space-y-16"
-        >
-          {path === "/requestAQuote" && (
-            <div className="space-y-3 md:space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {path === "/requestAQuote" && (
               <FormField
                 control={form.control}
                 name="product"
-                rules={{ required: true }}
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Product *
-                    </FormLabel>
+                  <FormItem className="col-span-full">
+                    <FormLabel>Product *</FormLabel>
                     <FormControl>
-                      <Select
-                        {...field}
-                        onValueChange={(value) => {
-                          field.onChange(value)
-                          updateProductName(value)
-                        }}
-                      >
-                        <SelectTrigger className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg">
-                          <SelectValue placeholder="Select an option" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {products.map((product) => (
-                            <SelectItem key={product.id} value={product.name}>
-                              {product.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      {isLoading ? (
+                        <SkeletonInput />
+                      ) : (
+                        <Select
+                          {...field}
+                          onValueChange={(value) => {
+                            field.onChange(value)
+                            updateProductName(value)
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a product" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {products.map((product) => (
+                              <SelectItem key={product.id} value={product.name}>
+                                {product.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3 md:space-y-4">
-              <FormField
-                control={form.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Full Name *
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="space-y-3 md:space-y-4">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Email *
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={isPending} type="email" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3 md:space-y-4">
+            )}
+            <FormField
+              control={form.control}
+              name="fullName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name *</FormLabel>
+                  <FormControl>
+                    {isLoading ? <SkeletonInput /> : <Input {...field} disabled={isPending} />}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email *</FormLabel>
+                  <FormControl>
+                    {isLoading ? <SkeletonInput /> : <Input {...field} disabled={isPending} type="email" />}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 text-base md:text-lg">
-                    Phone
-                  </FormLabel>
+                  <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input
-                      id="phone"
-                      {...field}
-                      disabled={isPending}
-                      type="tel"
-                    />
+                    {isLoading ? <SkeletonInput /> : <Input {...field} disabled={isPending} type="tel" />}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3 md:space-y-4">
-              <FormField
-                control={form.control}
-                name="companyName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Company Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input id="companyName" {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="space-y-3 md:space-y-4">
-              <FormField
-                control={form.control}
-                name="website"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Website
-                    </FormLabel>
-                    <FormControl>
-                      <Input id="website" {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3 md:space-y-4">
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company Name</FormLabel>
+                  <FormControl>
+                    {isLoading ? <SkeletonInput /> : <Input {...field} disabled={isPending} />}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="website"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Website</FormLabel>
+                  <FormControl>
+                    {isLoading ? <SkeletonInput /> : <Input {...field} disabled={isPending} />}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               name="needFor"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 text-base md:text-lg">
-                    Need This For?*
-                  </FormLabel>
+                  <FormLabel>Need This For? *</FormLabel>
                   <FormControl>
-                    <Select disabled={isPending} onValueChange={field.onChange}>
-                      <SelectTrigger className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg">
-                        <SelectValue placeholder="Select an option" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="import">Import</SelectItem>
-                        <SelectItem value="export">Export</SelectItem>
-                        <SelectItem value="import-export">
-                          Import & Export
-                        </SelectItem>
-                        <SelectItem value="food-retail">Food Retail</SelectItem>
-                        <SelectItem value="food-services">
-                          Food Services
-                        </SelectItem>
-                        <SelectItem value="wholesale">Wholesale</SelectItem>
-                        <SelectItem value="retail">Retail</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {isLoading ? (
+                      <SkeletonInput />
+                    ) : (
+                      <Select disabled={isPending} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select an option" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="import">Import</SelectItem>
+                          <SelectItem value="export">Export</SelectItem>
+                          <SelectItem value="import-export">Import & Export</SelectItem>
+                          <SelectItem value="food-retail">Food Retail</SelectItem>
+                          <SelectItem value="food-services">Food Services</SelectItem>
+                          <SelectItem value="wholesale">Wholesale</SelectItem>
+                          <SelectItem value="retail">Retail</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -355,160 +340,117 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
             />
           </div>
 
-          {/* Product Requirements Section */}
-          <div className="space-y-9">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
-              Product Requirements
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-600 mb-2">
-              {replaceProductName(
-                `What variety of Product are you looking for?`
-              )}
-            </p>
-            <div className="space-y-1 md:space-y-2">
-              <p className="text-sm md:text-base text-gray-500">
-                {replaceProductName(
-                  `What variety of Product are you looking for?`
-                )}
-              </p>
+          <div className="space-y-8 py-8">
+            <h3 className="text-2xl md:text-3xl font-semibold">Product Requirements</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 name="productType"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Product Type *
-                    </FormLabel>
+                    <FormLabel>Product Type *</FormLabel>
                     <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex space-x-4"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="hulled" id="hulled" />
-                          <Label htmlFor="hulled">
-                            {replaceProductName("Hulled Product")}
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="natural" id="natural" />
-                          <Label htmlFor="natural">
-                            {replaceProductName("Natural Product")}
-                          </Label>
-                        </div>
-                      </RadioGroup>
+                      {isLoading ? (
+                        <SkeletonRadioGroup />
+                      ) : (
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex space-x-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="hulled" id="hulled" />
+                            <Label htmlFor="hulled">{replaceProductName("Hulled Product")}</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="natural" id="natural" />
+                            <Label htmlFor="natural">{replaceProductName("Natural Product")}</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
-              <p className="text-sm md:text-base text-gray-500">
-                Organic or not? Select your option
-              </p>
               <FormField
                 name="cultivationType"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Cultivation Type *
-                    </FormLabel>
+                    <FormLabel>Cultivation Type *</FormLabel>
                     <FormControl>
-                      <div className="flex space-x-4">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="organic"
-                            checked={field.value.includes("organic")}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                field.onChange([...field.value, "organic"]);
-                              } else {
-                                field.onChange(
-                                  field.value.filter(
-                                    (value: string) => value !== "organic"
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor="organic"
-                            className="text-sm md:text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            Organic
-                          </label>
+                      {isLoading ? (
+                        <SkeletonCheckbox />
+                      ) : (
+                        <div className="flex space-x-4">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="organic"
+                              checked={field.value.includes("organic")}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  field.onChange([...field.value, "organic"]);
+                                } else {
+                                  field.onChange(
+                                    field.value.filter(
+                                      (value: string) => value !== "organic"
+                                    )
+                                  );
+                                }
+                              }}
+                            />
+                            <label htmlFor="organic">Organic</label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id="conventional"
+                              checked={field.value.includes("conventional")}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  field.onChange([...field.value, "conventional"]);
+                                } else {
+                                  field.onChange(
+                                    field.value.filter(
+                                      (value: string) => value !== "conventional"
+                                    
+                                    )
+                                  );
+                                }
+                              }}
+                            />
+                            <label htmlFor="conventional">Conventional</label>
+                          </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id="conventional"
-                            checked={field.value.includes("conventional")}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                field.onChange([
-                                  ...field.value,
-                                  "conventional",
-                                ]);
-                              } else {
-                                field.onChange(
-                                  field.value.filter(
-                                    (value: string) => value !== "conventional"
-                                  )
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor="conventional"
-                            className="text-sm md:text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            Conventional
-                          </label>
-                        </div>
-                      </div>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
-              <p className="text-sm md:text-base text-gray-500">
-                Leave this blank if you have other requirements not listed here
-              </p>
               <FormField
                 name="processing"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      {replaceProductName(
-                        `How should the Product be processed?`
-                      )}
-                    </FormLabel>
+                    <FormLabel>{replaceProductName(`How should the Product be processed?`)}</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange}>
-                        <SelectTrigger className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg">
-                          <SelectValue placeholder="Select processing options" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="sun-dried">Sun Dried</SelectItem>
-                          <SelectItem value="sortex-cleaned">
-                            Sortex Cleaned
-                          </SelectItem>
-                          <SelectItem value="double-sortex-cleaned">
-                            Double Sortex Cleaned
-                          </SelectItem>
-                          <SelectItem value="roasted">Roasted</SelectItem>
-                          <SelectItem value="steam-sterilised">
-                            Steam Sterilised
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
+                      {isLoading ? (
+                        <SkeletonInput />
+                      ) : (
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select processing options" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="sun-dried">Sun Dried</SelectItem>
+                            <SelectItem value="sortex-cleaned">Sortex Cleaned</SelectItem>
+                            <SelectItem value="double-sortex-cleaned">Double Sortex Cleaned</SelectItem>
+                            <SelectItem value="roasted">Roasted</SelectItem>
+                            <SelectItem value="steam-sterilised">Steam Sterilised</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -517,99 +459,85 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
             </div>
           </div>
 
-          {/* Quantity Section */}
-          <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
-              Quantity
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-600 mb-2">
-              Specify the quantity you require.
-            </p>
-            <div className="space-y-3 md:space-y-4">
+          <div className="space-y-8 py-8">
+            <h3 className="text-2xl md:text-3xl font-semibold">Quantity</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 name="unit"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Unit *
-                    </FormLabel>
+                    <FormLabel>Unit *</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange}>
-                        <SelectTrigger
-                          id="unit"
-                          className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg"
-                        >
-                          <SelectValue placeholder="Select a unit" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="kilogram">KILOGRAM</SelectItem>
-                          <SelectItem value="ton">TON</SelectItem>
-                          <SelectItem value="metric-ton">METRIC TON</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      {isLoading ? (
+                        <SkeletonInput />
+                      ) : (
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger id="unit">
+                            <SelectValue placeholder="Select a unit" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="kilogram">KILOGRAM</SelectItem>
+                            <SelectItem value="ton">TON</SelectItem>
+                            <SelectItem value="metric-ton">METRIC TON</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
               <FormField
                 name="volume"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Volume *
-                    </FormLabel>
+                    <FormLabel>Volume *</FormLabel>
                     <FormControl>
-                      <Input
-                        id="volume"
-                        type="text"
-                        {...field}
-                        className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg"
-                      />
+                      {isLoading ? (
+                        <SkeletonInput />
+                      ) : (
+                        <Input
+                          id="volume"
+                          type="text"
+                          {...field}
+                        />
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
-              <p className="text-sm md:text-base text-gray-500">
-                Are you seeking a quote for a long-term annual supply or just a
-                one-time delivery?
-              </p>
               <FormField
                 name="purchaseType"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Recursive or One-time Purchace? *
-                    </FormLabel>
+                  <FormItem className="col-span-full">
+                    <FormLabel>Recursive or One-time Purchase? *</FormLabel>
                     <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex space-x-4"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="annual" id="annual" />
-                          <Label htmlFor="annual">Annual supply</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="one-time" id="one-time" />
-                          <Label htmlFor="one-time">One time</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="not-sure" id="not-sure" />
-                          <Label htmlFor="not-sure">Not sure</Label>
-                        </div>
-                      </RadioGroup>
+                      {isLoading ? (
+                        <SkeletonRadioGroup />
+                      ) : (
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex space-x-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="annual" id="annual" />
+                            <Label htmlFor="annual">Annual supply</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="one-time" id="one-time" />
+                            <Label htmlFor="one-time">One time</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="not-sure" id="not-sure" />
+                            <Label htmlFor="not-sure">Not sure</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -618,252 +546,221 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
             </div>
           </div>
 
-          {/* Delivery Section */}
-          <div className="space-y-6">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary-foreground">
-              Delivery
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-600 mb-2">
-              Provide your delivery details.
-            </p>
-            <div className="space-y-3 md:space-y-4">
-              <p className="text-sm md:text-base  text-gray-500">
-                Enter your preferred delivery location
-              </p>
+          <div className="space-y-8 py-8">
+            <h3 className="text-2xl md:text-3xl font-semibold">Delivery</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 name="deliveryAddress"
                 control={form.control}
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Delivery Address *
-                    </FormLabel>
+                  <FormItem className="col-span-full">
+                    <FormLabel>Delivery Address *</FormLabel>
                     <FormControl>
-                      <Textarea
-                        id="deliveryAddress"
-                        {...field}
-                        className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg"
-                        rows={4}
-                      />
+                      {isLoading ? (
+                        <SkeletonTextarea />
+                      ) : (
+                        <Textarea
+                          id="deliveryAddress"
+                          {...field}
+                          rows={4}
+                        />
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
               <FormField
                 name="incoterm"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Incoterm® 2020
-                    </FormLabel>
+                    <FormLabel>Incoterm® 2020</FormLabel>
                     <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-wrap gap-4"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="exw" id="exw" />
-                          <Label htmlFor="exw">EXW</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="fob" id="fob" />
-                          <Label htmlFor="fob">FOB</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="cif" id="cif" />
-                          <Label htmlFor="cif">CIF</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="ddp" id="ddp" />
-                          <Label htmlFor="ddp">DDP</Label>
-                        </div>
-                      </RadioGroup>
+                      {isLoading ? (
+                        <SkeletonRadioGroup />
+                      ) : (
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-wrap gap-4"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="exw" id="exw" />
+                            <Label htmlFor="exw">EXW</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="fob" id="fob" />
+                            <Label htmlFor="fob">FOB</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="cif" id="cif" />
+                            <Label htmlFor="cif">CIF</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem value="ddp" id="ddp" />
+                            <Label htmlFor="ddp">DDP</Label>
+                          </div>
+                        </RadioGroup>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
-              <p className="text-sm md:text-base text-gray-500">
-                Enter your preferred delivery date
-              </p>
               <FormField
                 name="deliveryDate"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Delivery Date *
-                    </FormLabel>
+                    <FormLabel>Delivery Date *</FormLabel>
                     <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full justify-start text-left font-normal bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
+                      {isLoading ? (
+                        <SkeletonInput />
+                      ) : (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      )}
                     </FormControl>
                   </FormItem>
                 )}
               />
-            </div>
-
-            <div className="space-y-3 md:space-y-4">
-              <p className="text-sm md:text-base text-gray-500">
-                How frequently do you want to receive delivery?
-              </p>
               <FormField
                 name="deliveryFrequency"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 text-base md:text-lg">
-                      Delivery Frequency *
-                    </FormLabel>
+                    <FormLabel>Delivery Frequency *</FormLabel>
                     <FormControl>
-                      <Select onValueChange={field.onChange}>
-                        <SelectTrigger
-                          id="deliveryFrequency"
-                          className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg"
-                        >
-                          <SelectValue placeholder="Select frequency" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="weekly">Weekly</SelectItem>
-                          <SelectItem value="monthly">Monthly</SelectItem>
-                          <SelectItem value="quarterly">Quarterly</SelectItem>
-                          <SelectItem value="annually">Annually</SelectItem>
-                          <SelectItem value="one-time">One time</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      {isLoading ? (
+                        <SkeletonInput />
+                      ) : (
+                        <Select onValueChange={field.onChange}>
+                          <SelectTrigger id="deliveryFrequency">
+                            <SelectValue placeholder="Select frequency" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="weekly">Weekly</SelectItem>
+                            <SelectItem value="monthly">Monthly</SelectItem>
+                            <SelectItem value="quarterly">Quarterly</SelectItem>
+                            <SelectItem value="annually">Annually</SelectItem>
+                            <SelectItem value="one-time">One time</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-
-            <div className="space-y-3 md:space-y-4">
-              <Label htmlFor="file-upload">Upload Files</Label>
-              <p className="text-sm md:text-base text-gray-500">
-                You can upload references or specification sheet in image and
-                pdf formats. (Max 5 files)
-              </p>
-              <div
-                className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors duration-300"
-                onDragOver={(e) => e.preventDefault()}
-                onDrop={handleFileDrop}
-              >
-                <label
-                  htmlFor="file-upload"
-                  className="flex flex-col items-center justify-center w-full h-full"
-                >
-                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="w-8 h-8 mb-4 text-gray-500" />
-                    <p className="mb-2 text-sm md:text-base text-gray-500">
-                      <span className="font-semibold">Click to upload</span> or
-                      drag and drop
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      PNG, JPG or PDF (MAX. 10MB)
-                    </p>
-                  </div>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="hidden"
-                    accept=".png,.jpg,.jpeg,.pdf"
-                    onChange={handleFileChange}
-                    multiple
-                  />
-                </label>
-              </div>
-              {uploadedFiles.length > 0 && (
-                <div className="mt-4">
-                  <h4 className="text-sm font-medium mb-2">Uploaded Files:</h4>
-                  <ul className="space-y-2">
-                    {uploadedFiles.map((file, index) => (
-                      <li
-                        key={index}
-                        className="flex items-center justify-between bg-gray-100 p-2 rounded"
-                      >
-                        <span className="text-sm truncate">{file.name}</span>
-                        <button
-                          type="button"
-                          onClick={() => removeFile(index)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <X size={16} />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
           </div>
 
-          <div className="space-y-3 md:space-y-4">
-            <FormField
-              name="additionalInfo"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700 text-base md:text-lg">
-                    Additional Notes
-                  </FormLabel>
-                  <FormControl>
+          <FormField
+            name="additionalInfo"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-semibold text-2xl md:text-3xl ">Additional Information</FormLabel>
+                <FormControl>
+                  {isLoading ? (
+                    <SkeletonTextarea />
+                  ) : (
                     <Textarea
-                      disabled={isPending}
                       id="additionalInfo"
                       {...field}
-                      className="bg-white border-gray-300 focus:border-[#1a2b4c] transition-colors duration-300 text-base md:text-lg"
                       rows={4}
+                      placeholder="Any additional details or requirements?"
                     />
-                  </FormControl>
-                </FormItem>
-              )}
+                  )}
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div
+            className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer transition-colors hover:border-primary"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleFileDrop}
+          >
+            <input
+              type="file"
+              id="file-upload"
+              className="hidden"
+              onChange={handleFileChange}
+              multiple
             />
+            <label
+              htmlFor="file-upload"
+              className="cursor-pointer flex flex-col items-center justify-center"
+            >
+              <Upload className="w-8 h-8 text-gray-400 mb-2" />
+              <p className="text-sm text-gray-500">
+                Drag and drop files here or click to upload
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                (Max 5 files, 10MB each)
+              </p>
+            </label>
           </div>
+          {uploadedFiles.length > 0 && (
+            <div className="mt-4">
+              <h4 className="text-sm font-semibold mb-2">Uploaded Files:</h4>
+              <ul className="space-y-2">
+                {uploadedFiles.map((file, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between bg-gray-100 rounded p-2"
+                  >
+                    <span className="text-sm truncate">{file.name}</span>
+                    <button
+                      onClick={() => removeFile(index)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <FormError message={error} />
           <FormSuccess message={success} />
           <Button
-            disabled={isPending}
+            disabled={isPending || isLoading}
             type="submit"
-            className="w-full opacity-100 bg-primary text-white text-lg md:text-xl py-6 rounded-lg transform transition-all ease-out duration-300"
+            className="w-full opacity-100 bg-primary text-white text-lg md:text-xl py-6 rounded-lg transform transition-all ease-out duration-300 hover:bg-primary/90"
           >
-            Submit Quote Request
+            {isLoading ? "Loading..." : "Submit Quote Request"}
           </Button>
         </form>
       </Form>
     </motion.div>
-  );
+  )
 }

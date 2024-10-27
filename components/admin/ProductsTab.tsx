@@ -278,14 +278,14 @@ export default function ProductsTab() {
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{formData.id ? 'Edit Product' : 'Add New Product'}</DialogTitle>
-                <Button
+                {/* <Button
                   variant="ghost"
                   size="icon"
                   className="absolute right-4 top-4"
                   onClick={() => setIsEditModalOpen(false)}
                 >
                   <X className="h-4 w-4" />
-                </Button>
+                </Button> */}
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -300,9 +300,11 @@ export default function ProductsTab() {
                         <SelectValue placeholder="Select country" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="usa">USA</SelectItem>
-                        <SelectItem value="canada">Canada</SelectItem>
-                        <SelectItem value="mexico">Mexico</SelectItem>
+                        <SelectItem value="cameroon">Cameroon</SelectItem>
+                        <SelectItem value="egypt">Egypt</SelectItem>
+                        <SelectItem value="ghana">Ghana</SelectItem>
+                        <SelectItem value="nigeria">Nigeria</SelectItem>
+                        <SelectItem value="niger">Niger</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
