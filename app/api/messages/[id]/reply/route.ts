@@ -27,7 +27,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     // Send email using Resend
     await resend.emails.send({
-      from: 'contact@artesana.com.ng',
+      from: 'info@artesana.com.ng',
       to: message.email,
       subject: 'Reply to your message',
       html: `<p>Hello ${message.name},</p><p>${content}</p>`,
