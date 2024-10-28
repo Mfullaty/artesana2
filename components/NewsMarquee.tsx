@@ -18,7 +18,7 @@ export default function NewsMarquee() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await fetch('/api/news?page=1&keywords=agriculture&country=http://en.wikipedia.org/wiki/United_States');
+        const res = await fetch('/api/news?page=1&keywords=agriculture&country=http://en.wikipedia.org/wiki/Nigeria');
         const data = await res.json();
         setNewsItems(data.articles.results.slice(0, 10)); // Get first 10 news items
       } catch (err) {

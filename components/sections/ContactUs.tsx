@@ -1,6 +1,4 @@
 "use client"
-
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -129,7 +127,7 @@ export default function ContactUs() {
                 <Mail className="h-6 w-6 text-white mr-3 mt-1" />
                 <div>
                   <p className="font-medium text-white">Email</p>
-                  <a className="text-white text-opacity-80 hover:text-opacity-100 transition-colors" href="mailto:contact@artesana.com.ng">
+                  <a className="text-white text-opacity-80 hover:text-opacity-100 transition-colors" href="mailto:info@artesana.com.ng">
                     contact@artesana.com.ng
                   </a>
                 </div>
