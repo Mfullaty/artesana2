@@ -1,4 +1,3 @@
-import StockMarquee from "./StockMarquee";
 import Hero from "./sections/Hero";
 import FeaturedProducts from "./sections/FeaturedProducts";
 import Services from "./sections/Services";
@@ -8,9 +7,9 @@ import NewsLetter from "./sections/NewsLetter";
 import AgriculturalNews from "./sections/AgriCulturalNews";
 import AboutUs from "./sections/AboutUs";
 import Image from "next/image";
-import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import NewsMarquee from "./NewsMarquee";
 
 export default function LandingPage() {
   return (
@@ -36,7 +35,8 @@ export default function LandingPage() {
       <AboutUs />
 
       {/* Marquee */}
-      <StockMarquee />
+      {/* <StockMarquee /> */}
+      <NewsMarquee />
 
       {/* Services */}
       <div className="services pt-16 bg-white relative">

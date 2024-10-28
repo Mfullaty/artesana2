@@ -17,9 +17,9 @@ import React from "react";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import StockMarquee from "../StockMarquee";
 import Link from "next/link";
 import Image from "next/image";
+import NewsMarquee from "../NewsMarquee";
 
 const navItems: NavItems[] = [
   { label: "Home", href: "/", icon: Home },
@@ -110,7 +110,8 @@ const Header = () => {
               </div>
             </div>
             <div className="absolute bottom-28 left-4 right-4 bg-white rounded-md">
-              <StockMarquee />
+              {/* <StockMarquee /> */}
+              <NewsMarquee />
             </div>
           </SheetContent>
         </Sheet>

@@ -1,56 +1,65 @@
-import React from "react";
+'use client'
+
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Carousel from "../Carousel";
 import Link from "next/link";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface NewsItem {
-  id: string;
+  uri: string;
   title: string;
   date: string;
   image: string;
   url: string;
 }
 
-const newsItems: NewsItem[] = [
-  {
-    id: "1",
-    title: "Global Wheat Prices Surge Amid Supply Concerns",
-    date: "15 October 2024",
-    image: "/images/samplenews1.jpg",
-    url: "/news",
-  },
-  {
-    id: "2",
-    title: "New Sustainable Farming Techniques Boost Rice Yields",
-    date: "12 October 2024",
-    image: "/images/samplenews2.png",
-    url: "/news",
-  },
-  {
-    id: "3",
-    title: "Coffee Futures Rally on Brazilian Frost Reports",
-    date: "10 October 2024",
-    image: "/images/samplenews3.jpg",
-    url: "/news",
-  },
-  {
-    id: "4",
-    title: "Innovative Vertical Farming Project Launches in Urban Centers",
-    date: "8 October 2024",
-    image: "/images/samplenews4.jpg",
-    url: "/news",
-  },
-  {
-    id: "5",
-    title: "Global Soybean Trade Disrupted by New Tariffs",
-    date: "5 October 2024",
-    image: "/images/samplenews5.jpg",
-    url: "/news",
-  },
-];
-
 export default function AgriculturalNews() {
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await fetch('/api/news?page=1&keywords=agriculture&country=http://en.wikipedia.org/wiki/Saudi_Arabia');
+        const data = await res.json();
+        setNewsItems(data.articles.results.slice(0, 5).map((item: any) => ({
+          uri: item.uri,
+          title: item.title,
+          date: new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
+          image: item.image || '/images/placeholder.jpg',
+          url: item.url
+        })));
+      } catch (err) {
+        setError("Failed to fetch news data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 py-8 font-mono">
+        <h2 className="text-3xl font-bold text-primary mb-6">Latest News</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(5)].map((_, index) => (
+            <Skeleton key={index} className="h-64 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
+
   return (
     <div id="agricNews" className="max-w-6xl mx-auto px-4 py-8 font-mono">
       <h2 className="text-3xl font-bold text-primary mb-6">Latest News</h2>
@@ -58,9 +67,11 @@ export default function AgriculturalNews() {
         {newsItems.map((item) => (
           <Link
             href={item.url}
-            key={item.id}
+            key={item.uri}
             className="block h-full"
             draggable="false"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             <Card className="h-full overflow-hidden rounded-xl border-none shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
               <CardContent className="p-0 h-full">
@@ -91,7 +102,7 @@ export default function AgriculturalNews() {
           className="font-semibold bg-primary"
           asChild
         >
-          <a href="#">Discover More</a>
+          <Link href="/news">Discover More</Link>
         </Button>
       </div>
     </div>

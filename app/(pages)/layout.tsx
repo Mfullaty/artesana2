@@ -1,6 +1,6 @@
 import Footer from "@/components/layouts/Footer";
 import Header from "@/components/layouts/Header";
-import StockMarquee from "@/components/StockMarquee";
+import NewsMarquee from "@/components/NewsMarquee";
 
 export default function PagesLayout({
   children,
@@ -12,7 +12,8 @@ export default function PagesLayout({
       <Header />
       {/* Stock Marquee Section */}
       <div className="mt-20 py-2 bg-white">
-        <StockMarquee />
+        {/* <StockMarquee /> */}
+        <NewsMarquee />
       </div>
       <div>{children}</div>
       <Footer />
