@@ -65,13 +65,12 @@ export default function AgriculturalNews() {
       <h2 className="text-3xl font-bold text-primary mb-6">Latest News</h2>
       <Carousel showPlayPauseButton={false} showIndicators={false} showControls={false}>
         {newsItems.map((item) => (
-          <Link
+          <a
             href={item.url}
             key={item.uri}
             className="block h-full"
             draggable="false"
             target="_blank"
-            rel="noopener noreferrer"
           >
             <Card className="h-full overflow-hidden rounded-xl border-none shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
               <CardContent className="p-0 h-full">
@@ -92,7 +91,7 @@ export default function AgriculturalNews() {
                 </div>
               </CardContent>
             </Card>
-          </Link>
+          </a>
         ))}
       </Carousel>
       <div className="mt-8 text-center">
