@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
     // Send email using Resend
     await resend.emails.send({
-      from: body.email,
+      from: "info@artesana.com.ng",
       to: 'MustaphaIbrahim37@gmail.com',
       subject: 'Quote Request From '+body.fullName,
       html: `<p>Hello, Admin ${body.fullName + ' Filled the Quote Form'},</p><p>Login to your dashboard to view the quote: https://artesana.com.ng/admin/quotes</p>`,
