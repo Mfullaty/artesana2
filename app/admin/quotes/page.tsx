@@ -1,11 +1,8 @@
 import QuotesTab from '@/components/admin/QuotesTab'
 
-const QuotesPage = () => {
-  return (
-    <div>
-      <QuotesTab />
-    </div>
-  )
+const QuotesPage = async() => {
+
+return <QuotesTab />;
 }
 
 export default QuotesPage

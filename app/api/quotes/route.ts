@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import {db} from "@/lib/db";
-import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1");
@@ -63,14 +61,6 @@ export async function POST(request: Request) {
         additionalInfo: body.additionalInfo,
       },
     });
-
-    // Send email using Resend
-    await resend.emails.send({
-      from: "info@artesana.com.ng",
-      to: 'MustaphaIbrahim37@gmail.com',
-      subject: 'Quote Request From '+body.fullName,
-      html: `<p>Hello, Admin ${body.fullName + ' Filled the Quote Form'},</p><p>Login to your dashboard to view the quote: https://artesana.com.ng/admin/quotes</p>`,
-    })
     return NextResponse.json(quote);
   } catch (error) {
     console.error("Error creating quote:", error);

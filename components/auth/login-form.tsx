@@ -38,8 +38,8 @@ const LoginForm = () => {
     setSuccess("");
     startTransition(() => {
       login(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
+        setSuccess(data?.success);
       });
     });
   };
@@ -48,7 +48,7 @@ const LoginForm = () => {
       headerLabel="Welcome Back"
       backButtonLabel="Not Registered Yet?"
       backButtonHref="/register"
-      showSocial
+      showSocial={false}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="spce-y-6">

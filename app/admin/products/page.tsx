@@ -1,11 +1,7 @@
 import ProductsTab from '@/components/admin/ProductsTab'
 
-const ProductsPage = () => {
-  return (
-    <div>
-      <ProductsTab />
-    </div>
-  )
+const ProductsPage = async() => {
+return <ProductsTab />;
 }
 
 export default ProductsPage

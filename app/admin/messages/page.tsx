@@ -1,11 +1,7 @@
-import MessagesTab from '@/components/admin/MessagesTab'
+import MessagesTab from "@/components/admin/MessagesTab";
 
-const MessagesPage = () => {
-  return (
-    <div>
-      <MessagesTab />
-    </div>
-  )
-}
+const MessagesPage = async () => {
+  return <MessagesTab />;
+};
 
-export default MessagesPage
+export default MessagesPage;

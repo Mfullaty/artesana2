@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Package, MessageSquare, FileText, X, Menu, ChevronLeft, ChevronRight, LogOut, Boxes } from "lucide-react"
+import { signOut } from "next-auth/react"
 
 export function Sidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -82,7 +83,7 @@ export function Sidebar() {
           <Button
             variant="ghost"
             className={`w-full justify-start  ${isSidebarOpen ? 'px-4' : 'px-0 justify-center'}`}
-            onClick={handleLogout}
+            onClick={() => signOut()}
             title="Logout"
           >
             <LogOut className="h-5 w-5 mr-2" />

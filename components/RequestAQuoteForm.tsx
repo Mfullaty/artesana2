@@ -703,7 +703,7 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
             )}
           />
 
-          <div
+          {/* <div
             className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer transition-colors hover:border-primary"
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleFileDrop}
@@ -748,7 +748,7 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
 
           <FormError message={error} />
           <FormSuccess message={success} />

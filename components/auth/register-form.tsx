@@ -49,7 +49,7 @@ const RegisterForm = () => {
       headerLabel="Create Account"
       backButtonLabel="Already Registered?"
       backButtonHref="/login"
-      showSocial
+      showSocial= {false}
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="spce-y-6">
