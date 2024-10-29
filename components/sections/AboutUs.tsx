@@ -16,7 +16,7 @@ export default function AboutUs() {
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
               <Link
-                href="/#contactUs"
+                href="/contact-us"
                 className="inline-flex h-10 items-center justify-center rounded-md bg-[#2C5E3F] px-6 md:px-8 text-sm font-medium text-white shadow transition-colors hover:bg-[#2C5E3F]/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#2C5E3F]"
               >
                 Contact Us
