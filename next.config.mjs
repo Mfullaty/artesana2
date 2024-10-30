@@ -13,6 +13,11 @@ const nextConfig = {
         protocol: 'http',
         hostname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/dtovtzadn/image/upload/**',
+      },
     ],
   },
 };

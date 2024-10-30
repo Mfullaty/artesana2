@@ -31,16 +31,16 @@ export default function AboutUsPage() {
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-background to-background/80">
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
           <Image
-            src="/placeholder.svg?height=1080&width=1920"
-            alt="Artesana Hero"
+            src="/images/about-us-banner.webp"
+            alt="Artesana About Us Hero Image"
             layout="fill"
             objectFit="cover"
             className="absolute inset-0 z-0"
             priority
           />
-          <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-80 z-10"></div>
           <div className="relative z-20 text-center text-white px-4 sm:px-6 lg:px-8">
             <motion.h1 
               className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4"
@@ -57,7 +57,7 @@ export default function AboutUsPage() {
               variants={fadeIn}
               transition={{ delay: 0.2 }}
             >
-              Delivering Premium African Agro-Products to the World
+              Delivering Premium African Agro-Products to the World. We are committed to bringing the best of African agriculture to the global stage. As a non-oil export company, we specialize in premium, organic products that embody the richness and diversity of African soil.
             </motion.p>
           </div>
         </section>
@@ -74,6 +74,7 @@ export default function AboutUsPage() {
               <motion.h2 variants={fadeIn} className="text-3xl font-bold text-center mb-8">Our Story</motion.h2>
               <motion.p variants={fadeIn}>
                 At Artesana, we are passionate about delivering premium quality African agricultural products to the world. As a certified and fully registered business, we strictly comply with local and international regulations, ensuring a seamless and trustworthy experience for our global partners. We specialize in the export of grains, seeds, herbs, and other agro-products, focusing on sustainable sourcing and ethical practices.
+
               </motion.p>
             </motion.div>
           </div>

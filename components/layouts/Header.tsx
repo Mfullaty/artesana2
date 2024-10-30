@@ -23,10 +23,10 @@ import NewsMarquee from "../NewsMarquee";
 
 const navItems: NavItems[] = [
   { label: "Home", href: "/", icon: Home },
-  { label: "Products", href: "/#products", icon: Box },
+  { label: "Products", href: "/products", icon: Box },
   { label: "About us", href: "/about-us", icon: Info },
   { label: "Services", href: "/our-services", icon: Truck },
-  { label: "News", href: "/#agricNews", icon: SheetIcon },
+  { label: "News", href: "/news", icon: SheetIcon },
   { label: "Contact us", href: "/contact-us", icon: Headphones },
 ];
 const Header = () => {
