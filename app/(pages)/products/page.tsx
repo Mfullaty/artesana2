@@ -1,120 +1,132 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { ChevronLeft, ChevronRight, Check, Search, Filter, X } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Skeleton } from "@/components/ui/skeleton"
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  Search,
+  Filter,
+  X,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
+import CallToAction from "@/components/CallToAction";
+import FeaturedProducts from "@/components/sections/FeaturedProducts";
 
 interface Product {
-  id: string
-  name: string
-  description: string
-  origin: string
-  moisture: string
-  color: string
-  form: string
-  cultivation: string
-  cultivationType: string
-  purity: string
-  grades: string
-  measurement: string
-  inStock: number
-  images: string[]
+  id: string;
+  name: string;
+  description: string;
+  origin: string;
+  moisture: string;
+  color: string;
+  form: string;
+  cultivation: string;
+  cultivationType: string;
+  purity: string;
+  grades: string;
+  measurement: string;
+  inStock: number;
+  images: string[];
 }
 
 interface PaginationInfo {
-  page: number
-  limit: number
-  total: number
-  totalPages: number
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 interface Filters {
-  form: string[]
-  cultivation: string[]
+  form: string[];
+  cultivation: string[];
 }
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 6,
     total: 0,
-    totalPages: 0
-  })
-  const [loading, setLoading] = useState(true)
+    totalPages: 0,
+  });
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<Filters>({
     form: [],
     cultivation: [],
-  })
-  const [searchTerm, setSearchTerm] = useState('')
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
-    fetchProducts()
-  }, [pagination.page])
+    fetchProducts();
+  }, [pagination.page]);
 
   useEffect(() => {
-    applyFiltersAndSearch()
-  }, [filters, searchTerm, products])
+    applyFiltersAndSearch();
+  }, [filters, searchTerm, products]);
 
   const fetchProducts = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`/api/products?page=${pagination.page}&limit=${pagination.limit}`)
-      const data = await response.json()
-      setProducts(data.products)
-      setPagination(data.pagination)
+      const response = await fetch(
+        `/api/products?page=${pagination.page}&limit=${pagination.limit}`
+      );
+      const data = await response.json();
+      setProducts(data.products);
+      setPagination(data.pagination);
     } catch (error) {
-      console.error('Error fetching products:', error)
+      console.error("Error fetching products:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const applyFiltersAndSearch = () => {
-    const filtered = products.filter(product => {
-      const matchesFilters = (
+    const filtered = products.filter((product) => {
+      const matchesFilters =
         (filters.form.length === 0 || filters.form.includes(product.form)) &&
-        (filters.cultivation.length === 0 || filters.cultivation.includes(product.cultivation))
-      )
-      const matchesSearch = (
+        (filters.cultivation.length === 0 ||
+          filters.cultivation.includes(product.cultivation));
+      const matchesSearch =
         product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.origin.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      return matchesFilters && matchesSearch
-    })
-    setFilteredProducts(filtered)
-  }
+        product.origin.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesFilters && matchesSearch;
+    });
+    setFilteredProducts(filtered);
+  };
 
   const handleFilterChange = (filterType: keyof Filters, value: string) => {
-    setFilters(prevFilters => {
-      const updatedFilters = { ...prevFilters }
+    setFilters((prevFilters) => {
+      const updatedFilters = { ...prevFilters };
       if (updatedFilters[filterType].includes(value)) {
-        updatedFilters[filterType] = updatedFilters[filterType].filter(item => item !== value)
+        updatedFilters[filterType] = updatedFilters[filterType].filter(
+          (item) => item !== value
+        );
       } else {
-        updatedFilters[filterType] = [...updatedFilters[filterType], value]
+        updatedFilters[filterType] = [...updatedFilters[filterType], value];
       }
-      return updatedFilters
-    })
-  }
+      return updatedFilters;
+    });
+  };
 
   const handlePageChange = (newPage: number) => {
-    setPagination(prev => ({ ...prev, page: newPage }))
-  }
+    setPagination((prev) => ({ ...prev, page: newPage }));
+  };
 
   const ProductCard = ({ product }: { product: Product }) => (
     <Link href={`/products/${product.id}`} passHref>
@@ -130,22 +142,28 @@ export default function ProductsPage() {
         </div>
         <CardContent className="p-6">
           <div className="mb-2">
-            <p className="text-sm font-bold text-gray-500 uppercase">{product.origin}</p>
+            <p className="text-sm text-gray-700 font-bold capitalize">
+              ORIGIN: {product.origin}
+            </p>
           </div>
           <h3 className="font-bold text-2xl mb-2">{product.name}</h3>
           <div className="flex justify-between text-sm text-primary font-bold mb-4">
             <span>Purity: {product.purity}</span>
-            <span>In Stock: {product.inStock} {product.measurement}</span>
+            <span>
+              In Stock: {product.inStock} {product.measurement}
+            </span>
           </div>
-          <p className="text-gray-600 mb-2 line-clamp-3">{product.description}</p>
-          
+          <p className="text-gray-600 mb-2 line-clamp-3">
+            {product.description}
+          </p>
+
           <div className="grid grid-cols-2 gap-4 text-sm">
             {[
-              { label: 'Moisture', value: product.moisture },
-              { label: 'Grades', value: product.grades },
-              { label: 'Color', value: product.color },
-              { label: 'Cultivation', value: product.cultivation },
-              { label: 'Form', value: product.form },
+              { label: "Moisture", value: product.moisture },
+              { label: "Grades", value: product.grades },
+              { label: "Color", value: product.color },
+              { label: "Cultivation", value: product.cultivation },
+              { label: "Form", value: product.form },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-center">
                 <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center mr-2 flex-shrink-0">
@@ -158,23 +176,38 @@ export default function ProductsPage() {
         </CardContent>
       </Card>
     </Link>
-  )
+  );
 
   const FilterModal = () => (
     <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="mb-4" onClick={() => setIsFilterOpen(true)}>
+        <Button
+          variant="outline"
+          className="mb-4"
+          onClick={() => setIsFilterOpen(true)}
+        >
           <Filter className="mr-2 h-4 w-4" /> Filter Products
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]" onPointerDownOutside={() => setIsFilterOpen(false)}>
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onPointerDownOutside={() => setIsFilterOpen(false)}
+      >
         <DialogHeader>
           <DialogTitle>Filter Products</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {[
-            { title: 'Form', key: 'form' as keyof Filters, options: ['Whole', 'Ground', 'Powder'] },
-            { title: 'Cultivation', key: 'cultivation' as keyof Filters, options: ['Organic', 'Conventional'] },
+            {
+              title: "Form",
+              key: "form" as keyof Filters,
+              options: ["whole", "pieces", "Powder"],
+            },
+            {
+              title: "Cultivation",
+              key: "cultivation" as keyof Filters,
+              options: ["organic", "conventional"],
+            },
           ].map(({ title, key, options }) => (
             <div key={key} className="space-y-2">
               <h3 className="font-semibold">{title}</h3>
@@ -193,37 +226,56 @@ export default function ProductsPage() {
             </div>
           ))}
         </div>
-        <Button variant="outline" onClick={() => setIsFilterOpen(false)} className="mt-4">
+        <Button
+          variant="outline"
+          onClick={() => setIsFilterOpen(false)}
+          className="mt-4"
+        >
           <X className="mr-2 h-4 w-4" /> Close
         </Button>
       </DialogContent>
     </Dialog>
-  )
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <Image
-          src="/placeholder.svg?height=1080&width=1920"
+          src="/images/cultivation.webp"
           alt="Artesana Organic Products"
           width={1920}
           height={1080}
           className="absolute inset-0 object-cover w-full h-full"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-50" />
+        <div className="absolute inset-0 bg-yellow-800 bg-opacity-80 backdrop-blur-sm" />
         <div className="relative z-10 text-center text-white">
-          <h1 className="text-6xl font-bold mb-4">Certified Organic Products</h1>
-          <p className="text-2xl max-w-3xl mx-auto">
-            Discover our range of premium, certified organic agricultural products sourced from trusted farms worldwide.
+          <h1 className="text-4xl font-bold mb-4 drop-shadow-md">
+            Certified Quality Products
+          </h1>
+          <p className="text-base mb-5 font-mono max-w-3xl mx-auto">
+            Discover our range of premium, certified organic and conventional
+            agricultural products sourced from trusted farms and producers
+            worldwide. Each product is sourced from trusted farms or producers,
+            selected for their commitment to sustainable and eco-friendly
+            practices.
+          </p>
+          <p className="text-base max-w-3xl font-mono mx-auto">
+            From vibrant, nutrient-rich fruits and vegetables to carefully
+            cultivated grains and spices, our products are rigorously tested and
+            certified to bring you the best in organic agriculture. Embrace
+            freshness, purity, and authenticity with every product, crafted for
+            those who value quality and care in every bite.
           </p>
         </div>
       </section>
 
       {/* Main Content */}
       <div className="container mx-auto py-16 px-4">
-        <h2 className="text-4xl font-bold mb-8 text-center">Our Products</h2>
-        
+        <h2 className="text-4xl font-bold mb-8 text-center">
+          Explore Our Products Portfolio
+        </h2>
+
         {/* Search and Filter */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
           <div className="relative w-full sm:w-96">
@@ -265,16 +317,18 @@ export default function ProductsPage() {
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Previous page</span>
           </Button>
-          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
-            <Button
-              key={page}
-              variant={pagination.page === page ? "default" : "outline"}
-              size="icon"
-              onClick={() => handlePageChange(page)}
-            >
-              {page}
-            </Button>
-          ))}
+          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+            (page) => (
+              <Button
+                key={page}
+                variant={pagination.page === page ? "default" : "outline"}
+                size="icon"
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </Button>
+            )
+          )}
           <Button
             variant="outline"
             size="icon"
@@ -285,7 +339,13 @@ export default function ProductsPage() {
             <span className="sr-only">Next page</span>
           </Button>
         </div>
+
+        {/* Call To Action */}
+        <CallToAction />
+
+        {/* Featured Products Section */}
+        <FeaturedProducts title="Featured Products" description="" />
       </div>
     </div>
-  )
+  );
 }
