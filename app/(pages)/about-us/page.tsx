@@ -101,6 +101,7 @@ export default function AboutUsPage() {
                 of grains, seeds, herbs, and other agro-products, focusing on
                 sustainable sourcing and ethical practices."
         />
+
         {/* Why Choose Us Section */}
         <section className="py-16 bg-muted">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
