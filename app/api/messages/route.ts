@@ -60,3 +60,27 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const body = await req.json()
+    const { messageIds } = body
+
+    if (!Array.isArray(messageIds) || messageIds.length === 0) {
+      return NextResponse.json({ error: 'Invalid message IDs' }, { status: 400 })
+    }
+
+    await db.message.deleteMany({
+      where: {
+        id: {
+          in: messageIds,
+        },
+      },
+    })
+
+    return NextResponse.json({ success: true, deletedCount: messageIds.length })
+  } catch (error) {
+    console.error('Error deleting messages:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}

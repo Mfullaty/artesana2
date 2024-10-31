@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import {db} from "@/lib/db";
+import { db } from "@/lib/db";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -66,6 +66,33 @@ export async function POST(request: Request) {
     console.error("Error creating quote:", error);
     return NextResponse.json(
       { error: "Error creating quote" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { quoteIds } = body;
+
+    if (!Array.isArray(quoteIds) || quoteIds.length === 0) {
+      return NextResponse.json({ error: 'Invalid quote IDs' }, { status: 400 });
+    }
+
+    const result = await db.quote.deleteMany({
+      where: {
+        id: {
+          in: quoteIds,
+        },
+      },
+    });
+
+    return NextResponse.json({ success: true, deletedCount: result.count });
+  } catch (error) {
+    console.error("Error deleting quotes:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

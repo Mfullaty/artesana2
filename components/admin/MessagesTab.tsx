@@ -55,8 +55,12 @@ export default function MessagesTab() {
   const handleDeleteMessage = async (id: string) => {
     setLoadingStates(prev => ({ ...prev, [id]: true }))
     try {
-      const response = await fetch(`/api/messages/${id}`, {
+      const response = await fetch(`/api/messages`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messageIds: [id] }),
       })
       if (!response.ok) {
         throw new Error('Failed to delete message')
@@ -77,19 +81,27 @@ export default function MessagesTab() {
 
     setIsBulkDeleting(true)
     try {
-      // Implement bulk delete API call here
-      // For now, we'll delete messages one by one
-      for (const messageId of selectedMessages) {
-        await handleDeleteMessage(messageId)
+      const response = await fetch(`/api/messages`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messageIds: selectedMessages }),
+      })
+      if (!response.ok) {
+        throw new Error('Failed to delete messages')
       }
+      const data = await response.json()
+      await fetchMessages()
       setSelectedMessages([])
       setIsSelectionMode(false)
-      toast.success(`${selectedMessages.length} messages deleted successfully.`)
+      toast.success(`${data.deletedCount} messages deleted successfully.`)
     } catch (error) {
       console.error('Error bulk deleting messages:', error)
       toast.error("Failed to delete messages. Please try again.")
     } finally {
       setIsBulkDeleting(false)
+      setDeleteConfirmation({ isOpen: false, messageId: null })
     }
   }
 
@@ -128,7 +140,7 @@ export default function MessagesTab() {
             <CardDescription>View and manage incoming messages</CardDescription>
           </div>
           <div className="flex items-center flex-wrap gap-2">
-            <Badge className="bg-green-500 w-12 p-1">{unreadCount} New</Badge>
+            <Badge className="bg-green-500 w-12 p-1 text-center">{unreadCount} New</Badge>
             {isSelectionMode ? (
               <>
                 <Button
