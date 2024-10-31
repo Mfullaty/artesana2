@@ -6,19 +6,21 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-serif text-accent">About Us</h3>
+            <h3 className="text-lg font-semibold mb-4 font-serif text-accent">
+              About Us
+            </h3>
             <p className="text-gray-300 font-sans">
-              ARTESANA is a leading provider of products, connecting skilled
-              craftspeople worldwide with discerning customers who appreciate
-              quality.
+            Unlock endless possibilities with our export company. By focusing on top-tier agro products, we empower businesses like yours to excel in the global market.
             </p>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-serif text-accent">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4 font-serif text-accent">
+              Quick Links
+            </h3>
             <ul className="space-y-2 font-sans">
               <li>
                 <a
-                  href="#"
+                  href="/"
                   className="text-gray-300 hover:text-accent transition duration-300"
                 >
                   Home
@@ -26,15 +28,25 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/products"
                   className="text-gray-300 hover:text-accent transition duration-300"
                 >
                   Products
                 </a>
               </li>
+              
               <li>
                 <a
-                  href="#"
+                  href="/about-us"
+                  className="text-gray-300 hover:text-accent transition duration-300"
+                >
+                  About Us
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="/our-services"
                   className="text-gray-300 hover:text-accent transition duration-300"
                 >
                   Services
@@ -42,7 +54,15 @@ const Footer = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/news"
+                  className="text-gray-300 hover:text-accent transition duration-300"
+                >
+                  News
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/contact-us"
                   className="text-gray-300 hover:text-accent transition duration-300"
                 >
                   Contact
@@ -51,13 +71,20 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4 font-serif text-accent">Address</h3>
+            <h3 className="text-lg font-semibold mb-4 font-serif text-accent">
+              Address
+            </h3>
             <p className="text-gray-300 font-sans">
-              123 Artisan Street
+              Tunde adeniran street,
               <br />
-              Craft City, AC 12345
+              Guzape, Abuja.
               <br />
-              <a className="font-bold text-primary-foreground hover:text-accent" href="mailto:contact@artesana.com.ng">contact@artesana.com.ng</a>
+              <a
+                className="font-bold text-primary-foreground hover:text-accent"
+                href="mailto:info@artesana.com.ng"
+              >
+                info@artesana.com.ng
+              </a>
             </p>
           </div>
         </div>

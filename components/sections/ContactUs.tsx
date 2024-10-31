@@ -137,7 +137,7 @@ export default function ContactUs() {
                 <div>
                   <p className="font-medium text-white">Address</p>
                   <p className="text-white text-opacity-80">
-                    Tunde adeniran street, Guzape, Abuja
+                    Tunde adeniran street, Guzape, Abuja.
                   </p>
                 </div>
               </div>
@@ -152,7 +152,7 @@ export default function ContactUs() {
             </div>
             <div className="mt-6">
               <Button
-                onClick={() => window.open("https://wa.me/2348138497268", "_blank")}
+                onClick={() => window.open("https://wa.me/2347081746683", "_blank")}
                 variant="outline"
                 className="w-full bg-white bg-opacity-20 text-white border-white border-opacity-50 hover:bg-opacity-30 transition-all duration-300 font-semibold backdrop-filter backdrop-blur-sm"
               >

@@ -1,31 +1,44 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { ChevronDown, ChevronUp, Check, Zap, Shield, MessageSquare } from 'lucide-react'
+import { useState } from "react";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import {
+  ChevronDown,
+  ChevronUp,
+  Check,
+  Zap,
+  Shield,
+  MessageSquare,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import FooterCallToAction from '@/components/FooterCallToAction'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import FooterCallToAction from "@/components/FooterCallToAction";
+import AboutUs from "@/components/sections/AboutUs";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-}
+  visible: { opacity: 1, y: 0 },
+};
 
 const staggerChildren = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
-}
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
 
 export default function AboutUsPage() {
-  const [expandedSection, setExpandedSection] = useState<string | null>(null)
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const toggleSection = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section)
-  }
+    setExpandedSection(expandedSection === section ? null : section);
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-background to-background/80">
@@ -40,50 +53,58 @@ export default function AboutUsPage() {
             className="absolute inset-0 z-0"
             priority
           />
-          <div className="absolute inset-0 bg-black bg-opacity-80 z-10"></div>
+          <div className="absolute inset-0 bg-yellow-800 bg-opacity-80 backdrop-blur-sm z-10"></div>
           <div className="relative z-20 text-center text-white px-4 sm:px-6 lg:px-8">
-            <motion.h1 
-              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-4"
+            <motion.h1
+              className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight"
               initial="hidden"
               animate="visible"
               variants={fadeIn}
             >
               About Artesana
             </motion.h1>
-            <motion.p 
-              className="text-xl sm:text-2xl md:text-3xl mb-8"
+            <motion.p
+              className="text-xl sm:text-2xl md:text-3xl"
               initial="hidden"
               animate="visible"
               variants={fadeIn}
               transition={{ delay: 0.2 }}
             >
-              Delivering Premium African Agro-Products to the World. We are committed to bringing the best of African agriculture to the global stage. As a non-oil export company, we specialize in premium, organic products that embody the richness and diversity of African soil.
+              Delivering Premium African Agro-Products to the World. We are
+              committed to bringing the best of African agriculture to the
+              global stage. As a non-oil export company, we specialize in
+              premium, organic products that embody the richness and diversity
+              of African soil.
             </motion.p>
           </div>
         </section>
 
         {/* About Us Section */}
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div 
-              className="prose prose-lg mx-auto"
-              initial="hidden"
-              animate="visible"
-              variants={staggerChildren}
-            >
-              <motion.h2 variants={fadeIn} className="text-3xl font-bold text-center mb-8">Our Story</motion.h2>
-              <motion.p variants={fadeIn}>
-                At Artesana, we are passionate about delivering premium quality African agricultural products to the world. As a certified and fully registered business, we strictly comply with local and international regulations, ensuring a seamless and trustworthy experience for our global partners. We specialize in the export of grains, seeds, herbs, and other agro-products, focusing on sustainable sourcing and ethical practices.
-
-              </motion.p>
-            </motion.div>
-          </div>
-        </section>
-
+        <div
+          id="aboutUs"
+          className="relative top-[80px] left-0 w-24 h-24 md:w-32 md:h-32"
+        >
+          <Image
+            src="/images/decorativeLeaf.png"
+            alt="Decorative leaf"
+            layout="fill"
+            objectFit="contain"
+          />
+        </div>
+        <AboutUs
+          title="Our Story"
+          description="At Artesana, we are passionate about delivering premium quality
+                African agricultural products to the world. As a certified and
+                fully registered business, we strictly comply with local and
+                international regulations, ensuring a seamless and trustworthy
+                experience for our global partners. We specialize in the export
+                of grains, seeds, herbs, and other agro-products, focusing on
+                sustainable sourcing and ethical practices."
+        />
         {/* Why Choose Us Section */}
         <section className="py-16 bg-muted">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.h2 
+            <motion.h2
               className="text-3xl font-bold text-center mb-12"
               initial="hidden"
               animate="visible"
@@ -91,23 +112,41 @@ export default function AboutUsPage() {
             >
               Why Choose Us?
             </motion.h2>
-            <motion.div 
+            <motion.div
               className="grid gap-8 md:grid-cols-3"
               initial="hidden"
               animate="visible"
               variants={staggerChildren}
             >
               {[
-                { icon: Check, title: "Quality Assurance", description: "Rigorous quality control from farm to shipment" },
-                { icon: Zap, title: "Efficiency", description: "Streamlined processes for quick and reliable delivery" },
-                { icon: Shield, title: "Compliance", description: "Full adherence to local and international regulations" }
+                {
+                  icon: Check,
+                  title: "Quality Assurance",
+                  description: "Rigorous quality control from farm to shipment",
+                },
+                {
+                  icon: Zap,
+                  title: "Efficiency",
+                  description:
+                    "Streamlined processes for quick and reliable delivery",
+                },
+                {
+                  icon: Shield,
+                  title: "Compliance",
+                  description:
+                    "Full adherence to local and international regulations",
+                },
               ].map((item, index) => (
                 <motion.div key={index} variants={fadeIn}>
                   <Card>
                     <CardContent className="flex flex-col items-center p-6 text-center">
                       <item.icon className="w-12 h-12 mb-4 text-primary" />
-                      <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                      <p className="text-muted-foreground">{item.description}</p>
+                      <h3 className="text-xl font-semibold mb-2">
+                        {item.title}
+                      </h3>
+                      <p className="text-muted-foreground">
+                        {item.description}
+                      </p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -119,7 +158,7 @@ export default function AboutUsPage() {
         {/* Expandable Sections */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.h2 
+            <motion.h2
               className="text-3xl font-bold text-center mb-12"
               initial="hidden"
               animate="visible"
@@ -129,18 +168,21 @@ export default function AboutUsPage() {
             </motion.h2>
             <Accordion type="single" collapsible className="w-full">
               {[
-                { 
+                {
                   title: "How Do We Ensure Product Safety?",
-                  content: "Product safety is at the heart of everything we do. We have implemented rigorous quality control systems throughout our supply chain, from farm to shipment. Each product undergoes thorough testing and inspection, ensuring compliance with international food safety standards. Our team of experts closely monitors every process to guarantee that only the best products leave our facilities."
+                  content:
+                    "Product safety is at the heart of everything we do. We have implemented rigorous quality control systems throughout our supply chain, from farm to shipment. Each product undergoes thorough testing and inspection, ensuring compliance with international food safety standards. Our team of experts closely monitors every process to guarantee that only the best products leave our facilities.",
                 },
                 {
                   title: "Why We Choose to Be Formal",
-                  content: "At Artesana, we understand that formalization is key to sustainable and transparent business. By being certified and fully registered, we align with both local and international laws. This not only ensures compliance but also instills confidence in our partners, knowing that they are working with a reputable and legally recognized entity. Our commitment to formality reflects our dedication to professionalism and long-term relationships."
+                  content:
+                    "At Artesana, we understand that formalization is key to sustainable and transparent business. By being certified and fully registered, we align with both local and international laws. This not only ensures compliance but also instills confidence in our partners, knowing that they are working with a reputable and legally recognized entity. Our commitment to formality reflects our dedication to professionalism and long-term relationships.",
                 },
                 {
                   title: "How We Solve Problems",
-                  content: "Our proactive approach to problem-solving sets us apart. Whether addressing supply chain challenges, meeting specific product requirements, or managing logistics, we take pride in delivering tailored solutions. We maintain open communication with our clients, anticipating needs and resolving any issues that arise promptly and efficiently. Our goal is to provide a seamless experience, ensuring your satisfaction every step of the way."
-                }
+                  content:
+                    "Our proactive approach to problem-solving sets us apart. Whether addressing supply chain challenges, meeting specific product requirements, or managing logistics, we take pride in delivering tailored solutions. We maintain open communication with our clients, anticipating needs and resolving any issues that arise promptly and efficiently. Our goal is to provide a seamless experience, ensuring your satisfaction every step of the way.",
+                },
               ].map((item, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
                   <AccordionTrigger>{item.title}</AccordionTrigger>
@@ -155,5 +197,5 @@ export default function AboutUsPage() {
         <FooterCallToAction />
       </main>
     </div>
-  )
+  );
 }
