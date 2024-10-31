@@ -4,19 +4,42 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { Toaster } from "@/components/ui/toaster";
-import { ArrowLeft, Pencil, Loader2 } from "lucide-react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ArrowLeft, Pencil, Loader2, Reply, Phone } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { QuoteDetailFormData, quoteDetailSchema } from "@/schemas/quotes";
 import { getQuoteDetail, updateQuote } from "@/actions/quote";
@@ -79,9 +102,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
         deliveryDate: new Date(data.deliveryDate),
         // Ensure arrays are initialized
         cultivationType: data.cultivationType ?? [],
-        files: data.files ?? []
+        files: data.files ?? [],
       };
-    }
+    },
   });
 
   const { isLoading } = form.formState;
@@ -93,7 +116,7 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
       if (!result.success) {
         throw new Error(result.error || "Failed to update quote");
       }
-      
+
       toast({
         title: "Success",
         description: "Quote updated successfully.",
@@ -143,8 +166,27 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
       </Button>
       <Card>
         <CardHeader>
-          <CardTitle>Quote Details</CardTitle>
-          <CardDescription>View and edit quote information</CardDescription>
+          <div className="flex justify-between gap-2 flex-wrap">
+            <div>
+              <CardTitle>Quote Details</CardTitle>
+              <CardDescription>View and edit quote information</CardDescription>
+            </div>
+            <div className="flex gap-2 items-center">
+              <a
+                className="bg-primary text-primary-foreground p-2 rounded-md hover:opacity-90"
+                href={"tel:" + form.getValues("phone")}
+              >
+                <Phone className="h-4 w-4" />
+              </a>
+
+              <a
+                className="bg-primary text-primary-foreground p-2 rounded-md hover:opacity-90"
+                href={`mailto:` + form.getValues("email")}
+              >
+                <Reply className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -152,7 +194,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Contact Information */}
                 <div className="col-span-2">
-                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Contact Information
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -189,7 +233,11 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                         <FormItem>
                           <FormLabel>Phone</FormLabel>
                           <FormControl>
-                            <Input {...field} value={field.value || ''} disabled={!isEditing} />
+                            <Input
+                              {...field}
+                              value={field.value || ""}
+                              disabled={!isEditing}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -203,7 +251,11 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                         <FormItem>
                           <FormLabel>Company Name</FormLabel>
                           <FormControl>
-                            <Input {...field} value={field.value || ''} disabled={!isEditing} />
+                            <Input
+                              {...field}
+                              value={field.value || ""}
+                              disabled={!isEditing}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -217,7 +269,11 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                         <FormItem>
                           <FormLabel>Website</FormLabel>
                           <FormControl>
-                            <Input {...field} value={field.value || ''} disabled={!isEditing} />
+                            <Input
+                              {...field}
+                              value={field.value || ""}
+                              disabled={!isEditing}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -243,10 +299,18 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                             <SelectContent>
                               <SelectItem value="import">Import</SelectItem>
                               <SelectItem value="export">Export</SelectItem>
-                              <SelectItem value="import-export">Import/Export</SelectItem>
-                              <SelectItem value="food-retail">Food Retail</SelectItem>
-                              <SelectItem value="food-services">Food Services</SelectItem>
-                              <SelectItem value="wholesale">Wholesale</SelectItem>
+                              <SelectItem value="import-export">
+                                Import/Export
+                              </SelectItem>
+                              <SelectItem value="food-retail">
+                                Food Retail
+                              </SelectItem>
+                              <SelectItem value="food-services">
+                                Food Services
+                              </SelectItem>
+                              <SelectItem value="wholesale">
+                                Wholesale
+                              </SelectItem>
                               <SelectItem value="retail">Retail</SelectItem>
                               <SelectItem value="other">Other</SelectItem>
                             </SelectContent>
@@ -260,7 +324,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
 
                 {/* Product Information */}
                 <div className="col-span-2">
-                  <h3 className="text-lg font-semibold mb-4">Product Information</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Product Information
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -321,7 +387,8 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                                 field.onChange(Array.from(current));
                               }}
                               disabled={!isEditing}
-                            /> Organic
+                            />{" "}
+                            Organic
                             <Checkbox
                               checked={field.value.includes("conventional")}
                               onCheckedChange={(checked) => {
@@ -334,7 +401,8 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                                 field.onChange(Array.from(current));
                               }}
                               disabled={!isEditing}
-                            /> Conventional
+                            />{" "}
+                            Conventional
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -358,11 +426,19 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="sun-dried">Sun Dried</SelectItem>
-                              <SelectItem value="sortex-cleaned">Sortex Cleaned</SelectItem>
-                              <SelectItem value="double-sortex-cleaned">Double Sortex Cleaned</SelectItem>
+                              <SelectItem value="sun-dried">
+                                Sun Dried
+                              </SelectItem>
+                              <SelectItem value="sortex-cleaned">
+                                Sortex Cleaned
+                              </SelectItem>
+                              <SelectItem value="double-sortex-cleaned">
+                                Double Sortex Cleaned
+                              </SelectItem>
                               <SelectItem value="roasted">Roasted</SelectItem>
-                              <SelectItem value="steam-sterilised">Steam Sterilised</SelectItem>
+                              <SelectItem value="steam-sterilised">
+                                Steam Sterilised
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -374,7 +450,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
 
                 {/* Quantity Information */}
                 <div className="col-span-2">
-                  <h3 className="text-lg font-semibold mb-4">Quantity Information</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Quantity Information
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -409,7 +487,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                             <SelectContent>
                               <SelectItem value="kilogram">Kilogram</SelectItem>
                               <SelectItem value="ton">Ton</SelectItem>
-                              <SelectItem value="metric-ton">Metric Ton</SelectItem>
+                              <SelectItem value="metric-ton">
+                                Metric Ton
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -448,7 +528,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
 
                 {/* Delivery Information */}
                 <div className="col-span-2">
-                  <h3 className="text-lg font-semibold mb-4">Delivery Information</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Delivery Information
+                  </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={form.control}
@@ -517,7 +599,10 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
                               <Calendar
                                 mode="single"
                                 selected={field.value}
@@ -551,7 +636,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                             <SelectContent>
                               <SelectItem value="weekly">Weekly</SelectItem>
                               <SelectItem value="monthly">Monthly</SelectItem>
-                              <SelectItem value="quarterly">Quarterly</SelectItem>
+                              <SelectItem value="quarterly">
+                                Quarterly
+                              </SelectItem>
                               <SelectItem value="annually">Annually</SelectItem>
                               <SelectItem value="one-time">One Time</SelectItem>
                             </SelectContent>
@@ -565,7 +652,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
 
                 {/* Additional Information */}
                 <div className="col-span-2">
-                  <h3 className="text-lg font-semibold mb-4">Additional Information</h3>
+                  <h3 className="text-lg font-semibold mb-4">
+                    Additional Information
+                  </h3>
                   <FormField
                     control={form.control}
                     name="additionalInfo"
@@ -573,7 +662,12 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                       <FormItem>
                         <FormLabel>Additional Notes</FormLabel>
                         <FormControl>
-                          <Textarea {...field} value={field.value || ''} disabled={!isEditing} className="min-h-[100px]" />
+                          <Textarea
+                            {...field}
+                            value={field.value || ""}
+                            disabled={!isEditing}
+                            className="min-h-[100px]"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -598,7 +692,9 @@ export default function QuoteDetail({ params }: { params: { id: string } }) {
                     Cancel
                   </Button>
                   <Button type="submit" disabled={isSaving}>
-                    {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isSaving && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
                     Save Changes
                   </Button>
                 </div>
