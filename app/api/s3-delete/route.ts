@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3"
 
-
 const s3Client = new S3Client({
-    region: "eu-north-1",
-    credentials: {
-      accessKeyId: "AKIAXQIQACUTMSJ4L5P4",
-      secretAccessKey: "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",
-    },
-  });
+  region: process.env.AWS_REGION!,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+})
 
 export async function DELETE(req: NextRequest) {
   try {
