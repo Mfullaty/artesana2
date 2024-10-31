@@ -29,7 +29,6 @@ interface Product {
   purity: string
   grades: string
   measurement: string
-  inStock: string
   images: string[]
 }
 
@@ -289,10 +288,6 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                   <h4 className="font-semibold">Measurement</h4>
                   <p>{product.measurement}</p>
                 </div>
-                <div>
-                  <h4 className="font-semibold">In Stock</h4>
-                  <p>{product.inStock}</p>
-                </div>
               </div>
               <div className="space-y-2">
                 <Button onClick={() => setIsEditModalOpen(true)} className="w-full">
@@ -414,10 +409,6 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                       <SelectItem value="grams">grams</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="inStock">In Stock</Label>
-                  <Input id="inStock" name="inStock" type="number" value={formData.inStock} onChange={handleInputChange} />
                 </div>
               </div>
 

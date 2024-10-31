@@ -64,7 +64,6 @@ model Product {
   purity          String?
   grades          String?
   measurement     String
-  inStock         Int
   images          String[] // Array to store multiple image URLs
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

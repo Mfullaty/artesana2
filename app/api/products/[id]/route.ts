@@ -64,7 +64,6 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       purity: formData.get('purity') as string,
       grades: formData.get('grades') as string,
       measurement: formData.get('measurement') as string,
-      inStock: formData.get('inStock') ? parseInt(formData.get('inStock') as string) : 0,
     }
 
     const existingProduct = await db.product.findUnique({

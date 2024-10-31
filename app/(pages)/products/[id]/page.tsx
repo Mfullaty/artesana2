@@ -27,7 +27,6 @@ interface Product {
   purity: string
   grades: string
   measurement: string
-  inStock: number
   images: string[]
 }
 
@@ -203,7 +202,6 @@ export default function ProductSinglePage({ params }: { params: { id: string } }
                     { label: "Purity", value: product.purity },
                     { label: "Grades", value: product.grades },
                     { label: "Measurement", value: product.measurement },
-                    { label: "In Stock", value: `${product.inStock} ${product.measurement}` },
                   ].map((detail, index) => (
                     <div key={index} className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg shadow-sm">
                       <span className="w-3 h-3 bg-primary rounded-full flex-shrink-0"></span>

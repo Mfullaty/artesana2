@@ -13,7 +13,6 @@ export const productSchema = z.object({
   purity: z.string().optional(),
   grades: z.string().optional(),
   measurement: z.string(),
-  inStock: z.number().int().min(0),
   images: z.array(z.string()),
 })
 

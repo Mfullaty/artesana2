@@ -19,7 +19,6 @@ export async function createProduct(formData: FormData) {
       purity: formData.get('purity') as string || undefined,
       grades: formData.get('grades') as string || undefined,
       measurement: formData.get('measurement') as string,
-      inStock: parseInt(formData.get('inStock') as string) || 0,
       images: [],
     }
 
@@ -103,7 +102,6 @@ export async function updateProduct(formData: FormData) {
       purity: formData.get('purity') as string || '',
       grades: formData.get('grades') as string || '',
       measurement: formData.get('measurement') as string || '',
-      inStock: formData.get('inStock') ? parseInt(formData.get('inStock') as string) : 0,
     }
 
     const existingProduct = await db.product.findUnique({ where: { id } })

@@ -3,28 +3,12 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  Search,
-  Filter,
-  X,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Check, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import CallToAction from "@/components/CallToAction";
-import FeaturedProducts from "@/components/sections/FeaturedProducts";
 
 interface Product {
   id: string;
@@ -39,7 +23,6 @@ interface Product {
   purity: string;
   grades: string;
   measurement: string;
-  inStock: number;
   images: string[];
 }
 
@@ -48,11 +31,6 @@ interface PaginationInfo {
   limit: number;
   total: number;
   totalPages: number;
-}
-
-interface Filters {
-  form: string[];
-  cultivation: string[];
 }
 
 export default function ProductsPage() {
@@ -65,20 +43,15 @@ export default function ProductsPage() {
     totalPages: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<Filters>({
-    form: [],
-    cultivation: [],
-  });
   const [searchTerm, setSearchTerm] = useState("");
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
   }, [pagination.page]);
 
   useEffect(() => {
-    applyFiltersAndSearch();
-  }, [filters, searchTerm, products]);
+    applySearch();
+  }, [searchTerm, products]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -96,32 +69,12 @@ export default function ProductsPage() {
     }
   };
 
-  const applyFiltersAndSearch = () => {
-    const filtered = products.filter((product) => {
-      const matchesFilters =
-        (filters.form.length === 0 || filters.form.includes(product.form)) &&
-        (filters.cultivation.length === 0 ||
-          filters.cultivation.includes(product.cultivation));
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.origin.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesFilters && matchesSearch;
-    });
+  const applySearch = () => {
+    const filtered = products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.origin.toLowerCase().includes(searchTerm.toLowerCase())
+    );
     setFilteredProducts(filtered);
-  };
-
-  const handleFilterChange = (filterType: keyof Filters, value: string) => {
-    setFilters((prevFilters) => {
-      const updatedFilters = { ...prevFilters };
-      if (updatedFilters[filterType].includes(value)) {
-        updatedFilters[filterType] = updatedFilters[filterType].filter(
-          (item) => item !== value
-        );
-      } else {
-        updatedFilters[filterType] = [...updatedFilters[filterType], value];
-      }
-      return updatedFilters;
-    });
   };
 
   const handlePageChange = (newPage: number) => {
@@ -149,9 +102,6 @@ export default function ProductsPage() {
           <h3 className="font-bold text-2xl mb-2">{product.name}</h3>
           <div className="flex justify-between text-sm text-primary font-bold mb-4">
             <span>Purity: {product.purity}</span>
-            <span>
-              In Stock: {product.inStock} {product.measurement}
-            </span>
           </div>
           <p className="text-gray-600 mb-2 line-clamp-3">
             {product.description}
@@ -178,65 +128,6 @@ export default function ProductsPage() {
     </Link>
   );
 
-  const FilterModal = () => (
-    <Dialog open={isFilterOpen} onOpenChange={setIsFilterOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          className="mb-4"
-          onClick={() => setIsFilterOpen(true)}
-        >
-          <Filter className="mr-2 h-4 w-4" /> Filter Products
-        </Button>
-      </DialogTrigger>
-      <DialogContent
-        className="sm:max-w-[425px]"
-        onPointerDownOutside={() => setIsFilterOpen(false)}
-      >
-        <DialogHeader>
-          <DialogTitle>Filter Products</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {[
-            {
-              title: "Form",
-              key: "form" as keyof Filters,
-              options: ["whole", "pieces", "Powder"],
-            },
-            {
-              title: "Cultivation",
-              key: "cultivation" as keyof Filters,
-              options: ["organic", "conventional"],
-            },
-          ].map(({ title, key, options }) => (
-            <div key={key} className="space-y-2">
-              <h3 className="font-semibold">{title}</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {options.map((option) => (
-                  <label key={option} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`${key}-${option}`}
-                      checked={filters[key].includes(option)}
-                      onCheckedChange={() => handleFilterChange(key, option)}
-                    />
-                    <span>{option}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-        <Button
-          variant="outline"
-          onClick={() => setIsFilterOpen(false)}
-          className="mt-4"
-        >
-          <X className="mr-2 h-4 w-4" /> Close
-        </Button>
-      </DialogContent>
-    </Dialog>
-  );
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -249,7 +140,7 @@ export default function ProductsPage() {
           className="absolute inset-0 object-cover w-full h-full"
         />
         <div className="absolute inset-0 bg-yellow-800 bg-opacity-80 backdrop-blur-sm" />
-        <div className="relative z-10 text-center text-white">
+        <div className="relative z-10 text-center p-5 text-white">
           <h1 className="text-4xl font-bold mb-4 drop-shadow-md">
             Certified Quality Products
           </h1>
@@ -276,9 +167,9 @@ export default function ProductsPage() {
           Explore Our Products Portfolio
         </h2>
 
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <div className="relative w-full sm:w-96">
+        {/* Search */}
+        <div className="flex justify-center mb-8">
+          <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <Input
               type="text"
@@ -288,7 +179,6 @@ export default function ProductsPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <FilterModal />
         </div>
 
         {/* Product Grid */}
@@ -342,9 +232,6 @@ export default function ProductsPage() {
 
         {/* Call To Action */}
         <CallToAction />
-
-        {/* Featured Products Section */}
-        <FeaturedProducts title="Featured Products" description="" />
       </div>
     </div>
   );

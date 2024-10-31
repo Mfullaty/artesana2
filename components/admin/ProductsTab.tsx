@@ -70,7 +70,6 @@ export default function ProductsTab() {
     purity: "",
     grades: "",
     measurement: "",
-    inStock: "",
   });
 
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -262,7 +261,6 @@ export default function ProductsTab() {
       purity: "",
       grades: "",
       measurement: "",
-      inStock: "",
     });
     setImageFiles([]);
     setImagePreviews([]);
@@ -365,7 +363,6 @@ export default function ProductsTab() {
                     <TableHead>Name</TableHead>
                     <TableHead>Image</TableHead>
                     <TableHead className="w-1/3">Description</TableHead>
-                    <TableHead>In Stock</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -436,7 +433,6 @@ export default function ProductsTab() {
                             {product.description}
                           </div>
                         </TableCell>
-                        <TableCell>{product.inStock}</TableCell>
                         <TableCell onClick={(e) => e.stopPropagation()}>
                           <Button
                             variant="ghost"
@@ -640,16 +636,6 @@ export default function ProductsTab() {
                         <SelectItem value="grams">grams</SelectItem>
                       </SelectContent>
                     </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="inStock">In Stock</Label>
-                    <Input
-                      id="inStock"
-                      name="inStock"
-                      type="number"
-                      value={formData.inStock}
-                      onChange={handleInputChange}
-                    />
                   </div>
                 </div>
 
