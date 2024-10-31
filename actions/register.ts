@@ -1,4 +1,5 @@
 "use server";
+
 import { RegisterSchema } from "@/schemas";
 import * as z from "zod";
 import bcrypt from "bcryptjs";
@@ -20,14 +21,18 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "Email already taken" };
   }
 
-  await db.user.create({
-    data: {
-      name,
-      email: email.toLocaleLowerCase(),
-      password: hashedPassword,
-    },
-  });
+  try {
+    await db.user.create({
+      data: {
+        name,
+        email: email.toLowerCase(),
+        password: hashedPassword,
+      },
+    });
 
-  //TODO:: Send verification token email later
-  return { success: "Registered" };
+    // TODO: Send verification token email later
+    return { success: "Registered successfully. Redirecting to login..." };
+  } catch (error) {
+    return { error: "An error occurred during registration. Please try again." };
+  }
 };

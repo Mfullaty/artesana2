@@ -1,11 +1,11 @@
 "use client";
-import * as z from "zod";
 
+import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { RegisterSchema } from "@/schemas";
-
 import {
   Form,
   FormControl,
@@ -20,7 +20,9 @@ import { Button } from "../ui/button";
 import FormError from "../FormError";
 import FormSuccess from "../FormSuccess";
 import { register } from "@/actions/register";
+
 const RegisterForm = () => {
+  const router = useRouter();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -39,20 +41,27 @@ const RegisterForm = () => {
     setSuccess("");
     startTransition(() => {
       register(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        if (data.error) {
+          setError(data.error);
+        } else if (data.success) {
+          setSuccess(data.success);
+          setTimeout(() => {
+            router.push("/login");
+          }, 1500); // Redirect after 1.5 seconds to allow user to see success message
+        }
       });
     });
   };
+
   return (
     <CardWrapper
       headerLabel="Create Account"
       backButtonLabel="Already Registered?"
       backButtonHref="/login"
-      showSocial= {false}
+      showSocial={false}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="spce-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
             <FormField
               control={form.control}
@@ -81,7 +90,7 @@ const RegisterForm = () => {
                     <Input
                       {...field}
                       disabled={isPending}
-                      placeholder="name.surename@example.com"
+                      placeholder="name.surname@example.com"
                       type="email"
                     />
                   </FormControl>
@@ -119,4 +128,5 @@ const RegisterForm = () => {
     </CardWrapper>
   );
 };
+
 export default RegisterForm;
