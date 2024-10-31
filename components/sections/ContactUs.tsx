@@ -42,7 +42,7 @@ export default function ContactUs() {
   }
 
   return (
-    <section id="contactUs" className="py-16 font-mono bg-gradient-to-br from-gray-900 to-black text-white">
+    <section id="contactUs" className="py-16 font-mono bg-gradient-to-br from-primary-foreground to-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-8 text-white text-center">
           Contact Us

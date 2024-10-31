@@ -3,6 +3,8 @@
 import { db } from "@/lib/db";
 import { requestAQuoteSchema } from "@/schemas";
 import { quoteDetailSchema, QuoteDetailFormData } from "@/schemas/quotes";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { unlink, writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
 import path from "path";
@@ -22,21 +24,71 @@ export interface QuoteResponse {
   productType: string;
   volume: string;
   unit: string;
+  files: string[];
   deliveryDate: Date;
   createdAt: Date;
 }
 
+
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION!,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+async function uploadFileToS3(file: File): Promise<string> {
+  const key = `quotes/${Date.now()}-${file.name}`;
+  const command = new PutObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME!,
+    Key: key,
+    ContentType: file.type,
+  });
+
+  const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+  
+  const response = await fetch(signedUrl, {
+    method: 'PUT',
+    body: await file.arrayBuffer(),
+    headers: {
+      'Content-Type': file.type,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to upload file: ${response.statusText}`);
+  }
+
+  return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+}
+
+async function deleteFileFromS3(fileUrl: string) {
+  const key = fileUrl.split('.com/')[1];
+  const command = new DeleteObjectCommand({
+    Bucket: process.env.S3_BUCKET_NAME!,
+    Key: key,
+  });
+
+  await s3Client.send(command);
+}
+
 export const submitQuoteRequest = async (formData: FormData) => {
   try {
+    const files = formData.getAll("files") as File[];
+    const fileUrls: string[] = [];
+
+    for (const file of files) {
+      const fileUrl = await uploadFileToS3(file);
+      fileUrls.push(fileUrl);
+    }
+
     const rawData = Object.fromEntries(formData);
     const data = {
       ...rawData,
       cultivationType: formData.getAll("cultivationType"),
       deliveryDate: new Date(rawData.deliveryDate as string),
-      files: formData
-        .getAll("files")
-        .filter((file): file is File => file instanceof File)
-        .map((file) => file.name),
+      files: fileUrls,
     };
 
     const validatedFields = requestAQuoteSchema.safeParse(data);
@@ -45,33 +97,28 @@ export const submitQuoteRequest = async (formData: FormData) => {
       return { error: validatedFields.error.issues[0].message };
     }
 
-    const files = formData
-      .getAll("files")
-      .filter((file): file is File => file instanceof File);
-    const uploadedFiles = [];
-
-    for (const file of files) {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
-      const fileName = file.name;
-      const filePath = path.join(process.cwd(), "/public/uploads/files", fileName);
-
-      await writeFile(filePath, buffer);
-      uploadedFiles.push(fileName);
-    }
-
     await db.quote.create({
       data: {
         ...validatedFields.data,
-        files: uploadedFiles,
+        files: fileUrls,
       },
     });
 
+    revalidatePath("/admin/quotes");
     return { success: "Quote request submitted successfully" };
   } catch (error) {
     console.error("Error submitting quote request:", error);
     return { error: "Failed to submit quote request" };
+  }
+};
+
+export const deleteFile = async (fileUrl: string) => {
+  try {
+    await deleteFileFromS3(fileUrl);
+    return { success: "File deleted successfully" };
+  } catch (error) {
+    console.error("Error deleting file:", error);
+    return { error: "Failed to delete file" };
   }
 };
 

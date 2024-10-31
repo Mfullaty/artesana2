@@ -143,12 +143,15 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
         formData.append("files", file)
       })
       submitQuoteRequest(formData).then((data) => {
-        setError(data.error)
-        setSuccess(data.success)
+        if (data.error) {
+          setError(data.error)
+        } else if (data.success) {
+          setSuccess(data.success)
+          setUploadedFiles([])
+          form.reset()
+        }
       })
     })
-
-    setUploadedFiles([]);
   }
 
   const handleFileChange = useCallback(
@@ -703,7 +706,7 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
             )}
           />
 
-          {/* <div
+          <div
             className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer transition-colors hover:border-primary"
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleFileDrop}
@@ -748,7 +751,7 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
                 ))}
               </ul>
             </div>
-          )} */}
+          )}
 
           <FormError message={error} />
           <FormSuccess message={success} />

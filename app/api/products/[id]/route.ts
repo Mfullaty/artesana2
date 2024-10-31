@@ -1,8 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, unlink } from 'fs/promises'
-import path from 'path'
+import { S3Client, DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 import { db } from '@/lib/db'
 
+const s3Client = new S3Client({
+  region: "eu-north-1",
+  credentials: {
+    accessKeyId: "AKIAXQIQACUTMSJ4L5P4",
+    secretAccessKey: "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",
+  },
+});
+
+async function deleteFromS3(imageUrl: string) {
+  const key = imageUrl.split('.amazonaws.com/')[1]
+  const command = new DeleteObjectCommand({
+    Bucket: "artesana-bucket",
+    Key: key,
+  })
+  await s3Client.send(command)
+}
+
+async function uploadToS3(file: File, filename: string): Promise<string> {
+  const buffer = Buffer.from(await file.arrayBuffer())
+  const command = new PutObjectCommand({
+    Bucket: "artesana-bucket",
+    Key: filename,
+    Body: buffer,
+    ContentType: file.type,
+  })
+
+  await s3Client.send(command)
+  return `https://artesana-bucket.s3.amazonaws.com/${filename}`
+}
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -39,23 +67,6 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       inStock: formData.get('inStock') ? parseInt(formData.get('inStock') as string) : 0,
     }
 
-    const imageUrls: string[] = []
-
-    // Handle image uploads
-    for (let i = 1; i <= 4; i++) {
-      const image = formData.get(`image${i}`) as File | null
-      if (image) {
-        const bytes = await image.arrayBuffer()
-        const buffer = Buffer.from(bytes)
-
-        // Save the file
-        const filename = `${Date.now()}-${image.name}`
-        const filepath = path.join(process.cwd(), 'public', 'images', 'uploads', filename)
-        await writeFile(filepath, buffer)
-        imageUrls.push(`/images/uploads/${filename}`)
-      }
-    }
-
     const existingProduct = await db.product.findUnique({
       where: { id: params.id },
     })
@@ -64,11 +75,15 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     }
 
-    // Delete old images if new ones are uploaded
-    if (imageUrls.length > 0) {
-      for (const oldImage of existingProduct.images) {
-        const oldImagePath = path.join(process.cwd(), 'public', oldImage)
-        await unlink(oldImagePath)
+    const imageUrls: string[] = [...existingProduct.images]
+
+    // Handle image uploads
+    for (let i = 1; i <= 4; i++) {
+      const image = formData.get(`image${i}`) as File | null
+      if (image) {
+        const filename = `${Date.now()}-${image.name}`
+        const imageUrl = await uploadToS3(image, filename)
+        imageUrls.push(imageUrl)
       }
     }
 
@@ -76,7 +91,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
       where: { id: params.id },
       data: {
         ...product,
-        images: imageUrls.length > 0 ? imageUrls : existingProduct.images,
+        images: imageUrls,
       },
     })
 
@@ -97,10 +112,13 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     }
 
-    // Delete associated images
+    // Delete images from S3
     for (const imageUrl of product.images) {
-      const imagePath = path.join(process.cwd(), 'public', imageUrl)
-      await unlink(imagePath)
+      try {
+        await deleteFromS3(imageUrl)
+      } catch (error) {
+        console.error('Error deleting image from S3:', error)
+      }
     }
 
     await db.product.delete({

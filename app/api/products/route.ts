@@ -1,41 +1,57 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { writeFile } from 'fs/promises'
-import path from 'path'
-import { db } from '@/lib/db'
+import { NextRequest, NextResponse } from "next/server";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { db } from "@/lib/db";
 
+const s3Client = new S3Client({
+  region: "eu-north-1",
+  credentials: {
+    accessKeyId: "AKIAXQIQACUTMSJ4L5P4",
+    secretAccessKey: "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",
+  },
+});
+
+async function uploadToS3(file: File, filename: string): Promise<string> {
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const command = new PutObjectCommand({
+    Bucket: "artesana-bucket",
+    Key: filename,
+    Body: buffer,
+    ContentType: file.type,
+  });
+
+  await s3Client.send(command);
+  return `https://artesana-bucket.s3.amazonaws.com/${filename}`;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData()
+    const formData = await req.formData();
     const product = {
-      name: formData.get('name') as string,
-      description: formData.get('description') as string,
-      origin: formData.get('origin') as string || '',
-      moisture: formData.get('moisture') as string || '',
-      color: formData.get('color') as string || '',
-      form: formData.get('form') as string || '',
-      cultivation: formData.get('cultivation') as string || '',
-      cultivationType: formData.get('cultivationType') as string || '',
-      purity: formData.get('purity') as string || '',
-      grades: formData.get('grades') as string || '',
-      measurement: formData.get('measurement') as string || '',
-      inStock: formData.get('inStock') ? parseInt(formData.get('inStock') as string) : 0,
-    }
+      name: formData.get("name") as string,
+      description: formData.get("description") as string,
+      origin: (formData.get("origin") as string) || "",
+      moisture: (formData.get("moisture") as string) || "",
+      color: (formData.get("color") as string) || "",
+      form: (formData.get("form") as string) || "",
+      cultivation: (formData.get("cultivation") as string) || "",
+      cultivationType: (formData.get("cultivationType") as string) || "",
+      purity: (formData.get("purity") as string) || "",
+      grades: (formData.get("grades") as string) || "",
+      measurement: (formData.get("measurement") as string) || "",
+      inStock: formData.get("inStock")
+        ? parseInt(formData.get("inStock") as string)
+        : 0,
+    };
 
-    const imageUrls: string[] = []
+    const imageUrls: string[] = [];
 
     // Handle image uploads
     for (let i = 1; i <= 4; i++) {
-      const image = formData.get(`image${i}`) as File | null
+      const image = formData.get(`image${i}`) as File | null;
       if (image) {
-        const bytes = await image.arrayBuffer()
-        const buffer = Buffer.from(bytes)
-
-        // Save the file
-        const filename = `${Date.now()}-${image.name}`
-        const filepath = path.join(process.cwd(), 'public', 'images', 'uploads', filename)
-        await writeFile(filepath, buffer)
-        imageUrls.push(`/images/uploads/${filename}`)
+        const filename = `${Date.now()}-${image.name}`;
+        const imageUrl = await uploadToS3(image, filename);
+        imageUrls.push(imageUrl);
       }
     }
 
@@ -44,85 +60,53 @@ export async function POST(req: NextRequest) {
         ...product,
         images: imageUrls,
       },
-    })
+    });
 
-    return NextResponse.json(createdProduct)
+    return NextResponse.json(createdProduct);
   } catch (error) {
-    console.error('Error creating product:', error)
-    return NextResponse.json({ error: 'Error creating product' }, { status: 500 })
-  }
-}
-
-export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url)
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const skip = (page - 1) * limit
-
-    const products = await db.product.findMany({
-      skip,
-      take: limit,
-      orderBy: {
-        createdAt: 'desc',
-      },
-    })
-
-    const total = await db.product.count()
-
-    return NextResponse.json({
-      products,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    })
-  } catch (error) {
-    console.error('Error fetching products:', error)
-    return NextResponse.json({ error: 'Error fetching products' }, { status: 500 })
+    console.error("Error creating product:", error);
+    return NextResponse.json(
+      { error: "Error creating product" },
+      { status: 500 }
+    );
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
-    const formData = await req.formData()
-    const id = formData.get('id') as string
+    const formData = await req.formData();
+    const id = formData.get("id") as string;
     const product = {
-      name: formData.get('name') as string,
-      description: formData.get('description') as string,
-      origin: formData.get('origin') as string || '',
-      moisture: formData.get('moisture') as string || '',
-      color: formData.get('color') as string || '',
-      form: formData.get('form') as string || '',
-      cultivation: formData.get('cultivation') as string || '',
-      cultivationType: formData.get('cultivationType') as string || '',
-      purity: formData.get('purity') as string || '',
-      grades: formData.get('grades') as string || '',
-      measurement: formData.get('measurement') as string || '',
-      inStock: formData.get('inStock') ? parseInt(formData.get('inStock') as string) : 0,
-    }
+      name: formData.get("name") as string,
+      description: formData.get("description") as string,
+      origin: (formData.get("origin") as string) || "",
+      moisture: (formData.get("moisture") as string) || "",
+      color: (formData.get("color") as string) || "",
+      form: (formData.get("form") as string) || "",
+      cultivation: (formData.get("cultivation") as string) || "",
+      cultivationType: (formData.get("cultivationType") as string) || "",
+      purity: (formData.get("purity") as string) || "",
+      grades: (formData.get("grades") as string) || "",
+      measurement: (formData.get("measurement") as string) || "",
+      inStock: formData.get("inStock")
+        ? parseInt(formData.get("inStock") as string)
+        : 0,
+    };
 
-    const existingProduct = await db.product.findUnique({ where: { id } })
+    const existingProduct = await db.product.findUnique({ where: { id } });
     if (!existingProduct) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    const imageUrls: string[] = [...existingProduct.images]
+    const imageUrls: string[] = [...existingProduct.images];
 
     // Handle image uploads
     for (let i = 1; i <= 4; i++) {
-      const image = formData.get(`image${i}`) as File | null
+      const image = formData.get(`image${i}`) as File | null;
       if (image) {
-        const bytes = await image.arrayBuffer()
-        const buffer = Buffer.from(bytes)
-
-        // Save the file
-        const filename = `${Date.now()}-${image.name}`
-        const filepath = path.join(process.cwd(), 'public', 'images', 'uploads', filename)
-        await writeFile(filepath, buffer)
-        imageUrls.push(`/images/uploads/${filename}`)
+        const filename = `${Date.now()}-${image.name}`;
+        const imageUrl = await uploadToS3(image, filename);
+        imageUrls.push(imageUrl);
       }
     }
 
@@ -132,11 +116,49 @@ export async function PUT(req: NextRequest) {
         ...product,
         images: imageUrls,
       },
-    })
+    });
 
-    return NextResponse.json(updatedProduct)
+    return NextResponse.json(updatedProduct);
   } catch (error) {
-    console.error('Error updating product:', error)
-    return NextResponse.json({ error: 'Error updating product' }, { status: 500 })
+    console.error("Error updating product:", error);
+    return NextResponse.json(
+      { error: "Error updating product" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const skip = (page - 1) * limit;
+
+    const products = await db.product.findMany({
+      skip,
+      take: limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const total = await db.product.count();
+
+    return NextResponse.json({
+      products,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return NextResponse.json(
+      { error: "Error fetching products" },
+      { status: 500 }
+    );
   }
 }
