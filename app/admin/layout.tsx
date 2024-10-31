@@ -12,7 +12,7 @@ export default async function AdminLayout({
   const session = await auth();
   if (!session || session.user.role !== "ADMIN")
     return (
-      <div className="flex h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-400 to-green-800 py-6">
+      <div className="flex flex-col justify-center items-center min-h-screen mx-auto bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-green-400 to-green-800 py-6">
         <LoginForm />
       </div>
     );
