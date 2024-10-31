@@ -106,8 +106,8 @@ export const submitQuoteRequest = async (formData: FormData) => {
 
     // Send email to Artesana admins
     await resend.emails.send({
-      from: 'Artesana Quotes <info@artesana.com.ng>',
-      to: 'mustaphaibrahimfullaty37@gmail.com',
+      from: 'Artesana <info@artesana.com.ng>',
+      to: 'info@artesana.com.ng',
       subject: 'You have a new quote request',
       html: `
         <h1>New Quote Request</h1>
@@ -122,13 +122,13 @@ export const submitQuoteRequest = async (formData: FormData) => {
           <li>Volume: ${newQuote.volume} ${newQuote.unit}</li>
           <li>Delivery Date: ${newQuote.deliveryDate.toDateString()}</li>
         </ul>
-        <p>Please log in to the admin panel for full details. Login <a href="https://www.artesana.ng/admin/quotes">Here</a></p></p>
+        <p>Please log in to the admin panel for full details. Login <a href="https://artesana.com.ng/admin/quotes">Here</a></p></p>
       `
     });
 
     // Send confirmation email to user
     await resend.emails.send({
-      from: 'Artesana Quotes <info@artesana.com.ng>',
+      from: 'Artesana <info@artesana.com.ng>',
       to: newQuote.email,
       subject: 'Quote Request Received - Artesana',
       html: `
