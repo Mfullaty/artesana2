@@ -42,7 +42,7 @@ export default function ContactUs() {
   }
 
   return (
-    <section id="contactUs" className="py-16 font-mono bg-gradient-to-br from-primary-foreground to-black text-white">
+    <section id="contactUs" className="py-16 font-mono bg-gradient-to-br from-primary to-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold mb-8 text-white text-center">
           Contact Us
@@ -120,15 +120,15 @@ export default function ContactUs() {
                 <Phone className="h-6 w-6 text-white mr-3 mt-1" />
                 <div>
                   <p className="font-medium text-white">Phone</p>
-                  <p className="text-white text-opacity-80">+234 123-456-789</p>
+                  <a className="text-accent text-opacity-90 hover:opacity-100" href="tel:+2347081746683">+234 708 174 6683</a>
                 </div>
               </div>
               <div className="flex items-start">
                 <Mail className="h-6 w-6 text-white mr-3 mt-1" />
                 <div>
                   <p className="font-medium text-white">Email</p>
-                  <a className="text-white text-opacity-80 hover:text-opacity-100 transition-colors" href="mailto:info@artesana.com.ng">
-                    contact@artesana.com.ng
+                  <a className="text-accent text-opacity-90 hover:text-opacity-100 transition-colors" href="mailto:info@artesana.com.ng">
+                    info@artesana.com.ng
                   </a>
                 </div>
               </div>
@@ -137,7 +137,7 @@ export default function ContactUs() {
                 <div>
                   <p className="font-medium text-white">Address</p>
                   <p className="text-white text-opacity-80">
-                    123 Artisan Street, Craft City, AC 12345
+                    Tunde adeniran street, Guzape, Abuja
                   </p>
                 </div>
               </div>

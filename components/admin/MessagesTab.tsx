@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Trash, CheckCheck, Reply } from "lucide-react"
+import { Trash, CheckCheck, Reply, MoreHorizontal, X, Loader2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
@@ -13,6 +13,7 @@ import Pagination from "./Pagination"
 import { format } from 'date-fns'
 import ConfirmationModal from "../ConfirmationModal"
 import { Message } from "@/types/all"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export default function MessagesTab() {
   const router = useRouter()
@@ -23,6 +24,9 @@ export default function MessagesTab() {
   const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; messageId: string | null }>({ isOpen: false, messageId: null })
   const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({})
   const [unreadCount, setUnreadCount] = useState(0)
+  const [selectedMessages, setSelectedMessages] = useState<string[]>([])
+  const [isSelectionMode, setIsSelectionMode] = useState(false)
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false)
   const itemsPerPage = 5
 
   useEffect(() => {
@@ -68,11 +72,51 @@ export default function MessagesTab() {
     }
   }
 
+  const handleBulkDelete = async () => {
+    if (selectedMessages.length === 0) return
+
+    setIsBulkDeleting(true)
+    try {
+      // Implement bulk delete API call here
+      // For now, we'll delete messages one by one
+      for (const messageId of selectedMessages) {
+        await handleDeleteMessage(messageId)
+      }
+      setSelectedMessages([])
+      setIsSelectionMode(false)
+      toast.success(`${selectedMessages.length} messages deleted successfully.`)
+    } catch (error) {
+      console.error('Error bulk deleting messages:', error)
+      toast.error("Failed to delete messages. Please try again.")
+    } finally {
+      setIsBulkDeleting(false)
+    }
+  }
+
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'MMM d, yyyy h:mm a')
   }
+
   const handleRowClick = (messageId: string) => {
-    router.push(`/admin/messages/${messageId}`)
+    if (!isSelectionMode) {
+      router.push(`/admin/messages/${messageId}`)
+    }
+  }
+
+  const toggleMessageSelection = (messageId: string) => {
+    setSelectedMessages(prev =>
+      prev.includes(messageId)
+        ? prev.filter(id => id !== messageId)
+        : [...prev, messageId]
+    )
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedMessages.length === messages.length) {
+      setSelectedMessages([])
+    } else {
+      setSelectedMessages(messages.map(message => message.id))
+    }
   }
 
   return (
@@ -83,7 +127,31 @@ export default function MessagesTab() {
             <CardTitle>Messages</CardTitle>
             <CardDescription>View and manage incoming messages</CardDescription>
           </div>
-          <Badge variant="secondary">{unreadCount} Unread</Badge>
+          <div className="flex items-center flex-wrap gap-2">
+            <Badge className="bg-green-500 w-12 p-1">{unreadCount} New</Badge>
+            {isSelectionMode ? (
+              <>
+                <Button
+                  variant="destructive"
+                  onClick={() => setDeleteConfirmation({ isOpen: true, messageId: 'bulk' })}
+                  disabled={selectedMessages.length === 0 || isBulkDeleting}
+                >
+                  {isBulkDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash className="h-4 w-4" />}
+                  <span className="ml-2">({selectedMessages.length})</span>
+                </Button>
+                <Button variant="outline" onClick={() => {
+                  setIsSelectionMode(false)
+                  setSelectedMessages([])
+                }}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <Button variant="outline" onClick={() => setIsSelectionMode(true)}>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -91,6 +159,14 @@ export default function MessagesTab() {
           <Table>
             <TableHeader>
               <TableRow>
+                {isSelectionMode && (
+                  <TableHead className="w-[50px]">
+                    <Checkbox
+                      checked={selectedMessages.length === messages.length}
+                      onCheckedChange={toggleSelectAll}
+                    />
+                  </TableHead>
+                )}
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Message</TableHead>
@@ -103,6 +179,7 @@ export default function MessagesTab() {
               {isLoading ? (
                 Array.from({ length: itemsPerPage }).map((_, index) => (
                   <TableRow key={index}>
+                    {isSelectionMode && <TableCell><Skeleton className="h-4 w-4" /></TableCell>}
                     <TableCell><Skeleton className="h-6 w-[150px]" /></TableCell>
                     <TableCell><Skeleton className="h-6 w-[200px]" /></TableCell>
                     <TableCell><Skeleton className="h-6 w-full" /></TableCell>
@@ -113,7 +190,7 @@ export default function MessagesTab() {
                 ))
               ) : messages.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center">No messages found</TableCell>
+                  <TableCell colSpan={isSelectionMode ? 7 : 6} className="text-center">No messages found</TableCell>
                 </TableRow>
               ) : (
                 messages.map((message) => (
@@ -125,6 +202,14 @@ export default function MessagesTab() {
                     }`}
                     onClick={() => handleRowClick(message.id)}
                   >
+                    {isSelectionMode && (
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                          checked={selectedMessages.includes(message.id)}
+                          onCheckedChange={() => toggleMessageSelection(message.id)}
+                        />
+                      </TableCell>
+                    )}
                     <TableCell>{message.name}</TableCell>
                     <TableCell>{message.email}</TableCell>
                     <TableCell>
@@ -143,34 +228,30 @@ export default function MessagesTab() {
                       )}
                     </TableCell>
                     <TableCell>
-                      <div className="flex space-x-2">
+                      <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            handleRowClick(message.id)
-                          }}
+                          onClick={() => handleRowClick(message.id)}
                           aria-label="View message"
                         >
                           <Reply className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setDeleteConfirmation({ isOpen: true, messageId: message.id })
-                          }}
-                          disabled={loadingStates[message.id]}
-                          aria-label="Delete message"
-                        >
-                          {loadingStates[message.id] ? (
-                            <Skeleton className="h-4 w-4 rounded-full" />
-                          ) : (
-                            <Trash className="h-4 w-4" />
-                          )}
-                        </Button>
+                        {!isSelectionMode && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeleteConfirmation({ isOpen: true, messageId: message.id })}
+                            disabled={loadingStates[message.id]}
+                            aria-label="Delete message"
+                          >
+                            {loadingStates[message.id] ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash className="h-4 w-4" />
+                            )}
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -188,9 +269,17 @@ export default function MessagesTab() {
         <ConfirmationModal
           isOpen={deleteConfirmation.isOpen}
           onClose={() => setDeleteConfirmation({ isOpen: false, messageId: null })}
-          onConfirm={() => deleteConfirmation.messageId && handleDeleteMessage(deleteConfirmation.messageId)}
-          title="Delete Message"
-          description="Are you sure you want to delete this message? This action cannot be undone."
+          onConfirm={() => {
+            if (deleteConfirmation.messageId === 'bulk') {
+              handleBulkDelete()
+            } else if (deleteConfirmation.messageId) {
+              handleDeleteMessage(deleteConfirmation.messageId)
+            }
+          }}
+          title={deleteConfirmation.messageId === 'bulk' ? "Delete Selected Messages" : "Delete Message"}
+          description={deleteConfirmation.messageId === 'bulk'
+            ? `Are you sure you want to delete ${selectedMessages.length} selected messages? This action cannot be undone.`
+            : "Are you sure you want to delete this message? This action cannot be undone."}
           confirmText="Delete"
           cancelText="Cancel"
         />
