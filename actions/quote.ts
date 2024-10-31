@@ -104,7 +104,7 @@ export const submitQuoteRequest = async (formData: FormData) => {
       },
     });
 
-    revalidatePath("/admin/quotes");
+    revalidatePath("/requestAQuote");
     return { success: "Quote request submitted successfully" };
   } catch (error) {
     console.error("Error submitting quote request:", error);

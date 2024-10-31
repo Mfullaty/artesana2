@@ -20,7 +20,7 @@ export default async function AdminLayout({
             <h1 className="text-base">Only Admins can access dashboard.</h1>
           </div>
           <small className="text-xs text-destructive/90">
-            If you registered and cann't see admin dashboard it's because you
+            If you registered and can't see admin dashboard it's because you
             are not an admin yet, request access.
           </small>
         </div>
