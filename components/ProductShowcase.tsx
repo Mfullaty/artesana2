@@ -87,7 +87,7 @@ export default function ProductShowcase() {
                 </div>
               ))
             : products.map((product) => (
-                <Link draggable={false} href={`/product/${product.id}`} key={product.id} className="px-2">
+                <Link draggable={false} href={`/products/${product.id}`} key={product.id} className="px-2">
                   <Card className="bg-[#eee0cd] relative border-none shadow-none overflow-hidden transition-transform duration-300 hover:scale-105">
                     <CardContent className="p-4">
                       <img

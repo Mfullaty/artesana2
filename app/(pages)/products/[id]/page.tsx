@@ -18,8 +18,17 @@ interface Product {
   id: string
   name: string
   description: string
+  origin: string
+  moisture: string
+  color: string
+  form: string
+  cultivation: string
+  cultivationType: string
+  purity: string
+  grades: string
+  measurement: string
+  inStock: number
   images: string[]
-  details: string[]
 }
 
 export default function ProductSinglePage({ params }: { params: { id: string } }) {
@@ -65,7 +74,7 @@ export default function ProductSinglePage({ params }: { params: { id: string } }
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 text-gray-800 p-2 md:p-8">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-start">
             <Skeleton className="aspect-square rounded-2xl" />
             <div className="space-y-6">
@@ -103,43 +112,72 @@ export default function ProductSinglePage({ params }: { params: { id: string } }
       <div className="min-h-screen bg-gradient-to-br from-white to-gray-100 text-gray-800 p-2 md:p-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 items-start">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="relative aspect-square rounded-2xl overflow-hidden shadow-xl"
-            >
-              {product.images && product.images.length > 0 ? (
-                <>
-                  <Image
-                    src={product.images[currentImage]}
-                    alt={product.name}
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/50 hover:bg-white/70 text-gray-800"
-                    onClick={prevImage}
-                  >
-                    <ChevronLeft className="h-6 w-6" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/50 hover:bg-white/70 text-gray-800"
-                    onClick={nextImage}
-                  >
-                    <ChevronRight className="h-6 w-6" />
-                  </Button>
-                </>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
-                  No image available
-                </div>
+            {/* Left column with image gallery */}
+            <div className="flex flex-col gap-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="relative aspect-square rounded-2xl overflow-hidden shadow-xl"
+              >
+                {product.images && product.images.length > 0 ? (
+                  <>
+                    <Image
+                      src={product.images[currentImage]}
+                      alt={product.name}
+                      layout="fill"
+                      objectFit="cover"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/50 hover:bg-white/70 text-gray-800"
+                      onClick={prevImage}
+                    >
+                      <ChevronLeft className="h-6 w-6" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/50 hover:bg-white/70 text-gray-800"
+                      onClick={nextImage}
+                    >
+                      <ChevronRight className="h-6 w-6" />
+                    </Button>
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                    No image available
+                  </div>
+                )}
+              </motion.div>
+
+              {product.images && product.images.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="grid grid-cols-4 gap-2"
+                >
+                  {product.images.map((src, index) => (
+                    <Image
+                      key={index}
+                      src={src}
+                      alt={`Thumbnail ${index + 1}`}
+                      width={100}
+                      height={100}
+                      className={`rounded-lg cursor-pointer transition-all object-cover aspect-square ${
+                        currentImage === index
+                          ? "ring-2 ring-primary"
+                          : "opacity-50 hover:opacity-100"
+                      }`}
+                      onClick={() => setCurrentImage(index)}
+                    />
+                  ))}
+                </motion.div>
               )}
-            </motion.div>
+            </div>
+            {/* Right column with product details */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -152,16 +190,28 @@ export default function ProductSinglePage({ params }: { params: { id: string } }
                 </h1>
                 <p className="text-xl text-gray-600">{product.description}</p>
               </div>
-              <div className="space-y-4">
-                <h2 className="text-2xl font-semibold text-gray-700">Product Details</h2>
-                <ul className="list-none space-y-2 text-gray-600">
-                  {product.details && product.details.map((detail, index) => (
-                    <li key={index} className="flex items-center">
-                      <span className="w-2 h-2 bg-primary rounded-full mr-2"></span>
-                      {detail}
-                    </li>
+              <div className="space-y-6">
+                <h2 className="text-2xl font-semibold text-gray-700 border-b pb-2">Product Details</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                  {[
+                    { label: "Origin", value: product.origin },
+                    { label: "Moisture", value: product.moisture },
+                    { label: "Color", value: product.color },
+                    { label: "Form", value: product.form },
+                    { label: "Cultivation", value: product.cultivation },
+                    { label: "Cultivation Type", value: product.cultivationType },
+                    { label: "Purity", value: product.purity },
+                    { label: "Grades", value: product.grades },
+                    { label: "Measurement", value: product.measurement },
+                    { label: "In Stock", value: `${product.inStock} ${product.measurement}` },
+                  ].map((detail, index) => (
+                    <div key={index} className="flex items-center space-x-2 bg-gray-50 p-3 rounded-lg shadow-sm">
+                      <span className="w-3 h-3 bg-primary rounded-full flex-shrink-0"></span>
+                      <span className="font-medium text-gray-700 min-w-[100px]">{detail.label}:</span>
+                      <span className="text-gray-600">{detail.value}</span>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
               <div className="flex flex-col space-y-4">
                 <a href="#requestAQuote">
@@ -189,30 +239,6 @@ export default function ProductSinglePage({ params }: { params: { id: string } }
                 </Button>
               </div>
             </motion.div>
-            {product.images && product.images.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="grid grid-cols-4 gap-4"
-              >
-                {product.images.map((src, index) => (
-                  <Image
-                    key={index}
-                    src={src}
-                    alt={`Thumbnail ${index + 1}`}
-                    width={150}
-                    height={150}
-                    className={`rounded-lg cursor-pointer transition-all ${
-                      currentImage === index
-                        ? "ring-2 ring-amber-600"
-                        : "opacity-50 hover:opacity-100"
-                    }`}
-                    onClick={() => setCurrentImage(index)}
-                  />
-                ))}
-              </motion.div>
-            )}
           </div>
           {/* Request A Quote Section */}
           <RequestAQuoteForm productName={product.name} />
