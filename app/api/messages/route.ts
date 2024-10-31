@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { messageSchema } from '@/schemas/messages'
 import * as z from 'zod'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,6 +18,38 @@ export async function POST(req: NextRequest) {
         message,
         status: 'new',
       },
+    })
+
+    // Send notification email to company
+    await resend.emails.send({
+      from: 'Artesana Messages <info@artesana.com.ng>',
+      to: 'info@artesana.com.ng',
+      subject: 'New Message Received',
+      html: `
+        <h1>New Message</h1>
+        <p>A new message has been received from ${name}.</p>
+        <h2>Message Details:</h2>
+        <ul>
+          <li>Name: ${name}</li>
+          <li>Email: ${email}</li>
+          <li>Message: ${message}</li>
+        </ul>
+        <p>Please log in to the admin panel to respond.</p>
+      `
+    })
+
+    // Send confirmation email to customer
+    await resend.emails.send({
+      from: 'Artesana <info@artesana.com.ng>',
+      to: email,
+      subject: 'Message Received - Artesana',
+      html: `
+        <h1>Thank You for Your Message</h1>
+        <p>Dear ${name},</p>
+        <p>We have received your message. Our team will review it and get back to you as soon as possible.</p>
+        <p>If you have any urgent inquiries, please don't hesitate to contact us directly at  <a href="mailto:info@artesana.com.ng">info@artesana.com.ng</a> visit the website and fill the contact form <a href="https://artesana.com.ng/contact-us">Here</a></p>
+        <p>Best regards,<br>The Artesana Team</p>
+      `
     })
 
     return NextResponse.json(newMessage, { status: 201 })

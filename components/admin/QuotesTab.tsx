@@ -23,9 +23,8 @@ import {
   Loader2,
   FileText,
   Image as ImageIcon,
-  Plus,
-  X,
   MoreHorizontal,
+  X,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
@@ -40,9 +39,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import Pagination from "./Pagination";
 import ConfirmationModal from "../ConfirmationModal";
-import { deleteQuote, getQuotes, QuoteResponse } from "@/actions/quote";
+import { getQuotes, QuoteResponse } from "@/actions/quote";
 
-export default function QuotesTab() {
+export default function Component() {
   const router = useRouter();
   const { toast } = useToast();
   const [quotes, setQuotes] = useState<QuoteResponse[]>([]);
@@ -53,9 +52,6 @@ export default function QuotesTab() {
     isOpen: boolean;
     quoteId: string | null;
   }>({ isOpen: false, quoteId: null });
-  const [loadingStates, setLoadingStates] = useState<{
-    [key: string]: boolean;
-  }>({});
   const [selectedQuotes, setSelectedQuotes] = useState<string[]>([]);
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
@@ -90,48 +86,31 @@ export default function QuotesTab() {
     }
   };
 
-  const handleDeleteQuote = async (id: string) => {
-    setLoadingStates((prev) => ({ ...prev, [id]: true }));
-    try {
-      const result = await deleteQuote(id);
-      if (result.success) {
-        await fetchQuotes();
-        toast({
-          title: "Success",
-          description: "Quote deleted successfully.",
-        });
-      } else {
-        throw new Error(result.error || "Failed to delete quote");
-      }
-    } catch (error) {
-      console.error("Error deleting quote:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete quote. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoadingStates((prev) => ({ ...prev, [id]: false }));
-      setDeleteConfirmation({ isOpen: false, quoteId: null });
-    }
-  };
-
   const handleBulkDelete = async () => {
     if (selectedQuotes.length === 0) return;
 
     setIsBulkDeleting(true);
     try {
-      // Implement bulk delete API call here
-      // For now, we'll delete quotes one by one
-      for (const quoteId of selectedQuotes) {
-        await deleteQuote(quoteId);
+      const response = await fetch('/api/quotes', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ quoteIds: selectedQuotes }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete quotes');
       }
+
+      const result = await response.json();
+
       await fetchQuotes();
       setSelectedQuotes([]);
       setIsSelectionMode(false);
       toast({
         title: "Success",
-        description: `${selectedQuotes.length} quotes deleted successfully.`,
+        description: `${result.deletedCount} quotes deleted successfully.`,
       });
     } catch (error) {
       console.error("Error deleting quotes:", error);
@@ -210,7 +189,7 @@ export default function QuotesTab() {
   return (
     <Card className="w-full">
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div>
             <CardTitle className="text-2xl font-bold">Quote Enquiries</CardTitle>
             <CardDescription>Manage incoming quote requests</CardDescription>
@@ -272,7 +251,6 @@ export default function QuotesTab() {
                 <TableHead>Name</TableHead>
                 <TableHead>Product</TableHead>
                 <TableHead>Files</TableHead>
-                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -292,9 +270,6 @@ export default function QuotesTab() {
                       </TableCell>
                       <TableCell>
                         <Skeleton className="h-4 w-[80px]" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-8 w-[100px]" />
                       </TableCell>
                     </TableRow>
                   ))
@@ -323,27 +298,6 @@ export default function QuotesTab() {
                           ))}
                         </div>
                       </TableCell>
-                      <TableCell onClick={(e) => e.stopPropagation()}>
-                        {!isSelectionMode && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() =>
-                              setDeleteConfirmation({
-                                isOpen: true,
-                                quoteId: quote.id,
-                              })
-                            }
-                            disabled={loadingStates[quote.id]}
-                          >
-                            {loadingStates[quote.id] ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Trash className="h-4 w-4" />
-                            )}
-                          </Button>
-                        )}
-                      </TableCell>
                     </TableRow>
                   ))}
             </TableBody>
@@ -362,20 +316,10 @@ export default function QuotesTab() {
           onConfirm={() => {
             if (deleteConfirmation.quoteId === "bulk") {
               handleBulkDelete();
-            } else if (deleteConfirmation.quoteId) {
-              handleDeleteQuote(deleteConfirmation.quoteId);
             }
           }}
-          title={
-            deleteConfirmation.quoteId === "bulk"
-              ? "Delete Selected Quotes"
-              : "Delete Quote"
-          }
-          description={
-            deleteConfirmation.quoteId === "bulk"
-              ? `Are you sure you want to delete ${selectedQuotes.length} selected quotes? This action cannot be undone.`
-              : "Are you sure you want to delete this quote? This action cannot be undone."
-          }
+          title="Delete Selected Quotes"
+          description={`Are you sure you want to delete ${selectedQuotes.length} selected quotes? This action cannot be undone.`}
           confirmText="Delete"
           cancelText="Cancel"
         />
