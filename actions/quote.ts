@@ -5,9 +5,10 @@ import { requestAQuoteSchema } from "@/schemas";
 import { quoteDetailSchema, QuoteDetailFormData } from "@/schemas/quotes";
 import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { unlink, writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
-import path from "path";
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export interface QuoteDetailResponse extends QuoteDetailFormData {
   id: string;
@@ -28,7 +29,6 @@ export interface QuoteResponse {
   deliveryDate: Date;
   createdAt: Date;
 }
-
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION!,
@@ -97,11 +97,47 @@ export const submitQuoteRequest = async (formData: FormData) => {
       return { error: validatedFields.error.issues[0].message };
     }
 
-    await db.quote.create({
+    const newQuote = await db.quote.create({
       data: {
         ...validatedFields.data,
         files: fileUrls,
       },
+    });
+
+    // Send email to Artesana admins
+    await resend.emails.send({
+      from: 'Artesana Quotes <info@artesana.com.ng>',
+      to: 'testofmailsss@gmail.com',
+      subject: 'You have a new quote request',
+      html: `
+        <h1>New Quote Request</h1>
+        <p>A new quote request has been submitted by ${newQuote.fullName}.</p>
+        <h2>Quote Details:</h2>
+        <ul>
+          <li>Name: ${newQuote.fullName}</li>
+          <li>Email: ${newQuote.email}</li>
+          <li>Phone: ${newQuote.phone || 'N/A'}</li>
+          <li>Company: ${newQuote.companyName || 'N/A'}</li>
+          <li>Product: ${newQuote.product}</li>
+          <li>Volume: ${newQuote.volume} ${newQuote.unit}</li>
+          <li>Delivery Date: ${newQuote.deliveryDate.toDateString()}</li>
+        </ul>
+        <p>Please log in to the admin panel for full details. Login <a href="https://www.artesana.ng/admin/quotes">Here</a></p></p>
+      `
+    });
+
+    // Send confirmation email to user
+    await resend.emails.send({
+      from: 'Artesana Quotes <info@artesana.com.ng>',
+      to: newQuote.email,
+      subject: 'Quote Request Received - Artesana',
+      html: `
+        <h1>Thank You for Your Quote Request</h1>
+        <p>Dear ${newQuote.fullName},</p>
+        <p>We have received your quote request for ${newQuote.product}. Our team will review your request and get back to you shortly.</p>
+        <p>If you have any questions, please don't hesitate to contact us.</p>
+        <p>Best regards,<br>The Artesana Team</p>
+      `
     });
 
     revalidatePath("/requestAQuote");
@@ -190,8 +226,7 @@ export async function deleteQuote(id: string) {
       await Promise.all(
         quote.files.map(async (file) => {
           try {
-            const filePath = path.join(process.cwd(), "public/uploads/files", file);
-            await unlink(filePath);
+            await deleteFileFromS3(file);
           } catch (error) {
             console.error(`Error deleting file ${file}:`, error);
           }
