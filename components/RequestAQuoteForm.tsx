@@ -706,6 +706,10 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
             )}
           />
 
+          <div className="mt-4">
+
+          <h3 className="font-semibold text-2xl md:text-3xl"> File Upload</h3>
+          <p className="text-base"> Do you have relevant files to upload such as your specification sheet?</p>
           <div
             className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer transition-colors hover:border-primary"
             onDragOver={(e) => e.preventDefault()}
@@ -752,6 +756,7 @@ export default function RequestAQuoteForm({ productName = "" }: { productName?: 
               </ul>
             </div>
           )}
+          </div>
 
           <FormError message={error} />
           <FormSuccess message={success} />

@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -10,7 +10,9 @@ const Footer = () => {
               About Us
             </h3>
             <p className="text-gray-300 font-sans">
-            Unlock endless possibilities with our export company. By focusing on top-tier agro products, we empower businesses like yours to excel in the global market.
+              Unlock endless possibilities with our export company. By focusing
+              on top-tier agro products, we empower businesses like yours to
+              excel in the global market.
             </p>
           </div>
           <div>
@@ -34,7 +36,7 @@ const Footer = () => {
                   Products
                 </a>
               </li>
-              
+
               <li>
                 <a
                   href="/about-us"
@@ -91,25 +93,29 @@ const Footer = () => {
         <div className="mt-8 pt-8 border-t border-accent flex flex-col items-center">
           <div className="flex space-x-4 mb-4">
             <a
-              href="#"
-              className="text-gray-300 hover:text-accent transition duration-300"
-            >
-              <Twitter className="h-6 w-6" />
-              <span className="sr-only">Twitter</span>
-            </a>
-            <a
-              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gray-300 hover:text-accent transition duration-300"
             >
               <Facebook className="h-6 w-6" />
               <span className="sr-only">Facebook</span>
             </a>
             <a
-              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.instagram.com/artesana.ng/"
               className="text-gray-300 hover:text-accent transition duration-300"
             >
               <Instagram className="h-6 w-6" />
               <span className="sr-only">Instagram</span>
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-accent transition duration-300"
+            >
+              <Linkedin className="h-6 w-6" />
+              <span className="sr-only">Linkedin</span>
             </a>
           </div>
           <p className="text-accent-foreground">
