@@ -90,7 +90,7 @@ export default function AboutUsPage() {
           />
         </div>
         <AboutUs
-          title="Our Story"
+          title="What About Us?"
           description="At Artesana, we are passionate about delivering premium quality
                 African agricultural products to the world. As a certified and
                 fully registered business, we strictly comply with local and
