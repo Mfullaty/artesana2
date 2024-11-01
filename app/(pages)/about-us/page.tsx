@@ -80,9 +80,11 @@ export default function AboutUsPage() {
         </section>
 
         {/* About Us Section */}
+        <section className="mt-[-120px] z-10 bg-secondary-foreground">
+
         <div
           id="aboutUs"
-          className="relative top-[80px] left-0 w-24 h-24 md:w-32 md:h-32"
+          className="relative top-[70px] left-0 w-24 h-24 md:w-32 md:h-32 z-10"
         >
           <Image
             src="/images/decorativeLeaf.png"
@@ -100,7 +102,9 @@ export default function AboutUsPage() {
                 experience for our global partners. We specialize in the export
                 of grains, seeds, herbs, and other agro-products, focusing on
                 sustainable sourcing and ethical practices."
+          imgSource="/images/wooden-fruits.webp"
         />
+        </section>
 
         {/* Why Choose Us Section */}
         <section className="py-16 bg-muted">

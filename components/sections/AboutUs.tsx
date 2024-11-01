@@ -5,14 +5,16 @@ interface AboutUsProps {
   title?: string;
   description?: string;
   action?: boolean;
+  imgSource?: string;
 }
 export default function AboutUs({
   title = "Welcome to Artesana",
   description = "Unlock endless possibilities with our export company. By focusing on top-tier agro products, we empower businesses like yours to excel in the global market.",
   action = true,
+  imgSource = "/images/decorativeTree.webp",
 }: AboutUsProps) {
   return (
-    <section className="overflow-hidden bg-[#F9F3EE] py-16 md:py-24">
+    <section className="overflow-hidden bg-secondary-foreground py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col justify-center space-y-4 mt-12 md:mt-0">
@@ -33,8 +35,8 @@ export default function AboutUs({
           </div>
           <div className="relative h-[200px] w-[200px] sm:h-[300px] sm:w-[300px] md:h-[400px] md:w-[400px] mx-auto">
             <Image
-              src="/images/decorativeTree.webp"
-              alt="Fresh produce on a wooden plate"
+              src={imgSource}
+              alt={title}
               layout="fill"
               objectFit="contain"
             />

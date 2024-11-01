@@ -8,6 +8,7 @@ import {
   Home,
   Info,
   Instagram,
+  Linkedin,
   Menu,
   SheetIcon,
   Truck,
@@ -89,24 +90,31 @@ const Header = () => {
             <div className="absolute bottom-4 left-4 right-4">
               <p className="text-sm text-gray-400 mb-2">Connect with us:</p>
               <div className="flex space-x-4">
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-accent transition duration-300"
-                >
-                  <Twitter className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-accent transition duration-300"
-                >
-                  <Facebook className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="text-gray-400 hover:text-accent transition duration-300"
-                >
-                  <Instagram className="h-5 w-5" />
-                </a>
+              <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-accent transition duration-300"
+            >
+              <Facebook className="h-6 w-6" />
+              <span className="sr-only">Facebook</span>
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.instagram.com/artesana.ng/"
+              className="text-gray-300 hover:text-accent transition duration-300"
+            >
+              <Instagram className="h-6 w-6" />
+              <span className="sr-only">Instagram</span>
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-300 hover:text-accent transition duration-300"
+            >
+              <Linkedin className="h-6 w-6" />
+              <span className="sr-only">Linkedin</span>
+            </a>
               </div>
             </div>
             <div className="absolute bottom-28 left-4 right-4 bg-white rounded-md">

@@ -28,6 +28,8 @@ model Account {
 
 enum UserRole {
   ADMIN
+  MANAGER
+  CMO
   USER
 }
 
@@ -124,4 +126,53 @@ model Reply {
   message   Message  @relation(fields: [messageId], references: [id])
   isAdmin   Boolean  @default(false)
   messageId String   @db.ObjectId
+}
+
+
+// Site General Settings:
+model GeneralSettings {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  heroText        String?
+  tagLineText      String?
+  aboutUsText     String?
+  missionStatement String?
+  productsHeroTitle    String?
+}
+
+// Site settings:
+model SiteSettings {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  siteName  String?
+  siteDescription  String?
+  logo String?
+  favicon String?
+  facebookLink String?
+  twitterLink String?
+  instagramLink String?
+  linkedinLink String?
+  contactEmail String?
+  contactPhone String?
+  address String?
+}
+
+//Template Enum
+enum Template {
+  DEFAULT
+  TEMPLATEA
+  TEMPLATEB
+  TEMPLATEC
+}
+// Theme Settings
+model ThemeSettings {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  themeChoice String?
+  primaryColor String?
+  secondaryColor String?
+  accentColor String?
+  fontFamily String?
+  fontSize String?
+  isDarkMode Boolean?
+  buttonStyle String?
+  headerStyle  String?
+  templateChoise          Template @default(DEFAULT)
 }
