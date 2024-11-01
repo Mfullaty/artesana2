@@ -140,7 +140,7 @@ export default function ProductsPage() {
           className="absolute inset-0 object-cover w-full h-full"
         />
         <div className="absolute inset-0 bg-yellow-800 bg-opacity-80 backdrop-blur-sm" />
-        <div className="relative z-10 text-center p-5 text-white">
+        <div className="relative z-10 text-center p-5 md:p-0 text-white">
           <h1 className="text-4xl font-bold mb-4 drop-shadow-md">
             Certified Quality Products
           </h1>
