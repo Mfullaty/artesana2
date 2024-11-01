@@ -139,7 +139,7 @@ export default function MessagesTab() {
             <CardTitle>Messages</CardTitle>
             <CardDescription>View and manage incoming messages</CardDescription>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-2">
             <Badge className="bg-green-500 w-12 p-1 text-center">{unreadCount} New</Badge>
             {isSelectionMode ? (
               <>

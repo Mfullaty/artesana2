@@ -32,13 +32,6 @@ export function Sidebar() {
     { icon: MessageSquare, label: "Messages", href: "/admin/messages" },
   ]
 
-  const handleLogout = () => {
-    // Implement logout logic here
-    console.log("Logging out...")
-    // After logout, redirect to login page or home page
-    router.push('/')
-  }
-
   return (
     <>
       <aside className={`
