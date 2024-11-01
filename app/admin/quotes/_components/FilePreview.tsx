@@ -54,7 +54,7 @@ export function FilePreview({ files }: FilePreviewProps) {
       <h3 className="text-lg font-semibold mb-4">Attached Files</h3>
       <div className="grid grid-cols-1 gap-4">
         {files.map((file, index) => (
-          <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+          <div key={index} className="flex items-center justify-between flex-wrap gap-2 p-4 bg-gray-50 rounded-lg">
             <div className="flex items-center">
               <FileText className="h-5 w-5 mr-2 text-blue-500" />
               <span className="text-sm font-medium text-gray-700">{file.split('/').pop()}</span>
