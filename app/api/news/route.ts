@@ -7,7 +7,7 @@ const BASE_URL = 'https://eventregistry.org/api/v1/article';
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const page = searchParams.get('page') || '1';
-  const keywords = searchParams.get('keywords') || 'food';
+  const keywords = searchParams.get('keywords') || 'export';
   const country = searchParams.get('country') || 'http://en.wikipedia.org/wiki/Nigeria';
 
   const params = {

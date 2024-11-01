@@ -30,7 +30,7 @@ export default function NewsList() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [keywords, setKeywords] = useState('food');
+  const [keywords, setKeywords] = useState('Export');
   const [country, setCountry] = useState('http://en.wikipedia.org/wiki/Nigeria');
 
   const fetchNews = async (reset = false) => {
