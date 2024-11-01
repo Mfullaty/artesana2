@@ -70,11 +70,7 @@ export default function AboutUsPage() {
               variants={fadeIn}
               transition={{ delay: 0.2 }}
             >
-              Delivering Premium African Agro-Products to the World. We are
-              committed to bringing the best of African agriculture to the
-              global stage. As a non-oil export company, we specialize in
-              premium, organic products that embody the richness and diversity
-              of African soil.
+              Artfully Expanding Boundaries, Innovating Global Trade
             </motion.p>
           </div>
         </section>
