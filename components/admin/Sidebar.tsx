@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { GearIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "@/helpers/navigate";
 
 export function Sidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -36,16 +37,14 @@ export function Sidebar() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const navigate = (route: string) => {
-    router.push(route);
-  };
-
   const sidebarItems = [
     { icon: Boxes, label: "Dashboard", href: "/admin" },
     { icon: Package, label: "Products", href: "/admin/products" },
     { icon: FileText, label: "Quotes", href: "/admin/quotes" },
     { icon: MessageSquare, label: "Messages", href: "/admin/messages" },
   ];
+
+  const navigate = useNavigate();
 
   return (
     <>
