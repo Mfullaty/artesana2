@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { toast } from 'sonner'
 import { Trash2 } from 'lucide-react'
+import { format, formatDistanceToNow } from 'date-fns'
 
 interface Subscription {
   id: string
@@ -85,18 +86,23 @@ export default function SubscriptionsPage() {
       if (response.ok) {
         setSubscriptions(subscriptions.filter(sub => !selectedSubscriptions.includes(sub.id)))
         setSelectedSubscriptions([])
-        toast.success('Selected subscriptions deleted successfully.')
+        toast.success('Subscriptions deleted successfully.')
       } else {
-        throw new Error('Failed to delete selected subscriptions')
+        throw new Error('Failed to delete  subscriptions')
       }
     } catch (error) {
-      console.error('Error deleting selected subscriptions:', error)
-      toast.error('Failed to delete selected subscriptions. Please try again.')
+      console.error('Error deleting  subscriptions:', error)
+      toast.error('Failed to delete  subscriptions. Please try again.')
     }
   }
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return `${format(date, 'PPP')} (${formatDistanceToNow(date, { addSuffix: true })})`
   }
 
   if (isLoading) {
@@ -125,14 +131,14 @@ export default function SubscriptionsPage() {
           <CardTitle>Email Subscriptions</CardTitle>
           {selectedSubscriptions.length > 0 && (
             <Button variant="destructive" onClick={handleDeleteSelected}>
-              Delete Selected ({selectedSubscriptions.length})
+              <Trash2 className="mr-2 h-4 w-4" />({selectedSubscriptions.length})
             </Button>
           )}
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {subscriptions.map((subscription) => (
-              <div key={subscription.id} className="flex items-center justify-between p-4 bg-accent rounded-lg">
+              <div key={subscription.id} className="flex items-center justify-between p-4 bg-primary-foreground rounded-lg">
                 <div className="flex items-center space-x-4">
                   <Checkbox
                     id={`select-${subscription.id}`}
@@ -144,7 +150,7 @@ export default function SubscriptionsPage() {
                       {subscription.email}
                     </label>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Submitted on: {new Date(subscription.submittedOn).toLocaleString()}
+                      {formatDate(subscription.submittedOn)}
                     </p>
                   </div>
                 </div>

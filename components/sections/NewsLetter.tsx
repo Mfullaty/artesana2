@@ -25,7 +25,11 @@ export default function NewsLetter() {
   useEffect(() => {
     const checkSubscription = async () => {
       try {
-        const response = await fetch('/api/subscriptions/check')
+        const response = await fetch('/api/subscriptions/check', {
+          headers: {
+            'x-user-email': email
+          }
+        })
         const data = await response.json()
         setIsSubscribed(data.isSubscribed)
         setShowForm(!data.isSubscribed)
@@ -37,7 +41,7 @@ export default function NewsLetter() {
     }
 
     checkSubscription()
-  }, [])
+  }, [email])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -96,7 +100,7 @@ export default function NewsLetter() {
         {isSubscribed ? (
           <>
             <h2 className="text-3xl font-bold mb-6 text-center">Thank You!</h2>
-            <p className="text-primary text-center mb-6">You've successfully subscribed to our newsletter.</p>
+            <p className="text-primary text-center mb-6">You've already subscribed to our newsletter.</p>
           </>
         ) : (
           <>

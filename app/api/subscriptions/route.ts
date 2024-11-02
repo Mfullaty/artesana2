@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { headers } from 'next/headers'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -34,7 +35,22 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const { email } = await request.json()
-    const ip = request.headers.get('x-forwarded-for') || 'Unknown'
+    const headersList = headers()
+    const ip = headersList.get('x-forwarded-for') || 'Unknown'
+
+    // Check if the email or IP is already subscribed
+    const existingSubscription = await db.emailSubscription.findFirst({
+      where: {
+        OR: [
+          { email: email },
+          { ip: ip }
+        ]
+      },
+    })
+
+    if (existingSubscription) {
+      return NextResponse.json({ success: true, message: 'Already subscribed' })
+    }
 
     const subscription = await db.emailSubscription.create({
       data: {

@@ -1,13 +1,20 @@
 import { NextResponse } from 'next/server'
-import {db} from '@/lib/db'
+import { db } from '@/lib/db'
 import { headers } from 'next/headers'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const ip = headers().get('x-forwarded-for') || 'Unknown'
+    const headersList = headers()
+    const ip = headersList.get('x-forwarded-for') || 'Unknown'
+    const email = request.headers.get('x-user-email') || ''
 
     const subscription = await db.emailSubscription.findFirst({
-      where: { ip },
+      where: {
+        OR: [
+          { email: email },
+          { ip: ip }
+        ]
+      },
     })
 
     return NextResponse.json({ isSubscribed: !!subscription })
