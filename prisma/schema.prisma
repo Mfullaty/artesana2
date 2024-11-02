@@ -176,3 +176,11 @@ model ThemeSettings {
   headerStyle  String?
   templateChoise          Template @default(DEFAULT)
 }
+
+// Email Subscription
+model EmailSubscription {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String
+  ip          String
+  submittedOn DateTime @default(now())
+}
