@@ -23,7 +23,7 @@ export default function AgriculturalNews() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const res = await fetch('/api/news?page=1&keywords=agriculture&country=http://en.wikipedia.org/wiki/Saudi_Arabia');
+        const res = await fetch('/api/news?page=1&keywords=export&country=http://en.wikipedia.org/wiki/Nigeria');
         const data = await res.json();
         setNewsItems(data.articles.results.slice(0, 5).map((item: any) => ({
           uri: item.uri,
