@@ -29,7 +29,7 @@ export default function AgriculturalNews() {
           uri: item.uri,
           title: item.title,
           date: new Date(item.date).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }),
-          image: item.image || '/images/placeholder.jpg',
+          image: item.image || '/images/placeholder.webp',
           url: item.url
         })));
       } catch (err) {
