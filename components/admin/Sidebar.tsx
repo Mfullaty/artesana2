@@ -110,7 +110,7 @@ export function Sidebar() {
           ))}
         </nav>
         <div className="p-4 flex flex-col gap-2">
-          <Button
+          {/* <Button
             variant="ghost"
             className={`w-full justify-start  ${
               isSidebarOpen ? "px-4" : "px-0 justify-center"
@@ -120,7 +120,7 @@ export function Sidebar() {
           >
             <GearIcon className="h-5 w-5 mr-2" />
             {isSidebarOpen && <span>Settings</span>}
-          </Button>
+          </Button> */}
           <Button
             variant="ghost"
             className={`w-full justify-start  ${
