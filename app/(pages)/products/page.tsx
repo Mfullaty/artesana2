@@ -169,7 +169,7 @@ export default function ProductsPage() {
             selected for their commitment to sustainable and eco-friendly
             practices.
           </p>
-          <p className="text-base text-center max-w-3xl font-mono mx-auto">
+          <p className="text-base hidden md:block text-center max-w-3xl font-mono mx-auto">
             From vibrant, nutrient-rich fruits and vegetables to carefully
             cultivated grains and spices, our products are rigorously tested and
             certified to bring you the best in organic agriculture. Embrace
