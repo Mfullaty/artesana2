@@ -28,6 +28,8 @@ interface Product {
   cultivationType: string
   purity: string
   grades: string
+  admixture: string
+  defection: string
   measurement: string
   images: string[]
 }
@@ -261,6 +263,14 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                   <p>{product.moisture}</p>
                 </div>
                 <div>
+                  <h4 className="font-semibold">Admixture</h4>
+                  <p>{product.admixture}</p>
+                </div>
+                <div>
+                  <h4 className="font-semibold">Defection</h4>
+                  <p>{product.defection}</p>
+                </div>
+                <div>
                   <h4 className="font-semibold">Color</h4>
                   <p>{product.color}</p>
                 </div>
@@ -336,6 +346,14 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 <div className="space-y-2">
                   <Label htmlFor="moisture">Moisture</Label>
                   <Input id="moisture" name="moisture" value={formData.moisture} onChange={handleInputChange} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="moisture">Admixture</Label>
+                  <Input id="moisture" name="moisture" value={formData.admixture} onChange={handleInputChange} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="moisture">Defection</Label>
+                  <Input id="moisture" name="moisture" value={formData.defection} onChange={handleInputChange} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="color">Color</Label>
