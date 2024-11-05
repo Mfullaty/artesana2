@@ -524,7 +524,7 @@ export default function ProductsTab() {
                         <SelectValue placeholder="Select country" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Select Origin</SelectItem>
+                        <SelectItem value=" ">Select Origin</SelectItem>
                         <SelectItem value="Cameroon">Cameroon</SelectItem>
                         <SelectItem value="Egypt">Egypt</SelectItem>
                         <SelectItem value="Ghana">Ghana</SelectItem>
