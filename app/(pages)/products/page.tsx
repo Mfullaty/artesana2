@@ -158,18 +158,18 @@ export default function ProductsPage() {
           className="absolute inset-0 object-cover w-full h-full"
         />
         <div className="absolute inset-0 bg-yellow-800 bg-opacity-80 backdrop-blur-sm" />
-        <div className="relative z-10 text-center p-5 md:p-0 text-white">
+        <div className="relative z-10 text-center flex flex-col justify-center items-center p-5 md:p-0 text-white">
           <h1 className="text-4xl font-bold mb-4 drop-shadow-md">
             Certified Quality Products
           </h1>
-          <p className="text-base mb-5 font-mono max-w-3xl mx-auto">
+          <p className="text-base text-center mb-5 font-mono max-w-3xl mx-auto">
             Discover our range of premium, certified organic and conventional
             agricultural products sourced from trusted farms and producers
             worldwide. Each product is sourced from trusted farms or producers,
             selected for their commitment to sustainable and eco-friendly
             practices.
           </p>
-          <p className="text-base max-w-3xl font-mono mx-auto">
+          <p className="text-base text-center max-w-3xl font-mono mx-auto">
             From vibrant, nutrient-rich fruits and vegetables to carefully
             cultivated grains and spices, our products are rigorously tested and
             certified to bring you the best in organic agriculture. Embrace
