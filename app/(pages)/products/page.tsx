@@ -22,6 +22,8 @@ interface Product {
   cultivationType: string;
   purity: string;
   grades: string;
+  admixture: string;
+  defection: string;
   measurement: string;
   images: string[];
 }
@@ -94,19 +96,28 @@ export default function ProductsPage() {
           />
         </div>
         <CardContent className="p-6">
-          <div className="mb-2">
-            <p className="text-sm text-gray-700 font-bold capitalize">
-              ORIGIN: {product.origin}
-            </p>
-          </div>
+          {product.origin && (
+            <div className="mb-2">
+              <p className="text-sm text-gray-700 font-bold capitalize">
+                ORIGIN: {product.origin}
+              </p>
+            </div>
+          )}
+          
           <h3 className="font-bold text-2xl mb-2">{product.name}</h3>
-          <div className="flex justify-between text-sm text-primary font-bold mb-4">
-            <span>Purity: {product.purity}</span>
-          </div>
-          <p className="text-gray-600 mb-2 line-clamp-3">
-            {product.description}
-          </p>
-
+          
+          {product.purity && (
+            <div className="flex justify-between text-sm text-primary font-bold mb-4">
+              <span>Purity: {product.purity}</span>
+            </div>
+          )}
+          
+          {product.description && (
+            <p className="text-gray-600 mb-2 line-clamp-3">
+              {product.description}
+            </p>
+          )}
+          
           <div className="grid grid-cols-2 gap-4 text-sm">
             {[
               { label: "Moisture", value: product.moisture },
@@ -114,19 +125,26 @@ export default function ProductsPage() {
               { label: "Color", value: product.color },
               { label: "Cultivation", value: product.cultivation },
               { label: "Form", value: product.form },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex items-center">
-                <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center mr-2 flex-shrink-0">
-                  <Check className="h-4 w-4 text-white font-bold" />
+              { label: "Cultivation Type", value: product.cultivationType },
+              { label: "Admixture", value: product.admixture },
+              { label: "Defection", value: product.defection },
+              { label: "Measurement", value: product.measurement },
+            ].map(({ label, value }) =>
+              value ? (
+                <div key={label} className="flex items-center">
+                  <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center mr-2 flex-shrink-0">
+                    <Check className="h-4 w-4 text-white font-bold" />
+                  </div>
+                  <span className="font-medium mr-1">{label}:</span> {value}
                 </div>
-                <span className="font-medium mr-1">{label}:</span> {value}
-              </div>
-            ))}
+              ) : null
+            )}
           </div>
         </CardContent>
       </Card>
     </Link>
   );
+  
 
   return (
     <div className="min-h-screen bg-gray-50">
