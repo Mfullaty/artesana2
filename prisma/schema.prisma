@@ -65,6 +65,8 @@ model Product {
   cultivationType String?
   purity          String?
   grades          String?
+  admixture       String?
+  defection       String?
   measurement     String
   images          String[] // Array to store multiple image URLs
   createdAt       DateTime @default(now())

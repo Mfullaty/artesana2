@@ -69,6 +69,8 @@ export default function ProductsTab() {
     cultivationType: "",
     purity: "",
     grades: "",
+    admixture: "",
+    defection: "",
     measurement: "",
   });
 
@@ -260,6 +262,8 @@ export default function ProductsTab() {
       cultivationType: "",
       purity: "",
       grades: "",
+      admixture: "",
+      defection: "",
       measurement: "",
     });
     setImageFiles([]);
@@ -538,6 +542,24 @@ export default function ProductsTab() {
                     />
                   </div>
                   <div className="space-y-2">
+                    <Label htmlFor="admixture">Admixture</Label>
+                    <Input
+                      id="admixture"
+                      name="admixture"
+                      value={formData.admixture}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="defection">Defection</Label>
+                    <Input
+                      id="defection"
+                      name="defection"
+                      value={formData.defection}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="color">Color</Label>
                     <Input
                       id="color"
@@ -546,6 +568,9 @@ export default function ProductsTab() {
                       onChange={handleInputChange}
                     />
                   </div>
+                  
+                  
+                  
                   <div className="space-y-2">
                     <Label>Form</Label>
                     <RadioGroup
