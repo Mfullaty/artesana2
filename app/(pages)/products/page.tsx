@@ -118,7 +118,7 @@ export default function ProductsPage() {
             </p>
           )}
           
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="flex justify-between items-center flex-wrap gap-4 text-sm">
             {[
               { label: "Moisture", value: product.moisture },
               { label: "Grades", value: product.grades },
@@ -131,7 +131,7 @@ export default function ProductsPage() {
               { label: "Measurement", value: product.measurement },
             ].map(({ label, value }) =>
               value ? (
-                <div key={label} className="flex items-center">
+                <div key={label} className="flex items-start">
                   <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center mr-2 flex-shrink-0">
                     <Check className="h-4 w-4 text-white font-bold" />
                   </div>
