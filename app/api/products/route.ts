@@ -85,6 +85,8 @@ export async function PUT(req: NextRequest) {
       cultivationType: (formData.get("cultivationType") as string) || "",
       purity: (formData.get("purity") as string) || "",
       grades: (formData.get("grades") as string) || "",
+      admixture: (formData.get("admixture") as string) || "",
+      defection: (formData.get("defection") as string) || "",
       measurement: (formData.get("measurement") as string) || "",
     };
 
