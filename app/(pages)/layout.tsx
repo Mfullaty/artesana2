@@ -11,11 +11,11 @@ export default function PagesLayout({
     <div>
       <Header />
       {/* Stock Marquee Section */}
-      <div className="mt-20 py-2 bg-white">
-        {/* <StockMarquee /> */}
+      {/* <div className="mt-20 py-2 bg-white">
         <NewsMarquee />
-      </div>
-      <div>{children}</div>
+      </div> */}
+
+      <div className="mt-20">{children}</div>
       <Footer />
     </div>
   );

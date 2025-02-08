@@ -21,6 +21,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import NewsMarquee from "../NewsMarquee";
+import { usePathname } from "next/navigation";
 
 const navItems: NavItems[] = [
   { label: "Home", href: "/", icon: Home },
@@ -32,6 +33,7 @@ const navItems: NavItems[] = [
 ];
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const pathname = usePathname();
   return (
     <header className="bg-primary text-white shadow-md fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -47,7 +49,7 @@ const Header = () => {
             <a
               key={item.label}
               href={item.href}
-              className="text-accent-foreground hover:text-accent transition duration-300"
+              className={`hover:text-accent transition duration-300 ${pathname === item.href ? "font-bold text-accent" : "text-accent-foreground"}`}
             >
               {item.label}
             </a>
@@ -79,7 +81,7 @@ const Header = () => {
                 <SheetClose asChild key={item.label}>
                   <a
                     href={item.href}
-                    className="flex items-center space-x-2 text-white hover:text-accent transition duration-300 py-2 px-4 rounded-lg hover:bg-[#2c3e50]"
+                    className={`flex items-center space-x-2 hover:text-accent ${pathname === item.href ? "font-bold text-accent" : "text-accent-foreground"} transition duration-300 py-2 px-4 rounded-lg hover:bg-[#2c3e50]`}
                   >
                     <item.icon className="h-5 w-5" />
                     <span>{item.label}</span>
@@ -117,10 +119,10 @@ const Header = () => {
             </a>
               </div>
             </div>
-            <div className="absolute bottom-28 left-4 right-4 bg-white rounded-md">
               {/* <StockMarquee /> */}
+            {/* <div className="absolute bottom-28 left-4 right-4 bg-white rounded-md">
               <NewsMarquee />
-            </div>
+            </div> */}
           </SheetContent>
         </Sheet>
       </div>
