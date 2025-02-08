@@ -27,7 +27,7 @@ const navItems: NavItems[] = [
   { label: "Products", href: "/products", icon: Box },
   { label: "About us", href: "/about-us", icon: Info },
   { label: "Services", href: "/our-services", icon: Truck },
-  { label: "News", href: "/news", icon: SheetIcon },
+  // { label: "News", href: "/news", icon: SheetIcon },
   { label: "Contact us", href: "/contact-us", icon: Headphones },
 ];
 const Header = () => {

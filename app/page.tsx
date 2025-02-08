@@ -9,9 +9,9 @@ export default function Home() {
     <>
       <Header />
       {/* Stock Marquee Section */}
-      <div className="mt-20 bg-white">
+      {/* <div className="mt-20 bg-white">
         <NewsMarquee />
-      </div>
+      </div> */}
       <LandingPage />
       <Footer />
     </>
