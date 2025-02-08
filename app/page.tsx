@@ -12,7 +12,9 @@ export default function Home() {
       {/* <div className="mt-20 bg-white">
         <NewsMarquee />
       </div> */}
-      <LandingPage />
+      <div className="mt-20">
+        <LandingPage />
+      </div>
       <Footer />
     </>
   );
