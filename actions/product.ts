@@ -9,6 +9,7 @@ export async function createProduct(formData: FormData) {
   try {
     const product: ProductFormData = {
       name: formData.get('name') as string,
+      slug: formData.get('slug') as string,
       description: formData.get('description') as string,
       origin: formData.get('origin') as string || undefined,
       moisture: formData.get('moisture') as string || undefined,
@@ -92,6 +93,7 @@ export async function updateProduct(formData: FormData) {
     const id = formData.get('id') as string
     const product = {
       name: formData.get('name') as string,
+      slug: formData.get('slug') as string,
       description: formData.get('description') as string,
       origin: formData.get('origin') as string || '',
       moisture: formData.get('moisture') as string || '',

@@ -90,6 +90,8 @@ export async function GET(req: NextRequest) {
       },
       unreadCount,
     })
+
+    console.log(messages)
   } catch (error) {
     console.error('Error fetching messages:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

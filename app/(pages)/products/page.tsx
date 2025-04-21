@@ -9,24 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import CallToAction from "@/components/CallToAction";
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  origin: string;
-  moisture: string;
-  color: string;
-  form: string;
-  cultivation: string;
-  cultivationType: string;
-  purity: string;
-  grades: string;
-  admixture: string;
-  defection: string;
-  measurement: string;
-  images: string[];
-}
+import { Product } from "@prisma/client";
 
 interface PaginationInfo {
   page: number;
@@ -72,9 +55,10 @@ export default function ProductsPage() {
   };
 
   const applySearch = () => {
-    const filtered = products.filter((product) =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.origin.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = products.filter(
+      (product) =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.origin.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredProducts(filtered);
   };
@@ -84,7 +68,7 @@ export default function ProductsPage() {
   };
 
   const ProductCard = ({ product }: { product: Product }) => (
-    <Link href={`/products/${product.id}`} passHref>
+    <Link href={`/products/${product.slug}`} passHref>
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer">
         <div className="aspect-square overflow-hidden">
           <Image
@@ -103,21 +87,21 @@ export default function ProductsPage() {
               </p>
             </div>
           )}
-          
+
           <h3 className="font-bold text-2xl mb-2">{product.name}</h3>
-          
+
           {product.purity && (
             <div className="flex justify-between text-sm text-primary font-bold mb-4">
               <span>Purity: {product.purity}</span>
             </div>
           )}
-          
+
           {product.description && (
             <p className="text-gray-600 mb-2 line-clamp-3">
               {product.description}
             </p>
           )}
-          
+
           <div className="flex justify-between items-center flex-wrap gap-4 text-sm">
             {[
               { label: "Moisture", value: product.moisture },
@@ -144,7 +128,6 @@ export default function ProductsPage() {
       </Card>
     </Link>
   );
-  
 
   return (
     <div className="min-h-screen bg-gray-50">

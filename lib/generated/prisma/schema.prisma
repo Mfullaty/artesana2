@@ -1,0 +1,190 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  CMO
+  USER
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(USER)
+  accounts      Account[]
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Product {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  slug            String   @unique
+  description     String
+  origin          String
+  moisture        String?
+  color           String?
+  form            String
+  cultivation     String
+  cultivationType String?
+  purity          String?
+  grades          String?
+  admixture       String?
+  defection       String?
+  measurement     String
+  images          String[] // Array to store multiple image URLs
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Quote {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Contact Information
+  fullName    String
+  email       String
+  phone       String?
+  companyName String?
+  website     String?
+  needFor     String
+
+  // Product Details
+  product         String
+  productType     String
+  cultivationType String[]
+  processing      String?
+
+  // Quantity
+  unit         String
+  volume       String
+  purchaseType String
+
+  // Delivery
+  deliveryAddress   String
+  incoterm          String?
+  deliveryDate      DateTime
+  deliveryFrequency String
+
+  // Additional Info
+  additionalInfo String?
+  status         String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  files          String[]
+
+  @@map("quote_requests")
+}
+
+model Message {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  email   String
+  message String
+  sentOn  DateTime @default(now())
+  status  String
+  replies Reply[]
+}
+
+model Reply {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  sentOn    DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id])
+  isAdmin   Boolean  @default(false)
+  messageId String   @db.ObjectId
+}
+
+// Site General Settings:
+model GeneralSettings {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  heroText          String?
+  tagLineText       String?
+  aboutUsText       String?
+  missionStatement  String?
+  productsHeroTitle String?
+}
+
+// Site settings:
+model SiteSettings {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  siteName        String?
+  siteDescription String?
+  logo            String?
+  favicon         String?
+  facebookLink    String?
+  twitterLink     String?
+  instagramLink   String?
+  linkedinLink    String?
+  contactEmail    String?
+  contactPhone    String?
+  address         String?
+}
+
+//Template Enum
+enum Template {
+  DEFAULT
+  TEMPLATEA
+  TEMPLATEB
+  TEMPLATEC
+}
+
+// Theme Settings
+model ThemeSettings {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  themeChoice    String?
+  primaryColor   String?
+  secondaryColor String?
+  accentColor    String?
+  fontFamily     String?
+  fontSize       String?
+  isDarkMode     Boolean?
+  buttonStyle    String?
+  headerStyle    String?
+  templateChoise Template @default(DEFAULT)
+}
+
+// Email Subscription
+model EmailSubscription {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String
+  ip          String
+  submittedOn DateTime @default(now())
+}

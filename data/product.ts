@@ -14,3 +14,16 @@ export const getProductById = async (id: string) => {
     return null
   }
 };
+export const getProductBySlug = async (slug: string) => {
+  try {
+    const product = await db.product.findUnique({
+      where: {
+        slug,
+      },
+    });
+
+    return product;
+  } catch {
+    return null
+  }
+};

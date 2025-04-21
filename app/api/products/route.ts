@@ -7,7 +7,7 @@ const s3Client = new S3Client({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
-})
+});
 
 async function uploadToS3(file: File, filename: string): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -25,8 +25,30 @@ async function uploadToS3(file: File, filename: string): Promise<string> {
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
+    let slug = formData.get("slug") as string;
+
+    // Check if slug already exists and make it unique if needed
+    let slugExists = true;
+    let uniqueSlug = slug;
+    let counter = 1;
+
+    while (slugExists) {
+      const existingProduct = await db.product.findUnique({
+        where: { slug: uniqueSlug },
+      });
+
+      if (!existingProduct) {
+        slugExists = false;
+      } else {
+        // Append a random number to make the slug unique
+        uniqueSlug = `${slug}-${counter}`;
+        counter++;
+      }
+    }
+
     const product = {
       name: formData.get("name") as string,
+      slug: uniqueSlug, // Use the unique slug
       description: formData.get("description") as string,
       origin: (formData.get("origin") as string) || "",
       moisture: (formData.get("moisture") as string) || "",
@@ -76,6 +98,7 @@ export async function PUT(req: NextRequest) {
     const id = formData.get("id") as string;
     const product = {
       name: formData.get("name") as string,
+      slug: formData.get("slug") as string,
       description: formData.get("description") as string,
       origin: (formData.get("origin") as string) || "",
       moisture: (formData.get("moisture") as string) || "",
@@ -141,6 +164,7 @@ export async function GET(req: NextRequest) {
     });
 
     const total = await db.product.count();
+    // console.log(products);
 
     return NextResponse.json({
       products,
