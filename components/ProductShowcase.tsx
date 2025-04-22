@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Carousel from "./Carousel";
 import Link from "next/link";
 import { RefreshCw } from "lucide-react";
-import { Product } from "@prisma/client";
+import { Product } from "@/lib/generated/prisma";
 
 const PLACEHOLDER_IMAGE = "/image/placeholder.webp";
 

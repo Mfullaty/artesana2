@@ -32,7 +32,7 @@ import Image from "next/image";
 import Pagination from "./Pagination";
 import ConfirmationModal from "../ConfirmationModal";
 import ProductForm from "./ProductForm";
-import { Product } from "@prisma/client";
+import { Product } from "@/lib/generated/prisma";
 
 interface DeleteState {
   isDeleting: boolean;

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, FormInputIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import RequestAQuoteForm from "@/components/RequestAQuoteForm";
-import { Product } from "@prisma/client";
+import { Product } from "@/lib/generated/prisma";
 
 interface ProductSinglePageProps {
   product: Product;
