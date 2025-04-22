@@ -156,7 +156,7 @@ export default function ProductSinglePage({ product }: ProductSinglePageProps) {
                 </a>
                 <Button
                   onClick={() =>
-                    window.open("https://wa.me/2348138497268", "_blank")
+                    window.open("https://wa.me/2347081746683", "_blank")
                   }
                   variant="outline"
                   className="w-full text-green-600 border-green-600 hover:bg-green-600 hover:text-white transition-all duration-300"

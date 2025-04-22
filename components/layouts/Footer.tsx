@@ -119,7 +119,7 @@ const Footer = () => {
             </a>
           </div>
           <p className="text-accent-foreground">
-            &copy; 2024 ARTESANA. All rights reserved.
+            All rights reserved, Artesana &copy; {new Date().getFullYear()}
           </p>
         </div>
       </div>
