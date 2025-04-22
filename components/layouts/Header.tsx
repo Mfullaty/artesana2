@@ -120,9 +120,9 @@ const Header = () => {
               </div>
             </div>
               {/* <StockMarquee /> */}
-            {/* <div className="absolute bottom-28 left-4 right-4 bg-white rounded-md">
+            <div className="absolute bottom-28 left-4 right-4 bg-white rounded-md">
               <NewsMarquee />
-            </div> */}
+            </div>
           </SheetContent>
         </Sheet>
       </div>

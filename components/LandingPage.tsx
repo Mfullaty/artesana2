@@ -35,7 +35,6 @@ export default function LandingPage() {
       <AboutUs />
 
       {/* Marquee */}
-      {/* <StockMarquee /> */}
       {/* <NewsMarquee /> */}
 
       {/* Services */}
@@ -50,7 +49,7 @@ export default function LandingPage() {
       </div>
 
       {/* Agricultural News */}
-      {/* <AgriculturalNews /> */}
+      <AgriculturalNews />
 
       {/* FAQ Section */}
       <Faqs />
