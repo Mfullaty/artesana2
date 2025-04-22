@@ -1,7 +1,13 @@
 import { MetadataRoute } from "next";
 import { db } from "@/lib/db";
+import { Product } from "@/lib/generated/prisma";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://artesana.com.ng";
+
+interface ProductSitemapData {
+  slug: string;
+  updatedAt: Date;
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all products
@@ -12,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   });
 
-  const productUrls = products.map((product) => ({
+  const productUrls = products.map((product: ProductSitemapData) => ({
     url: `${baseUrl}/products/${product.slug}`,
     lastModified: product.updatedAt,
     changeFrequency: "monthly" as const,
