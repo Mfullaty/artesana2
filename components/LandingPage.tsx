@@ -49,7 +49,7 @@ export default function LandingPage() {
       </div>
 
       {/* Agricultural News */}
-      <AgriculturalNews />
+      {/* <AgriculturalNews /> */}
 
       {/* FAQ Section */}
       <Faqs />

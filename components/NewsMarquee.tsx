@@ -1,20 +1,35 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Marquee from "./Marquee";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useNews } from "@/context/NewsContext";
+
+interface NewsItem {
+  uri: string;
+  title: string;
+  url: string;
+}
 
 export default function NewsMarquee() {
-  const { newsItems, loading, error, fetchNews } = useNews();
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchNews({
-      page: 1,
-      keywords: "export",
-      country: "http://en.wikipedia.org/wiki/Nigeria",
-      count: 10,
-    });
+    const fetchNews = async () => {
+      try {
+        const res = await fetch('/api/news?page=1&keywords=export&country=http://en.wikipedia.org/wiki/Nigeria');
+        const data = await res.json();
+        setNewsItems(data.articles.results.slice(0, 10)); // Get first 10 news items
+      } catch (err) {
+        setError("Failed to fetch news data");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNews();
   }, []);
 
   if (loading) {
@@ -40,7 +55,7 @@ export default function NewsMarquee() {
           className="inline-block px-6 py-2 text-center cursor-pointer opacity-100 hover:opacity-60"
         >
           <span className="font-semibold text-sm text-[#1a2b4c]">
-            {item.title.split(" ").slice(0, 4).join(" ")}...
+            {item.title.split(' ').slice(0, 4).join(' ')}...
           </span>
         </a>
       ))}
