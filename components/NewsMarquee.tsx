@@ -1,37 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Marquee from "./Marquee";
 import { Skeleton } from "@/components/ui/skeleton";
-
-interface NewsItem {
-  uri: string;
-  title: string;
-  url: string;
-}
+import { useNews } from "@/context/NewsContext";
 
 export default function NewsMarquee() {
-  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { newsItems, loading, error, fetchNews } = useNews();
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const res = await fetch(
-          "/api/news?page=1&keywords=export&country=http://en.wikipedia.org/wiki/Nigeria"
-        );
-        const data = await res.json();
-        setNewsItems(data.articles.results.slice(0, 10)); // Get first 10 news items
-      } catch (err) {
-        setError("Failed to fetch news data");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
+    fetchNews({
+      page: 1,
+      keywords: "export",
+      country: "http://en.wikipedia.org/wiki/Nigeria",
+      count: 10,
+    });
   }, []);
 
   if (loading) {

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { generateMetaKeywords } from "@/lib/generateKeywords";
+import { NewsProvider } from "@/context/NewsContext";
+
+const inter = Inter({ subsets: ["latin"] });
 
 const dynamicKeywords = generateMetaKeywords(
-  "Artesana is a trusted platform dedicated to connecting global markets with the finest agricultural products from Nigeria, West Africa, and across the African continent. We specialize in sourcing and delivering premium commodities that reflect the richness and diversity of Africa’s agricultural heritage. Our offerings include a wide range of fresh, organic, and conventional products, carefully selected to meet international quality standards. Whether you’re looking for products for export, import, sale, or purchase, Artesana serves as your reliable partner in agricultural trade",
+  "Artesana is a trusted platform dedicated to connecting global markets with the finest agricultural products from Nigeria, West Africa, and across the African continent. We specialize in sourcing and delivering premium commodities that reflect the richness and diversity of Africa's agricultural heritage. Our offerings include a wide range of fresh, organic, and conventional products, carefully selected to meet international quality standards. Whether you're looking for products for export, import, sale, or purchase, Artesana serves as your reliable partner in agricultural trade",
   50
 );
 
@@ -80,7 +84,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={inter.className}>
+        <NewsProvider>{children}</NewsProvider>
+      </body>
     </html>
   );
 }
