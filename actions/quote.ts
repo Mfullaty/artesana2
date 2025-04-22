@@ -3,10 +3,14 @@
 import { db } from "@/lib/db";
 import { requestAQuoteSchema } from "@/schemas";
 import { quoteDetailSchema, QuoteDetailFormData } from "@/schemas/quotes";
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { revalidatePath } from "next/cache";
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -47,12 +51,12 @@ async function uploadFileToS3(file: File): Promise<string> {
   });
 
   const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-  
+
   const response = await fetch(signedUrl, {
-    method: 'PUT',
+    method: "PUT",
     body: await file.arrayBuffer(),
     headers: {
-      'Content-Type': file.type,
+      "Content-Type": file.type,
     },
   });
 
@@ -64,7 +68,7 @@ async function uploadFileToS3(file: File): Promise<string> {
 }
 
 async function deleteFileFromS3(fileUrl: string) {
-  const key = fileUrl.split('.com/')[1];
+  const key = fileUrl.split(".com/")[1];
   const command = new DeleteObjectCommand({
     Bucket: process.env.S3_BUCKET_NAME!,
     Key: key,
@@ -106,9 +110,9 @@ export const submitQuoteRequest = async (formData: FormData) => {
 
     // Send email to Artesana admins
     await resend.emails.send({
-      from: 'Artesana <info@artesana.com.ng>',
-      to: 'info@artesana.com.ng',
-      subject: 'You have a new quote request',
+      from: "Artesana <info@artesana.com.ng>",
+      to: "info@artesana.com.ng",
+      subject: "You have a new quote request",
       html: `
         <h1>New Quote Request</h1>
         <p>A new quote request has been submitted by ${newQuote.fullName}.</p>
@@ -116,28 +120,28 @@ export const submitQuoteRequest = async (formData: FormData) => {
         <ul>
           <li>Name: ${newQuote.fullName}</li>
           <li>Email: ${newQuote.email}</li>
-          <li>Phone: ${newQuote.phone || 'N/A'}</li>
-          <li>Company: ${newQuote.companyName || 'N/A'}</li>
+          <li>Phone: ${newQuote.phone || "N/A"}</li>
+          <li>Company: ${newQuote.companyName || "N/A"}</li>
           <li>Product: ${newQuote.product}</li>
           <li>Volume: ${newQuote.volume} ${newQuote.unit}</li>
           <li>Delivery Date: ${newQuote.deliveryDate.toDateString()}</li>
         </ul>
         <p>Please log in to the admin panel for full details. Login <a href="https://artesana.com.ng/admin/quotes">Here</a></p></p>
-      `
+      `,
     });
 
     // Send confirmation email to user
     await resend.emails.send({
-      from: 'Artesana <info@artesana.com.ng>',
+      from: "Artesana <info@artesana.com.ng>",
       to: newQuote.email,
-      subject: 'Quote Request Received - Artesana',
+      subject: "Quote Request Received - Artesana",
       html: `
         <h1>Thank You for Your Quote Request</h1>
         <p>Dear ${newQuote.fullName},</p>
         <p>We have received your quote request for ${newQuote.product}. Our team will review your request and get back to you shortly.</p>
         <p>If you have any questions, please don't hesitate to contact us.</p>
         <p>Best regards,<br>The Team, Artesana</p>
-      `
+      `,
     });
 
     revalidatePath("/requestAQuote");
@@ -224,7 +228,7 @@ export async function deleteQuote(id: string) {
 
     if (quote.files && quote.files.length > 0) {
       await Promise.all(
-        quote.files.map(async (file) => {
+        quote.files.map(async (file: string) => {
           try {
             await deleteFileFromS3(file);
           } catch (error) {
@@ -275,7 +279,10 @@ export async function getQuoteDetail(id: string) {
   }
 }
 
-export async function updateQuote(id: string, data: Partial<QuoteDetailFormData>) {
+export async function updateQuote(
+  id: string,
+  data: Partial<QuoteDetailFormData>
+) {
   try {
     const validatedFields = quoteDetailSchema.safeParse(data);
 
