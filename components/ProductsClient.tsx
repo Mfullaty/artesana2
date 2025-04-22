@@ -9,8 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import CallToAction from "@/components/CallToAction";
-import { Product } from "@/lib/generated/prisma";
-
+import { Product } from "@prisma/client";
 
 interface PaginationInfo {
   page: number;

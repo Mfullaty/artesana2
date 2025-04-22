@@ -1,67 +1,88 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { User, UserRole } from '@/lib/generated/prisma'
-import { toast, Toaster } from 'sonner'
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { User, UserRole } from "@prisma/client";
+import { toast, Toaster } from "sonner";
 
-type UserWithRole = User
+type UserWithRole = User;
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<UserWithRole[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [users, setUsers] = useState<UserWithRole[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   const fetchUsers = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const response = await fetch('/api/users')
+      const response = await fetch("/api/users");
       if (response.ok) {
-        const data = await response.json()
-        setUsers(data)
+        const data = await response.json();
+        setUsers(data);
       } else {
-        throw new Error('Failed to fetch users')
+        throw new Error("Failed to fetch users");
       }
     } catch (error) {
-      console.error('Error fetching users:', error)
-      toast.error("Failed to load users. Please try again.")
+      console.error("Error fetching users:", error);
+      toast.error("Failed to load users. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleRoleChange = async (userId: string, newRole: UserRole) => {
     try {
       const response = await fetch(`/api/users/${userId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role: newRole }),
-      })
+      });
       if (response.ok) {
-        const updatedUser = await response.json()
-        setUsers(prevUsers => prevUsers.map(user => 
-          user.id === userId ? { ...user, role: newRole } : user
-        ))
-        toast.success("User role has been successfully updated.")
+        const updatedUser = await response.json();
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === userId ? { ...user, role: newRole } : user
+          )
+        );
+        toast.success("User role has been successfully updated.");
       } else {
-        throw new Error('Failed to update user role')
+        throw new Error("Failed to update user role");
       }
     } catch (error) {
-      console.error('Error updating user role:', error)
-      toast.error("Failed to update user role. Please try again.")
+      console.error("Error updating user role:", error);
+      toast.error("Failed to update user role. Please try again.");
     }
-  }
+  };
 
   const navigateToUserDetails = (userId: string) => {
-    router.push(`/admin/settings/users/${userId}`)
-  }
+    router.push(`/admin/settings/users/${userId}`);
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -86,13 +107,19 @@ export default function UsersPage() {
               </TableHeader>
               <TableBody>
                 {users.map((user) => (
-                  <TableRow key={user.id} className="cursor-pointer hover:bg-gray-100" onClick={() => navigateToUserDetails(user.id)}>
+                  <TableRow
+                    key={user.id}
+                    className="cursor-pointer hover:bg-gray-100"
+                    onClick={() => navigateToUserDetails(user.id)}
+                  >
                     <TableCell>{user.name}</TableCell>
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{user.role}</TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <Select
-                        onValueChange={(value) => handleRoleChange(user.id, value as UserRole)}
+                        onValueChange={(value) =>
+                          handleRoleChange(user.id, value as UserRole)
+                        }
                         value={user.role}
                       >
                         <SelectTrigger className="w-[180px]">
@@ -100,7 +127,9 @@ export default function UsersPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                          <SelectItem value={UserRole.MANAGER}>Manager</SelectItem>
+                          <SelectItem value={UserRole.MANAGER}>
+                            Manager
+                          </SelectItem>
                           <SelectItem value={UserRole.CMO}>CMO</SelectItem>
                           <SelectItem value={UserRole.USER}>User</SelectItem>
                         </SelectContent>
@@ -114,5 +143,5 @@ export default function UsersPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

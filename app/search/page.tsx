@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import { Product } from "@/lib/generated/prisma";
+import { Product } from "@prisma/client";
 
 interface SearchPageProps {
   searchParams: { q?: string };

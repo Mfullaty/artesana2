@@ -1,6 +1,5 @@
 import { MetadataRoute } from "next";
 import { db } from "@/lib/db";
-import { Product } from "@/lib/generated/prisma";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://artesana.com.ng";
 

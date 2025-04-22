@@ -1,5 +1,5 @@
+import { UserRole } from "@prisma/client";
 import NextAuth, { type DefaultSession } from "next-auth";
-import { UserRole } from "./lib/generated/prisma";
 
 const ExtendedUser =
   DefaultSession["user"] &

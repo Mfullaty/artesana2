@@ -1,81 +1,94 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "@/components/ui/use-toast"
-import { Skeleton } from "@/components/ui/skeleton"
-import { User, UserRole } from '@/lib/generated/prisma'
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
+import { User, UserRole } from "@prisma/client";
 
 interface UserWithRole extends User {
   userRole: UserRole;
 }
 
 export default function UserDetailsPage() {
-  const params = useParams()
-  const router = useRouter()
-  const [user, setUser] = useState<UserWithRole | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSaving, setIsSaving] = useState(false)
+  const params = useParams();
+  const router = useRouter();
+  const [user, setUser] = useState<UserWithRole | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    fetchUser()
-  }, [params.id])
+    fetchUser();
+  }, [params.id]);
 
   const fetchUser = async () => {
     try {
-      const response = await fetch(`/api/users/${params.id}`)
+      const response = await fetch(`/api/users/${params.id}`);
       if (response.ok) {
-        const data = await response.json()
-        setUser(data)
+        const data = await response.json();
+        setUser(data);
       } else {
-        throw new Error('Failed to fetch user')
+        throw new Error("Failed to fetch user");
       }
     } catch (error) {
-      console.error('Error fetching user:', error)
+      console.error("Error fetching user:", error);
       toast({
         title: "Error",
         description: "Failed to load user details. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleRoleChange = async (newRole: string) => {
-    if (!user) return
+    if (!user) return;
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       const response = await fetch(`/api/users/${user.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ role: newRole }),
-      })
+      });
       if (response.ok) {
-        const updatedUser = await response.json()
-        setUser(updatedUser)
+        const updatedUser = await response.json();
+        setUser(updatedUser);
         toast({
           title: "Role updated",
           description: "User role has been successfully updated.",
-        })
+        });
       } else {
-        throw new Error('Failed to update user role')
+        throw new Error("Failed to update user role");
       }
     } catch (error) {
-      console.error('Error updating user role:', error)
+      console.error("Error updating user role:", error);
       toast({
         title: "Error",
         description: "Failed to update user role. Please try again.",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -92,7 +105,7 @@ export default function UserDetailsPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   if (!user) {
@@ -101,14 +114,18 @@ export default function UserDetailsPage() {
         <Card>
           <CardHeader>
             <CardTitle>User Not Found</CardTitle>
-            <CardDescription>The requested user could not be found.</CardDescription>
+            <CardDescription>
+              The requested user could not be found.
+            </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Button onClick={() => router.push('/admin/settings/users')}>Back to Users</Button>
+            <Button onClick={() => router.push("/admin/settings/users")}>
+              Back to Users
+            </Button>
           </CardFooter>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
@@ -143,9 +160,11 @@ export default function UserDetailsPage() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={() => router.push('/admin/settings/users')}>Back to Users</Button>
+          <Button onClick={() => router.push("/admin/settings/users")}>
+            Back to Users
+          </Button>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

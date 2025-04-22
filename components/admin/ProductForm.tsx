@@ -24,7 +24,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { X, Upload, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
-import { Product } from "@/lib/generated/prisma";
+import { Product } from "@prisma/client";
 import { slugify } from "@/lib/utils";
 
 interface ProductFormProps {
