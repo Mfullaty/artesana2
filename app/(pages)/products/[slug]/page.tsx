@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import ProductSinglePage from "@/components/ProductSinglePage";
+import { generateMetaKeywords } from "@/lib/generateKeywords";
 
 interface ProductPageProps {
   params: {
@@ -25,13 +26,22 @@ export async function generateMetadata({
     };
   }
 
+  const keywords = generateMetaKeywords(product.description, 50);
+  // console.log(keywords);
+
   return {
     title: `${product.name} | Artesana`,
+    applicationName: "Artesana",
     description: product.description,
     openGraph: {
       title: product.name,
       description: product.description,
       images: product.images,
+      siteName: "Artesana",
+      countryName: "Nigeria",
+      locale: "en_NG",
+      type: "website",
+      url: `https://www.artesana.com/products/${product.slug}`,
     },
     twitter: {
       card: "summary_large_image",
@@ -39,6 +49,7 @@ export async function generateMetadata({
       description: product.description,
       images: product.images,
     },
+    keywords: keywords,
   };
 }
 
