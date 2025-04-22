@@ -11,9 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { getNewsArticles } from "@/lib/news";
 import { NewsItem, NewsQueryParams } from "@/types/news";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getNewsArticles } from "@/lib/news";
 
 const countries = [
   { value: "http://en.wikipedia.org/wiki/Nigeria", label: "Nigeria" },

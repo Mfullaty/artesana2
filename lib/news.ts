@@ -4,7 +4,6 @@ import {
   NewsQueryParams,
   ArticleResponse,
 } from "@/types/news";
-import { getCachedData, setCachedData, invalidateCache } from "./redis";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://artesana.com.ng";
@@ -23,13 +22,6 @@ export async function getNewsArticles(
 ): Promise<NewsResponse> {
   const cacheKey = generateCacheKey(params);
 
-  // Try to get cached data first
-  const cachedData = await getCachedData<NewsResponse>(cacheKey);
-  if (cachedData) {
-    return cachedData;
-  }
-
-  // If no cache, fetch from API
   const { keywords, country, page = 1, count = 10 } = params;
 
   const queryParams = new URLSearchParams({
@@ -56,9 +48,6 @@ export async function getNewsArticles(
 
   const data = await response.json();
 
-  // Cache the response
-  await setCachedData(cacheKey, data, CACHE_TTL);
-
   return data;
 }
 
@@ -79,9 +68,4 @@ export async function getNewsArticle(
     console.error("Error fetching news article:", error);
     throw error;
   }
-}
-
-// Function to manually invalidate cache (can be called when needed)
-export async function invalidateNewsCache(): Promise<void> {
-  await invalidateCache("news:*");
 }
