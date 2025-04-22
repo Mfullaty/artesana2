@@ -55,6 +55,7 @@ export default function Component() {
   const [selectedQuotes, setSelectedQuotes] = useState<string[]>([]);
   const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [selectedFile, setSelectedFile] = useState<{
     url: string;
     type: string;
@@ -90,6 +91,7 @@ export default function Component() {
     if (selectedQuotes.length === 0) return;
 
     setIsBulkDeleting(true);
+    setIsDeleting(true);
     try {
       const response = await fetch('/api/quotes', {
         method: 'DELETE',
@@ -122,6 +124,7 @@ export default function Component() {
     } finally {
       setIsBulkDeleting(false);
       setDeleteConfirmation({ isOpen: false, quoteId: null });
+      setIsDeleting(false);
     }
   };
 
@@ -309,6 +312,7 @@ export default function Component() {
           onPageChange={setCurrentPage}
         />
         <ConfirmationModal
+          isDeleting={isDeleting}
           isOpen={deleteConfirmation.isOpen}
           onClose={() =>
             setDeleteConfirmation({ isOpen: false, quoteId: null })

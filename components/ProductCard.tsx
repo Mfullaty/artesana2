@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@prisma/client";
 import { Card, CardContent } from "@/components/ui/card";
+import { Product } from "@/lib/generated/prisma";
 
 interface ProductCardProps {
   product: Product;

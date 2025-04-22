@@ -23,6 +23,7 @@ export default function MessagesTab() {
   const [isLoading, setIsLoading] = useState(true)
   const [deleteConfirmation, setDeleteConfirmation] = useState<{ isOpen: boolean; messageId: string | null }>({ isOpen: false, messageId: null })
   const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({})
+  const [isDeleting, setIsDeleting] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
   const [selectedMessages, setSelectedMessages] = useState<string[]>([])
   const [isSelectionMode, setIsSelectionMode] = useState(false)
@@ -54,6 +55,7 @@ export default function MessagesTab() {
 
   const handleDeleteMessage = async (id: string) => {
     setLoadingStates(prev => ({ ...prev, [id]: true }))
+    setIsDeleting(true)
     try {
       const response = await fetch(`/api/messages`, {
         method: 'DELETE',
@@ -73,6 +75,7 @@ export default function MessagesTab() {
     } finally {
       setLoadingStates(prev => ({ ...prev, [id]: false }))
       setDeleteConfirmation({ isOpen: false, messageId: null })
+      setIsDeleting(false)
     }
   }
 
@@ -80,6 +83,7 @@ export default function MessagesTab() {
     if (selectedMessages.length === 0) return
 
     setIsBulkDeleting(true)
+    setIsDeleting(true)
     try {
       const response = await fetch(`/api/messages`, {
         method: 'DELETE',
@@ -102,6 +106,7 @@ export default function MessagesTab() {
     } finally {
       setIsBulkDeleting(false)
       setDeleteConfirmation({ isOpen: false, messageId: null })
+      setIsDeleting(false)
     }
   }
 
@@ -288,6 +293,7 @@ export default function MessagesTab() {
               handleDeleteMessage(deleteConfirmation.messageId)
             }
           }}
+          isDeleting={isDeleting}
           title={deleteConfirmation.messageId === 'bulk' ? "Delete Selected Messages" : "Delete Message"}
           description={deleteConfirmation.messageId === 'bulk'
             ? `Are you sure you want to delete ${selectedMessages.length} selected messages? This action cannot be undone.`

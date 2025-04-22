@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
+import { Product } from "@/lib/generated/prisma";
 
 interface SearchPageProps {
   searchParams: { q?: string };
@@ -54,7 +55,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         Found {products.length} products matching your search
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
+        {products.map((product : Product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
