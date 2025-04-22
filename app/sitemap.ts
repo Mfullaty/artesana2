@@ -1,0 +1,55 @@
+import { MetadataRoute } from "next";
+import { db } from "@/lib/db";
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://artesana.com.ng";
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Get all products
+  const products = await db.product.findMany({
+    select: {
+      slug: true,
+      updatedAt: true,
+    },
+  });
+
+  const productUrls = products.map((product) => ({
+    url: `${baseUrl}/products/${product.slug}`,
+    lastModified: product.updatedAt,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/products`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/our-services`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    ...productUrls,
+  ];
+}
